@@ -13,6 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    timeline.cpp \
+    frameeditor.cpp \
+    frame.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    timeline.h \
+    frameeditor.h \
+    frame.h
