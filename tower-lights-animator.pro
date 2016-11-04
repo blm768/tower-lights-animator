@@ -16,9 +16,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     timeline.cpp \
     frameeditor.cpp \
-    frame.cpp
+    frame.cpp \
+    toolbar.cpp \
+    mainmenu.cpp
 
 HEADERS  += mainwindow.h \
     timeline.h \
     frameeditor.h \
-    frame.h
+    frame.h \
+    toolbar.h \
+    mainmenu.h

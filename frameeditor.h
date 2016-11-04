@@ -21,8 +21,9 @@ signals:
     void frameChanged(Frame* frame);
 
 public slots:
-    void frameSelected(Frame* frame);
-    void toolSelected(ToolType tool);
+    void selectionChanged(QList<Frame*> selection);
+    void selectTool(ToolType tool);
+    void setPenColor(const QColor& color);
 };
 
 #endif // FRAMEEDITOR_H

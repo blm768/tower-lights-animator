@@ -3,7 +3,7 @@
 #include "timeline.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), _mainMenu(this)
 {
     Timeline* timeline = new Timeline(this);
     setCentralWidget(timeline);
