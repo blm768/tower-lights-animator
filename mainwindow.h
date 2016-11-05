@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 
+#include "mainmenu.h"
+
+class MainWindow;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -10,6 +14,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+
+private:
+    MainMenu _mainMenu;
 };
 
 #endif // MAINWINDOW_H
