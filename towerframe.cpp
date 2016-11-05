@@ -35,7 +35,6 @@ int TowerFrame::AddFrame(QTime Duration)
 
 int TowerFrame::AddFrame(int Index)
 {
-
     frameptr curr = FrameList.at(Index);
     frameptr n = new Frame;
     n->FDuration = curr->FDuration;
@@ -50,28 +49,63 @@ int TowerFrame::AddFrame(int Index)
 
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
     FrameList.append(n);
-    return 0;
+    return 1;
+}
+
+int TowerFrame::AddFrame(QTime Duration, int Position)
+{
+    frameptr n = new Frame;
+    if (Duration >= QTime(0,0,0,050))
+    {
+        n->FDuration = Duration;
+    } else {
+        n->FDuration = QTime(0,0,0,050);
+    }
+
+    for (int i = 0; i < FWIDTH; i++)
+    {
+        for (int j = 0; j < FHEIGHT; j++)
+        {
+            n->WorkArea[i][j] = QColor(Qt::black);
+        }
+    }
+
+    FrameList.insert(Position, n);
+    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(Duration));
+    return 1;
 }
 
 int TowerFrame::AddFrame(int Index, int Position)
 {
-    return 1;
-}
+    frameptr curr = FrameList.at(Index);
+    std::cout << "Hi?" << std::endl;
+    frameptr n = new Frame;
+    n->FDuration = curr->FDuration;
 
-int TowerFrame::AddFrame(QTime Duration, int Postition)
-{
+    for (int i = 0; i < FWIDTH; i++)
+    {
+        for (int j = 0; j < FHEIGHT; j++)
+        {
+            n->WorkArea[i][j] = curr->WorkArea[i][j];
+        }
+    }
+
+    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
+    FrameList.insert(Position, n);
     return 1;
 }
 
 void TowerFrame::DeleteFrame(int Index)
 {
-
+    frameptr curr = FrameList.at(Index);
+    std::cout << std::endl << "Hi?" << (QTime(0,0,0,0).msecsTo(curr->FDuration)) << std::endl;
+    FrameList.removeAt(Index);
+    delete(curr);
 }
 
-// TODO: Rewrite MoveFrame
 int TowerFrame::MoveFrame(int IndexFrom, int IndexTo)
 {
-    FrameList.insert(IndexTo, FrameList.value(IndexFrom));
+    FrameList.move(IndexFrom,IndexTo);
     return 1;
 }
 
