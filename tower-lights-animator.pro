@@ -18,11 +18,13 @@ SOURCES += main.cpp\
     frameeditor.cpp \
     frame.cpp \
     toolbar.cpp \
-    mainmenu.cpp
+    mainmenu.cpp \
+    colorpicker.cpp
 
 HEADERS  += mainwindow.h \
     timeline.h \
     frameeditor.h \
     frame.h \
     toolbar.h \
-    mainmenu.h
+    mainmenu.h \
+    colorpicker.h
