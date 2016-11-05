@@ -12,12 +12,15 @@ private:
 
     struct Frame {
         QTime FDuration;
-        QColor **WorkArea = new QColor*[FWIDTH];
+        // Does not requre dynamic allocation at this time, however allocation
+        // preserved for possible future case in dynamic sized selections
+        /*QColor **WorkArea = new QColor*[FWIDTH];
         Frame() {
             for (int i = 0; i < FWIDTH; i++) {
                 WorkArea[i] = new QColor[FHEIGHT];
             }
-        }
+        }*/
+        QColor WorkArea[FWIDTH][FHEIGHT];
     };
     typedef Frame *frameptr;
 
@@ -27,13 +30,21 @@ private:
 public:
     TowerFrame();
 
-    int AddFrame(QTime Duration);   // Adds a frame to the end of FrameList with passed Duration
-    int AddFrame(int Index);        // Adds a copy of frame at index Index to end of FrameList
-    int InsertFrame(int IndexFrom, int IndexTo);
-    void ColorCell(int Index, int x, int y, QColor Color);
 
-    void PrintTower();
+    void ColorCell(int Index, int x, int y, QColor Color);
+    int AddFrame(QTime Duration);               // Add a frame with Duration to end
+    int AddFrame(int Index);                    // Add a copy of frame at Index to end
     int GetDuration();
+
+        // Awaiting Implementation
+    int AddFrame(int Index, int Position);      // Add a copy of frame at Index to Position
+    int AddFrame(QTime Duration, int Postition);// Add a new frame to Position with Duration
+    void DeleteFrame(int Position);             // Deletes frame at Position
+
+    int MoveFrame(int IndexFrom, int IndexTo);
+
+        // Testing
+    void PrintTower();
 
 };
 

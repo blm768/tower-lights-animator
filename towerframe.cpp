@@ -13,17 +13,15 @@ TowerFrame::TowerFrame()
 int TowerFrame::AddFrame(QTime Duration)
 {
     frameptr n = new Frame;
-    if (Duration >= QTime(0,0,0,200))
+    if (Duration >= QTime(0,0,0,050))
     {
         n->FDuration = Duration;
     } else {
-        n->FDuration = QTime(0,0,0,200);
+        n->FDuration = QTime(0,0,0,050);
     }
 
-    //n->WorkArea = (QColor**)malloc(sizeof(QColor *) * FWIDTH);
     for (int i = 0; i < FWIDTH; i++)
     {
-        //n->WorkArea[i] = (QColor*)malloc(sizeof(QColor) * FHEIGHT);
         for (int j = 0; j < FHEIGHT; j++)
         {
             n->WorkArea[i][j] = QColor(Qt::black);
@@ -55,7 +53,23 @@ int TowerFrame::AddFrame(int Index)
     return 0;
 }
 
-int TowerFrame::InsertFrame(int IndexFrom, int IndexTo)
+int TowerFrame::AddFrame(int Index, int Position)
+{
+    return 1;
+}
+
+int TowerFrame::AddFrame(QTime Duration, int Postition)
+{
+    return 1;
+}
+
+void TowerFrame::DeleteFrame(int Index)
+{
+
+}
+
+// TODO: Rewrite MoveFrame
+int TowerFrame::MoveFrame(int IndexFrom, int IndexTo)
 {
     FrameList.insert(IndexTo, FrameList.value(IndexFrom));
     return 1;
@@ -66,10 +80,27 @@ void TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
     FrameList.at(Index)->WorkArea[row][column] = Color;
 }
 
+int TowerFrame::GetDuration()
+{
+    return (QTime(0,0,0,0).msecsTo(TDuration));
+}
+
+/*
+ *
+ * Functions below exist only for testing at this point, in the future may be moved to
+ * production or to another file completely once GUI testing is possible
+ *
+ */
+
+// NOTE: If this function is removed this file should no longer include iostream
 void TowerFrame::PrintTower()
 {
+    std::cout << std::endl;
     for (int i = 0; i < FrameList.count(); i++)
     {
+        std::cout << std::endl;
+        std::cout << "Frame: " << i << " size: " << sizeof(FrameList[i]->WorkArea) << std::endl;
+        std::cout << FrameList[i] << std::endl;
         for (int j = 0; j < FWIDTH; j++)
         {
             for (int k = 0; k < FHEIGHT; k++)
@@ -80,11 +111,5 @@ void TowerFrame::PrintTower()
             }
             std::cout << std::endl;
         }
-        std::cout << "Tail" << std::endl;
     }
-}
-
-int TowerFrame::GetDuration()
-{
-    return (QTime(0,0,0,0).msecsTo(TDuration));
 }
