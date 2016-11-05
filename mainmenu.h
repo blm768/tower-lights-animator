@@ -21,11 +21,13 @@ private slots:
     // Slots corresponding to menu actions
     void newFile();
     void saveFile();
+    void saveFileAs();
 
 private:
     // Menu actions
     QAction* actNewFile;
     QAction* actSaveFile;
+    QAction* actSaveAs;
 
     // Menus
     QMenu* menuFile;
