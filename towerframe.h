@@ -12,12 +12,7 @@ private:
 
     struct Frame {
         QTime FDuration;
-        QColor **WorkArea = new QColor*[FWIDTH];
-        Frame() {
-            for (int i = 0; i < FWIDTH; i++) {
-                WorkArea[i] = new QColor[FHEIGHT];
-            }
-        }
+        QColor WorkArea[FWIDTH][FHEIGHT];
     };
     typedef Frame *frameptr;
 
@@ -29,7 +24,7 @@ public:
 
     int AddFrame(QTime Duration);   // Adds a frame to the end of FrameList with passed Duration
     int AddFrame(int Index);        // Adds a copy of frame at index Index to end of FrameList
-    int InsertFrame(int IndexFrom, int IndexTo);
+    int MoveFrame(int IndexFrom, int IndexTo);
     void ColorCell(int Index, int x, int y, QColor Color);
 
     void PrintTower();

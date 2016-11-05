@@ -20,10 +20,8 @@ int TowerFrame::AddFrame(QTime Duration)
         n->FDuration = QTime(0,0,0,200);
     }
 
-    //n->WorkArea = (QColor**)malloc(sizeof(QColor *) * FWIDTH);
     for (int i = 0; i < FWIDTH; i++)
     {
-        //n->WorkArea[i] = (QColor*)malloc(sizeof(QColor) * FHEIGHT);
         for (int j = 0; j < FHEIGHT; j++)
         {
             n->WorkArea[i][j] = QColor(Qt::black);
@@ -31,6 +29,7 @@ int TowerFrame::AddFrame(QTime Duration)
     }
 
     FrameList.append(n);
+    delete n;
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(Duration));
     return 1;
 }
@@ -52,10 +51,11 @@ int TowerFrame::AddFrame(int Index)
 
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
     FrameList.append(n);
+    delete n;
     return 0;
 }
 
-int TowerFrame::InsertFrame(int IndexFrom, int IndexTo)
+int TowerFrame::MoveFrame(int IndexFrom, int IndexTo)
 {
     FrameList.insert(IndexTo, FrameList.value(IndexFrom));
     return 1;
@@ -66,10 +66,25 @@ void TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
     FrameList.at(Index)->WorkArea[row][column] = Color;
 }
 
+int TowerFrame::GetDuration()
+{
+    return (QTime(0,0,0,0).msecsTo(TDuration));
+}
+
+/*
+ *
+ * Functions below exist only for testing at this point, in the future may be moved to
+ * production or to another file completely once GUI testing is possible
+ *
+ */
+
+// NOTE: If this function is removed this file should no longer include iostream
 void TowerFrame::PrintTower()
 {
+    std::cout << std::endl;
     for (int i = 0; i < FrameList.count(); i++)
     {
+        std::cout << std::endl;
         for (int j = 0; j < FWIDTH; j++)
         {
             for (int k = 0; k < FHEIGHT; k++)
@@ -80,11 +95,5 @@ void TowerFrame::PrintTower()
             }
             std::cout << std::endl;
         }
-        std::cout << "Tail" << std::endl;
     }
-}
-
-int TowerFrame::GetDuration()
-{
-    return (QTime(0,0,0,0).msecsTo(TDuration));
 }
