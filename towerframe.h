@@ -20,7 +20,7 @@ private:
                 WorkArea[i] = new QColor[FHEIGHT];
             }
         }*/
-        QColor WorkArea[FWIDTH][FHEIGHT];
+        QColor WorkArea[FHEIGHT][FWIDTH];
     };
     typedef Frame *frameptr;
 

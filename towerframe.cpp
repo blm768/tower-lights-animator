@@ -4,8 +4,6 @@
 #include <iostream>
 #include "towerframe.h"
 
-//this is a test
-
 
 TowerFrame::TowerFrame()
 {
@@ -22,9 +20,9 @@ int TowerFrame::AddFrame(QTime Duration)
         n->FDuration = QTime(0,0,0,050);
     }
 
-    for (int i = 0; i < FWIDTH; i++)
+    for (int i = 0; i < FHEIGHT; i++)
     {
-        for (int j = 0; j < FHEIGHT; j++)
+        for (int j = 0; j < FWIDTH; j++)
         {
             n->WorkArea[i][j] = QColor(Qt::black);
         }
@@ -41,9 +39,9 @@ int TowerFrame::AddFrame(int Index)
     frameptr n = new Frame;
     n->FDuration = curr->FDuration;
 
-    for (int i = 0; i < FWIDTH; i++)
+    for (int i = 0; i < FHEIGHT; i++)
     {
-        for (int j = 0; j < FHEIGHT; j++)
+        for (int j = 0; j < FWIDTH; j++)
         {
             n->WorkArea[i][j] = curr->WorkArea[i][j];
         }
@@ -64,9 +62,9 @@ int TowerFrame::AddFrame(QTime Duration, int Position)
         n->FDuration = QTime(0,0,0,050);
     }
 
-    for (int i = 0; i < FWIDTH; i++)
+    for (int i = 0; i < FHEIGHT; i++)
     {
-        for (int j = 0; j < FHEIGHT; j++)
+        for (int j = 0; j < FWIDTH; j++)
         {
             n->WorkArea[i][j] = QColor(Qt::black);
         }
@@ -84,9 +82,9 @@ int TowerFrame::AddFrame(int Index, int Position)
     frameptr n = new Frame;
     n->FDuration = curr->FDuration;
 
-    for (int i = 0; i < FWIDTH; i++)
+    for (int i = 0; i < FHEIGHT; i++)
     {
-        for (int j = 0; j < FHEIGHT; j++)
+        for (int j = 0; j < FWIDTH; j++)
         {
             n->WorkArea[i][j] = curr->WorkArea[i][j];
         }
@@ -137,9 +135,9 @@ void TowerFrame::PrintTower()
         std::cout << std::endl;
         std::cout << "Frame: " << i << " size: " << sizeof(FrameList[i]->WorkArea) << std::endl;
         std::cout << FrameList[i] << std::endl;
-        for (int j = 0; j < FWIDTH; j++)
+        for (int j = 0; j < FHEIGHT; j++)
         {
-            for (int k = 0; k < FHEIGHT; k++)
+            for (int k = 0; k < FWIDTH; k++)
             {
                 std::cout << FrameList[i]->WorkArea[j][k].red() << " " <<
                              FrameList[i]->WorkArea[j][k].green() << " " <<
