@@ -1,4 +1,4 @@
-#include <QtGui/QColor>
+#include <QColor>
 #include <QTime>
 #include <QList>
 #include <iostream>

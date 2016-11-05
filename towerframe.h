@@ -1,6 +1,6 @@
 #ifndef TOWERFRAME_H
 #define TOWERFRAME_H
-#include <QTGui/QColor>
+#include <QColor>
 #include <QTime>
 #include <QList>
 
