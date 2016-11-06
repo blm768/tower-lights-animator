@@ -42,6 +42,11 @@ public:
             // If Color is not valid it sets it to Qt::black
     int ColorCell(int Index, int row, int column, QColor Color);
 
+            // Does everything the previous one does excepts sets
+            // the color of the currently selected frame in tan file
+            // and no index cause we are going linearly
+    int ColorCell(int row, int column, QColor Color);
+
             // Returns the length of the entire sequence in ms
     int GetDuration();
 
@@ -57,7 +62,7 @@ public:
             // Points the currFrame pointer at
             // a newly created frame for tan file
 
-    void AddColoredFrame(QTime pTime, QTime nTime);
+    int  AddColoredFrame(QTime pTime, QTime nTime);
             // Used to add a frame thats been created
             // from the tan file to a tower animation
 

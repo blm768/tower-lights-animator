@@ -44,7 +44,7 @@ void LoadTan(string fileName, TowerFrame * animation)
     else
         return;
 
-    int frameLine = 0;
+    int frameLine = 1;
 
     getline(tanFile, line);        // skip intial 00:00.000 line? or can it be some other time than that?
                                    // if so we need to make sure that previous time is set right
@@ -64,8 +64,8 @@ void LoadTan(string fileName, TowerFrame * animation)
 
     while(getline(tanFile, line))
     {
-        if(frameLine == 9){
-            ProcessValues(animation, line, frameHeight, frameWidth);
+        if(frameLine == frameHeight){
+            ProcessValues(animation, line, frameWidth, frameLine);
             if(!getline(tanFile, line)){
                 frameCount++;
                 animation->AddColoredFrame(QTime(0,0,0,0), QTime(0,0,0,25));
@@ -78,7 +78,7 @@ void LoadTan(string fileName, TowerFrame * animation)
             animation->CreateNewFrame();
         }
         else
-            ProcessValues(animation, line, frameHeight, frameWidth);
+            ProcessValues(animation, line, frameWidth, frameLine);
 
     }
 }
@@ -120,7 +120,7 @@ QTime GetNewTime(string line)
     int secs = 0;
     int ms   = 0;
 
-    tok = (const char *) strtok((char *) line.c_str(), ":");      //get minutes
+    tok = strtok((char *) line.c_str(), ":");      //get minutes
     mins = atoi(tok);
     tok = strtok(NULL, ".");                                      //get seconds
     secs = atoi(tok);
@@ -131,9 +131,35 @@ QTime GetNewTime(string line)
 
 }
 
-void ProcessValues(TowerFrame * animation, string line, int height, int width)
+void ProcessValues(TowerFrame * animation, string line, int width, int level)
 {
+    const char * tok;
+    QColor newColor;
+    int red;
+    int green;
+    int blue;
 
+    //must initally break the first grouping then loop
+
+    tok = strtok((char *) line.c_str(), " ");
+    red = atoi(tok);
+    tok = strtok(NULL, " ");
+    green = atoi(tok);
+    tok = strtok(NULL, " ");
+    blue = atoi(tok);
+
+    animation->ColorCell
+    //start looping through the rest
+
+    for (int i = 1; i < width; i++)
+    {
+        tok = strtok(NULL, " ");
+        red = atoi(tok);
+        tok = strtok(NULL, " ");
+        green = atoi(tok);
+        tok = strtok(NULL, " ");
+        blue = atoi(tok);
+    }
 }
 
 void ExportAnimationTan(TowerFrame * animation);

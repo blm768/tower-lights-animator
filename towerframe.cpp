@@ -55,12 +55,18 @@ void TowerFrame::CreateNewFrame()
     }
 }
 
-void TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
+int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
 {
-    currFrame->FDuration = SanitizeTime(currFrame->FDuration.addMSecs(pTime.msecsTo(nTime)));
-    FrameList.append(currFrame);
-    FrameCount++;
-    TDuration = TDuration.addMSecs(pTime.msecsTo(nTime));
+    if(currFrame != NULL)
+    {
+        currFrame->FDuration = SanitizeTime(currFrame->FDuration.addMSecs(pTime.msecsTo(nTime)));
+        FrameList.append(currFrame);
+        FrameCount++;
+        TDuration = TDuration.addMSecs(pTime.msecsTo(nTime));
+        return 1;
+    }
+    else
+        return 0;
 }
 
 void TowerFrame::AddFrame(QTime Duration)
@@ -199,6 +205,29 @@ int TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
             Color = QColor(Qt::black);
         }
         FrameList.at(Index)->WorkArea[row][column] = Color;
+    }
+    return 1;
+}
+
+int TowerFrame::ColorCell(int row, int column, QColor Color)
+{
+    if (row < 0 || column < 0 || row > FHEIGHT || column > FWIDTH)
+    {
+        // Row, or column are out of bounds
+        return 0;
+    }
+    else
+    {
+        if (!Color.isValid())
+        {
+            Color = QColor(Qt::black);
+        }
+
+        if(currFrame != NULL)
+           currFrame->WorkArea[row][column] = Color;
+        else
+            return 0;
+
     }
     return 1;
 }
