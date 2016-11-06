@@ -10,15 +10,42 @@ TowerFrame::TowerFrame()
     TDuration.setHMS(0, 0, 0, 0);
 }
 
-int TowerFrame::AddFrame(QTime Duration)
+QTime TowerFrame::SanitizeTime(QTime InTime)
+{
+    QTime OutTime = InTime;
+    int MinMS = 25;
+    if (!OutTime.isValid())
+    {
+        OutTime = QTime(0,0,0,MinMS);
+    }
+    else
+    {
+        int remainder = (OutTime.msec() % MinMS);
+        if (remainder != 0)
+        {
+            OutTime = OutTime.addMSecs(MinMS - remainder);
+        }
+    }
+    return OutTime;
+}
+
+int TowerFrame::GetFrameDuration(int Index)
+{
+    if (Index < 0 || Index > FrameList.count())
+    {
+        // Index out of bounds
+        return -1;
+    }
+    else
+    {
+        return (QTime(0,0,0,0).msecsTo(FrameList.at(Index)->FDuration));
+    }
+}
+
+void TowerFrame::AddFrame(QTime Duration)
 {
     frameptr n = new Frame;
-    if (Duration >= QTime(0,0,0,050))
-    {
-        n->FDuration = Duration;
-    } else {
-        n->FDuration = QTime(0,0,0,050);
-    }
+    n->FDuration = SanitizeTime(Duration);
 
     for (int i = 0; i < FHEIGHT; i++)
     {
@@ -30,37 +57,39 @@ int TowerFrame::AddFrame(QTime Duration)
 
     FrameList.append(n);
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(Duration));
-    return 1;
 }
 
 int TowerFrame::AddFrame(int Index)
 {
-    frameptr curr = FrameList.at(Index);
-    frameptr n = new Frame;
-    n->FDuration = curr->FDuration;
-
-    for (int i = 0; i < FHEIGHT; i++)
+    if (Index < 0 || Index > FrameList.count())
     {
-        for (int j = 0; j < FWIDTH; j++)
-        {
-            n->WorkArea[i][j] = curr->WorkArea[i][j];
-        }
+        // Index is outside of the bounds of TowerFrame
+        return 0;
     }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
 
-    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
-    FrameList.append(n);
+        for (int i = 0; i < FHEIGHT; i++)
+        {
+            for (int j = 0; j < FWIDTH; j++)
+            {
+                n->WorkArea[i][j] = curr->WorkArea[i][j];
+            }
+        }
+
+        TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
+        FrameList.append(n);
+    }
     return 1;
 }
 
-int TowerFrame::AddFrame(QTime Duration, int Position)
+void TowerFrame::AddFrame(QTime Duration, int Position)
 {
     frameptr n = new Frame;
-    if (Duration >= QTime(0,0,0,050))
-    {
-        n->FDuration = Duration;
-    } else {
-        n->FDuration = QTime(0,0,0,050);
-    }
+    n->FDuration = SanitizeTime(Duration);
 
     for (int i = 0; i < FHEIGHT; i++)
     {
@@ -72,51 +101,102 @@ int TowerFrame::AddFrame(QTime Duration, int Position)
 
     FrameList.insert(Position, n);
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(Duration));
-    return 1;
 }
 
 int TowerFrame::AddFrame(int Index, int Position)
 {
-    frameptr curr = FrameList.at(Index);
-    std::cout << "Hi?" << std::endl;
-    frameptr n = new Frame;
-    n->FDuration = curr->FDuration;
-
-    for (int i = 0; i < FHEIGHT; i++)
+    if (Index < 0 || Index > FrameList.count())
     {
-        for (int j = 0; j < FWIDTH; j++)
-        {
-            n->WorkArea[i][j] = curr->WorkArea[i][j];
-        }
+        // Index is outside of the bounds of TowerFrame
+        return 0;
     }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
 
-    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
-    FrameList.insert(Position, n);
+        for (int i = 0; i < FHEIGHT; i++)
+        {
+            for (int j = 0; j < FWIDTH; j++)
+            {
+                n->WorkArea[i][j] = curr->WorkArea[i][j];
+            }
+        }
+
+        TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
+        FrameList.insert(Position, n);
+    }
     return 1;
 }
 
-void TowerFrame::DeleteFrame(int Index)
+int TowerFrame::DeleteFrame(int Position)
 {
-    frameptr curr = FrameList.at(Index);
-    std::cout << std::endl << "Hi?" << (QTime(0,0,0,0).msecsTo(curr->FDuration)) << std::endl;
-    FrameList.removeAt(Index);
+    frameptr curr = FrameList.at(Position);
+    if (FrameList.count() < Position || Position < 0)
+    {
+        // Index is out of FrameList bounds
+        return 0;
+    }
+    else
+    {
+        FrameList.removeAt(Position);
+    }
     delete(curr);
+    return 1;
 }
 
 int TowerFrame::MoveFrame(int IndexFrom, int IndexTo)
 {
-    FrameList.move(IndexFrom,IndexTo);
-    return 1;
+    if (IndexFrom < 0 || IndexTo < 0 ||
+        IndexFrom > FrameList.count() || IndexTo > FrameList.count())
+    {
+        // IndexFrom or IndexTo are outside of the bounds of FrameList
+        return 0;
+    }
+    else
+    {
+        FrameList.move(IndexFrom,IndexTo);
+        return 1;
+    }
 }
 
-void TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
+int TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
 {
-    FrameList.at(Index)->WorkArea[row][column] = Color;
+    if (Index < 0 || Index > FrameList.count() || row < 0 || column < 0 ||
+        row > FHEIGHT || column > FWIDTH)
+    {
+        // Index, row, or column are out of bounds
+        return 0;
+    }
+    else
+    {
+        if (!Color.isValid())
+        {
+            Color = QColor(Qt::black);
+        }
+        FrameList.at(Index)->WorkArea[row][column] = Color;
+    }
+    return 1;
 }
 
 int TowerFrame::GetDuration()
 {
     return (QTime(0,0,0,0).msecsTo(TDuration));
+}
+
+int TowerFrame::SetFrameDuration(QTime Duration, int Index)
+{
+    if (Index < 0 || Index > FrameList.count())
+    {
+        // Index is out of FrameList bounds
+        return 0;
+    }
+    else
+    {
+        FrameList.at(Index)->FDuration = Duration;
+    }
+    return 1;
 }
 
 /*
