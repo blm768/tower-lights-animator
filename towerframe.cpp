@@ -42,7 +42,12 @@ int TowerFrame::GetFrameDuration(int Index)
     }
 }
 
-void TowerFrame::AddNewFrame(Frame newFrame, int Position)
+void TowerFrame::CreateNewFrame()
+{
+    this->currFrame = new Frame;
+}
+
+void TowerFrame::AddFrame(Frame newFrame, int Position)
 {
 
 }

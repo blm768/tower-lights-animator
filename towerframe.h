@@ -51,7 +51,11 @@ public:
             // returns -1 if Index is out of bounds
     int GetFrameDuration(int Index);
 
-    void AddNewFrame(Frame newFrame, int Position);
+    void CreateNewFrame();
+            // Points the currFrame pointer at
+            // a newly created frame for tan file
+
+    void AddFrame(Frame newFrame, int Position);
             // Used to add a frame thats been created
             // from the tan file to a tower animation
 
