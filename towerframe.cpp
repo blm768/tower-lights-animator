@@ -42,6 +42,11 @@ int TowerFrame::GetFrameDuration(int Index)
     }
 }
 
+void TowerFrame::AddNewFrame(Frame newFrame, int Position)
+{
+
+}
+
 void TowerFrame::AddFrame(QTime Duration)
 {
     frameptr n = new Frame;

@@ -24,6 +24,8 @@ private:
     };
     typedef Frame *frameptr;
 
+    frameptr currFrame;                 // Stores the current frame in the animation
+
     QTime TDuration;                    // Stores duration of entire FrameList
     QList<frameptr> FrameList;
 
@@ -48,6 +50,10 @@ public:
             // Returns the duration of frame Index in ms
             // returns -1 if Index is out of bounds
     int GetFrameDuration(int Index);
+
+    void AddNewFrame(Frame newFrame, int Position);
+            // Used to add a frame thats been created
+            // from the tan file to a tower animation
 
             // Add a frame with Duration to end
     void AddFrame(QTime Duration);
