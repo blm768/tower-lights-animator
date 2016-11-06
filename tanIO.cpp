@@ -10,19 +10,17 @@ using namespace std;
 int lineNum = 0;
 int frameCount = 0;
 
-void loadTan(string fileName, TowerFrame * animation)
+void LoadTan(string fileName, TowerFrame * animation)
 {
     QTime previousTime = QTime(0,0,0,0);
     QTime newTime = QTime(0,0,0,0);
     ifstream tanFile;
     string line;
     int inputType;
-    int frameLine = 0;
     int frameWidth = 0;
     int frameHeight = 0;
 
     tanFile.open(fileName, ifstream::in);
-
 
     if(!tanFile){
         cout << "Error opening .tan file\n" << fileName;
@@ -34,7 +32,7 @@ void loadTan(string fileName, TowerFrame * animation)
     getline(tanFile,  line); // but for now I want to get to the meat of the problem
     getline(tanFile,  line); //this line will matter because we are going to see
                                        // whether or not we have a project or tan file
-    if((inputType = handleHeader(line)) == 1){
+    if((inputType = GetMetaData(line)) == 1){
         frameWidth = 4;
         frameHeight = 10;
     }
@@ -45,26 +43,32 @@ void loadTan(string fileName, TowerFrame * animation)
     else
         return;
 
-    while(getline(tanFile, line))
+    int frameLine = 0;
+
+    getline(tanFile, line);        // skip intial 00:00.000 line? or can it be other than that?
+                                   // if so we need to make sure that previous time is set right
+
+    GetNewTime(line);
+
+    //animation->CreateNewFrame();
+
+   /* while(getline(tanFile, line))
     {
-        if(frameLine == 0){
-            animation->currFrame = new Frame;
-            processTime(line);
+        if(frameLine == 9){
+            ProcessValues(animation, line);
+            getline(tanFile, line);
+            newTime = GetNewTime(line);
+            animation->AddColoredFrame(FrameCount, previousTime, newTime);
+            previousTime = newTime;
+            animation->CreateNewFrame();
         }
-        else{
-            if(frameLine == 9)
-                frameLine = 0;
+        else
+            ProcessValues(animation, line);
 
-        }
-
-
-    }
-
-
-
+    }*/
 }
 
-int handleHeader(string line)
+int GetMetaData(string line)
 {
     const char * tok;
     int height;
@@ -73,16 +77,16 @@ int handleHeader(string line)
 
     tok = (const char *) strtok((char *) line.c_str(), " ");
     if(!(frameCount = atoi(tok)))
-        error(tok);
+        Error(tok);
     tok = strtok(NULL, " ");
     if(!(height = atoi(tok)))
-        error(tok);
+        Error(tok);
     tok = strtok(NULL, " ");
     if(!(width = atoi(tok)))
-        error(tok);
+        Error(tok);
 
     if((tok = strtok(NULL, " ")))
-        error(tok);
+        Error(tok);
 
     if(width == 4 && height == 10)
         return 1;
@@ -94,10 +98,32 @@ int handleHeader(string line)
     }
 }
 
-void exportAnimationTan(TowerFrame * animation);
-void exportAnimationProject(TowerFrame * animation);
+QTime GetNewTime(string line)
+{
+    const char * tok;
+    int mins = 0;
+    int secs = 0;
+    int ms   = 0;
 
-void error(const char * tok)
+    tok = (const char *) strtok((char *) line.c_str(), ":");
+    mins = atoi(tok);
+    tok = strtok(NULL, ".");
+    secs = atoi(tok);
+    tok = strtok(NULL , " ");
+    ms = atoi(tok);
+
+    cout << "mins: " << mins << "\n";
+    cout << "secs: " << secs << "\n";
+    cout << "mills: " << ms << "\n";
+
+    return QTime(0,mins,secs,ms);
+
+}
+
+void ExportAnimationTan(TowerFrame * animation);
+void ExportAnimationProject(TowerFrame * animation);
+
+void Error(const char * tok)
 {
     cout << "Error in tan file at line " << lineNum << " and token " << tok << "\n";
 }

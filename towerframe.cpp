@@ -44,12 +44,14 @@ int TowerFrame::GetFrameDuration(int Index)
 
 void TowerFrame::CreateNewFrame()
 {
-    this->currFrame = new Frame;
+    currFrame = new Frame;
 }
 
-void TowerFrame::AddFrame(Frame newFrame, int Position)
+void TowerFrame::AddColoredFrame(int Position, QTime pTime, QTime nTime)
 {
-
+    currFrame->FDuration = SanitizeTime(currFrame->FDuration.addMSecs(pTime.msecsTo(nTime)));
+    FrameList.append(currFrame);
+    TDuration = TDuration.addMSecs(pTime.msecsTo(nTime));
 }
 
 void TowerFrame::AddFrame(QTime Duration)
