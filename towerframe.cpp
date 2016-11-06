@@ -140,6 +140,8 @@ int TowerFrame::DeleteFrame(int Position)
     }
     else
     {
+        // Subtract qtime fduration from qtime tduration
+        TDuration = TDuration.addMSecs(curr->FDuration.msecsTo(QTime(0,0,0,0)));
         FrameList.removeAt(Position);
     }
     delete(curr);
@@ -226,4 +228,5 @@ void TowerFrame::PrintTower()
             std::cout << std::endl;
         }
     }
+    std::cout << TDuration.minute() << ":" << TDuration.second() << "." << TDuration.msec() << std::endl;
 }
