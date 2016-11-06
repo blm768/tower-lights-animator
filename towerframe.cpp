@@ -45,6 +45,14 @@ int TowerFrame::GetFrameDuration(int Index)
 void TowerFrame::CreateNewFrame()
 {
     currFrame = new Frame;
+
+    for (int i = 0; i < FHEIGHT; i++)
+    {
+        for (int j = 0; j < FWIDTH; j++)
+        {
+            currFrame->WorkArea[i][j] = QColor(Qt::black);
+        }
+    }
 }
 
 void TowerFrame::AddColoredFrame(int Position, QTime pTime, QTime nTime)

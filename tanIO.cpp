@@ -48,24 +48,22 @@ void LoadTan(string fileName, TowerFrame * animation)
     getline(tanFile, line);        // skip intial 00:00.000 line? or can it be other than that?
                                    // if so we need to make sure that previous time is set right
 
-    GetNewTime(line);
+    animation->CreateNewFrame();
 
-    //animation->CreateNewFrame();
-
-   /* while(getline(tanFile, line))
+    while(getline(tanFile, line))
     {
         if(frameLine == 9){
             ProcessValues(animation, line);
             getline(tanFile, line);
             newTime = GetNewTime(line);
-            animation->AddColoredFrame(FrameCount, previousTime, newTime);
+            animation->AddColoredFrame(frameCount, previousTime, newTime);
             previousTime = newTime;
             animation->CreateNewFrame();
         }
         else
             ProcessValues(animation, line);
 
-    }*/
+    }
 }
 
 int GetMetaData(string line)
@@ -112,11 +110,12 @@ QTime GetNewTime(string line)
     tok = strtok(NULL , " ");
     ms = atoi(tok);
 
-    cout << "mins: " << mins << "\n";
-    cout << "secs: " << secs << "\n";
-    cout << "mills: " << ms << "\n";
-
     return QTime(0,mins,secs,ms);
+
+}
+
+void ProcessValues(animation, line)
+{
 
 }
 
