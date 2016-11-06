@@ -7,8 +7,7 @@
 
 using namespace std;
 
-int lineNum = 0;
-int frameCount = 0;
+int lineNum = 0;            //used for handling headers... eventually
 
 void LoadTan(string fileName, TowerFrame * animation)
 {
@@ -32,11 +31,12 @@ void LoadTan(string fileName, TowerFrame * animation)
     getline(tanFile,  line); // but for now I want to get to the meat of the problem
     getline(tanFile,  line); //this line will matter because we are going to see
                                        // whether or not we have a project or tan file
-    if((inputType = GetMetaData(line)) == 1){
+
+    if((inputType = GetMetaData(line)) == 1){      //if this format is a .tan file
         frameWidth = 4;
         frameHeight = 10;
     }
-    else if(inputType == 2){
+    else if(inputType == 2){                       //if this format is a project file
         frameWidth = 12;
         frameHeight = 20;
     }
@@ -45,8 +45,19 @@ void LoadTan(string fileName, TowerFrame * animation)
 
     int frameLine = 0;
 
-    getline(tanFile, line);        // skip intial 00:00.000 line? or can it be other than that?
+    getline(tanFile, line);        // skip intial 00:00.000 line? or can it be some other time than that?
                                    // if so we need to make sure that previous time is set right
+
+
+    /* The order goes. If we are at the end of a frame we
+     * want to process the last line of the frame and then
+     * get the next frame timestamp (if we aren't at the end
+     * of the file else break). Then process the next timestamp
+     * and use that and the previous timestamp to calculate the
+     * duration. The new time becomes the previous time. And then
+     * we create a new frame to be processed. If not at last line
+     * of frame just process the line
+     */
 
     animation->CreateNewFrame();
 
@@ -54,9 +65,12 @@ void LoadTan(string fileName, TowerFrame * animation)
     {
         if(frameLine == 9){
             ProcessValues(animation, line);
-            getline(tanFile, line);
+            if(!getline(tanFile, line)){
+                animation->AddColoredFrame(QTime(0,0,0,0), QTime(0,0,0,25));
+                break;
+            }
             newTime = GetNewTime(line);
-            animation->AddColoredFrame(frameCount, previousTime, newTime);
+            animation->AddColoredFrame(previousTime, newTime);
             previousTime = newTime;
             animation->CreateNewFrame();
         }
@@ -73,14 +87,14 @@ int GetMetaData(string line)
     int width;
 
 
-    tok = (const char *) strtok((char *) line.c_str(), " ");
+    tok = (const char *) strtok((char *) line.c_str(), " ");     //framecount
     if(!(frameCount = atoi(tok)))
         Error(tok);
     tok = strtok(NULL, " ");
-    if(!(height = atoi(tok)))
+    if(!(height = atoi(tok)))                                    //height of tower
         Error(tok);
     tok = strtok(NULL, " ");
-    if(!(width = atoi(tok)))
+    if(!(width = atoi(tok)))                                     //width of tower
         Error(tok);
 
     if((tok = strtok(NULL, " ")))
@@ -103,11 +117,11 @@ QTime GetNewTime(string line)
     int secs = 0;
     int ms   = 0;
 
-    tok = (const char *) strtok((char *) line.c_str(), ":");
+    tok = (const char *) strtok((char *) line.c_str(), ":");      //get minutes
     mins = atoi(tok);
-    tok = strtok(NULL, ".");
+    tok = strtok(NULL, ".");                                      //get seconds
     secs = atoi(tok);
-    tok = strtok(NULL , " ");
+    tok = strtok(NULL , " ");                                     //get milliseconds
     ms = atoi(tok);
 
     return QTime(0,mins,secs,ms);

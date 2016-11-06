@@ -10,6 +10,8 @@ private:
     static const int FHEIGHT = 20;
     static const int FWIDTH = 12;
 
+    int FrameCount = 0;
+
     struct Frame {
         QTime FDuration;
         // Does not requre dynamic allocation at this time
@@ -55,7 +57,7 @@ public:
             // Points the currFrame pointer at
             // a newly created frame for tan file
 
-    void AddColoredFrame(int Position, QTime pTime, QTime nTime);
+    void AddColoredFrame(QTime pTime, QTime nTime);
             // Used to add a frame thats been created
             // from the tan file to a tower animation
 

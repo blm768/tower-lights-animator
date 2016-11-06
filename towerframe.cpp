@@ -55,10 +55,11 @@ void TowerFrame::CreateNewFrame()
     }
 }
 
-void TowerFrame::AddColoredFrame(int Position, QTime pTime, QTime nTime)
+void TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
 {
     currFrame->FDuration = SanitizeTime(currFrame->FDuration.addMSecs(pTime.msecsTo(nTime)));
     FrameList.append(currFrame);
+    FrameCount++;
     TDuration = TDuration.addMSecs(pTime.msecsTo(nTime));
 }
 
