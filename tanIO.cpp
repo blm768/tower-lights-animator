@@ -8,6 +8,7 @@
 using namespace std;
 
 int lineNum = 0;            //used for handling headers... eventually
+int frameCount = 1;         //check to see if we collected all the frames
 
 void LoadTan(string fileName, TowerFrame * animation)
 {
@@ -64,18 +65,20 @@ void LoadTan(string fileName, TowerFrame * animation)
     while(getline(tanFile, line))
     {
         if(frameLine == 9){
-            ProcessValues(animation, line);
+            ProcessValues(animation, line, frameHeight, frameWidth);
             if(!getline(tanFile, line)){
+                frameCount++;
                 animation->AddColoredFrame(QTime(0,0,0,0), QTime(0,0,0,25));
                 break;
             }
             newTime = GetNewTime(line);
             animation->AddColoredFrame(previousTime, newTime);
             previousTime = newTime;
+            frameCount++;
             animation->CreateNewFrame();
         }
         else
-            ProcessValues(animation, line);
+            ProcessValues(animation, line, frameHeight, frameWidth);
 
     }
 }
@@ -128,7 +131,7 @@ QTime GetNewTime(string line)
 
 }
 
-void ProcessValues(animation, line)
+void ProcessValues(TowerFrame * animation, string line, int height, int width)
 {
 
 }

@@ -9,7 +9,7 @@
 void  LoadTan(std::string fileName, TowerFrame * animation);
 int   GetMetaData(std::string line);
 QTime GetNewTime(std::string line);
-void  ProcessValues(TowerFrame * animation, std::string line);
+void  ProcessValues(TowerFrame * animation, std::string line, int height, int width);
 void  ExportAnimationTan(TowerFrame * animation);
 void  ExportAnimationProject(TowerFrame * animation);
 void  Error(const char * tok);
