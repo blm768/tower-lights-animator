@@ -10,6 +10,6 @@ int main(int argc, char *argv[])
 
     //return a.exec();
 
-    TowerFrame  * animation;
+    TowerFrame  * animation = new TowerFrame;
     LoadTan("/home/paden/Desktop/cs383/testTan1.tan", animation);
 }

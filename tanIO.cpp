@@ -10,7 +10,7 @@ using namespace std;
 int lineNum = 0;            //used for handling headers... eventually
 int frameCount = 1;         //check to see if we collected all the frames
 
-void LoadTan(string fileName, TowerFrame * animation)
+int LoadTan(string fileName, TowerFrame * animation)
 {
     QTime previousTime = QTime(0,0,0,0);
     QTime newTime = QTime(0,0,0,0);
@@ -24,7 +24,7 @@ void LoadTan(string fileName, TowerFrame * animation)
 
     if(!tanFile){
         cout << "Error opening .tan file\n" << fileName;
-        return;
+        return 0;
     }   
 
     lineNum = 3;              //temporary placeholder till I hander headers
@@ -42,12 +42,12 @@ void LoadTan(string fileName, TowerFrame * animation)
         frameHeight = 20;
     }
     else
-        return;
+        return 0;
 
     int frameLine = 1;
 
     getline(tanFile, line);        // skip intial 00:00.000 line? or can it be some other time than that?
-                                   // if so we need to make sure that previous time is set right
+    lineNum++;                     // if so we need to make sure that previous time is set right
 
 
     /* The order goes. If we are at the end of a frame we
@@ -64,22 +64,31 @@ void LoadTan(string fileName, TowerFrame * animation)
 
     while(getline(tanFile, line))
     {
+        lineNum++;
         if(frameLine == frameHeight){
-            ProcessValues(animation, line, frameWidth, frameLine);
+            if(!(ProcessValues(animation, line, frameWidth, frameLine)))
+                return 0;
             if(!getline(tanFile, line)){
-                frameCount++;
-                animation->AddColoredFrame(QTime(0,0,0,0), QTime(0,0,0,25));
+                //frameCount++;
+                //lineNum++;
+                if(!animation->AddColoredFrame(QTime(0,0,0,0), QTime(0,0,0,25)))
+                    return 0;
                 break;
             }
-            newTime = GetNewTime(line);
-            animation->AddColoredFrame(previousTime, newTime);
+            if(!GetNewTime(line, &newTime))
+                return 0;
+            if(!animation->AddColoredFrame(previousTime, newTime))
+                return 0;
             previousTime = newTime;
             frameCount++;
             animation->CreateNewFrame();
+            frameLine = 1;
         }
-        else
-            ProcessValues(animation, line, frameWidth, frameLine);
-
+        else{
+            if(!(ProcessValues(animation, line, frameWidth, frameLine)))
+                return 0;
+            frameLine++;
+        }
     }
 }
 
@@ -109,29 +118,43 @@ int GetMetaData(string line)
         return 2;
     else{
         cout << "Error at line " << lineNum << ". The height or width of the tan file is incorrect\n";
-        return -1;
+        return 0;
     }
 }
 
-QTime GetNewTime(string line)
+int GetNewTime(string line, QTime * nTime)
 {
     const char * tok;
     int mins = 0;
     int secs = 0;
     int ms   = 0;
 
-    tok = strtok((char *) line.c_str(), ":");      //get minutes
-    mins = atoi(tok);
-    tok = strtok(NULL, ".");                                      //get seconds
-    secs = atoi(tok);
-    tok = strtok(NULL , " ");                                     //get milliseconds
-    ms = atoi(tok);
+    if(!(tok = strtok((char *) line.c_str(), ":"))){              //get minutes
+        cout << "Error in timestamp at line " << lineNum;
+        return 0;
+    }
+    else
+        mins = atoi(tok);
+    if(!(tok = strtok(NULL, "."))){                                //get seconds
+        cout << "Error in timestamp at line " << lineNum;
+        return 0;
+    }
+    else
+        secs = atoi(tok);
+    if(!(tok = strtok(NULL , " "))){                               //get milliseconds
+        cout << "Error in timestamp at line " << lineNum;
+        return 0;
+    }
+    else
+        ms = atoi(tok);
 
-    return QTime(0,mins,secs,ms);
+    nTime->setHMS(0,mins, secs, ms);
+
+    return 1;
 
 }
 
-void ProcessValues(TowerFrame * animation, string line, int width, int level)
+int ProcessValues(TowerFrame * animation, string line, int width, int level)
 {
     const char * tok;
     QColor newColor;
@@ -141,24 +164,66 @@ void ProcessValues(TowerFrame * animation, string line, int width, int level)
 
     //must initally break the first grouping then loop
 
-    tok = strtok((char *) line.c_str(), " ");
-    red = atoi(tok);
-    tok = strtok(NULL, " ");
-    green = atoi(tok);
-    tok = strtok(NULL, " ");
-    blue = atoi(tok);
+    if(!(tok = strtok((char *) line.c_str(), " ")))
+    {
+        Error(tok);
+        return 0;
+    }
+    else
+        red = atoi(tok);
+    if(!(tok = strtok(NULL, " ")))
+    {
+        Error(tok);
+        return 0;
+    }
+    else
+        green = atoi(tok);
+    if(!(tok = strtok(NULL, " ")))
+    {
+        Error(tok);
+        return 0;
+    }
+    else
+        blue = atoi(tok);
 
-    animation->ColorCell
+    //animation->ColorCell(1, level, QColor(red, green, blue));
+
+    cout << "red: " << red << " ";
+    cout << "blue: " << blue << " ";
+    cout << "green:" << green << "\n";
+
     //start looping through the rest
 
     for (int i = 1; i < width; i++)
     {
-        tok = strtok(NULL, " ");
-        red = atoi(tok);
-        tok = strtok(NULL, " ");
-        green = atoi(tok);
-        tok = strtok(NULL, " ");
-        blue = atoi(tok);
+
+        if(!(tok = strtok((char *) line.c_str(), " ")))
+        {
+            Error(tok);
+            return 0;
+        }
+        else
+            red = atoi(tok);
+        if(!(tok = strtok(NULL, " ")))
+        {
+            Error(tok);
+            return 0;
+        }
+        else
+            green = atoi(tok);
+        if(!(tok = strtok(NULL, " ")))
+        {
+            Error(tok);
+            return 0;
+        }
+        else
+            blue = atoi(tok);
+
+        cout << "red: " << red << " ";
+        cout << "blue: " << blue << " ";
+        cout << "green:" << green << "\n";
+
+        //animation->ColorCell(i, level, QColor(red, green, blue));
     }
 }
 
