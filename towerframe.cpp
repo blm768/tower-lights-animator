@@ -12,11 +12,21 @@ TowerFrame::TowerFrame()
     TDuration.setHMS(0, 0, 0, 0);
 }
 
+    /*
+     * SanitizeTime should always return a value that is:
+     * 1) isValid() = true (this means nonnegative and formatted correctly)
+     * 2) is divisible by 25 ms (with the lowest accepted value being 25)
+     * 3) rounded up to the nearest number that is divisible by 25 if it fails
+     *    the second check, or just set to 25ms if it fails the first
+     *
+     * I tried to write it to quietly try to fix errors and return a valid time
+     * as opposed to just returning error messages here
+     */
 QTime TowerFrame::SanitizeTime(QTime InTime)
 {
     QTime OutTime = InTime;
     int MinMS = 25;
-    if (!OutTime.isValid())
+    if (!OutTime.isValid() || OutTime < QTime(0,0,0,MinMS))
     {
         OutTime = QTime(0,0,0,MinMS);
     }
@@ -69,10 +79,16 @@ int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
          * 2) Is greater than 25 ms
          * 3) Is in a valid format
          * - Paden
+         *
          */
 
         currFrame->FDuration = currFrame->FDuration.addMSecs(pTime.msecsTo(nTime));
-
+        currFrame->FDuration = SanitizeTime(currFrame->FDuration);
+/*
+ *   I adjusted SanitizeTime to no longer return 0 ms, it now works properly in all cases
+ *   -Nick
+ */
+        /*
         if(!currFrame->FDuration.isValid())
         {
             std::cout << "Error - timestamp in wrong format";
@@ -88,6 +104,7 @@ int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
             std::cout << "Error - Timestamp does not meet minumum requirement";
             return 0;
         }
+        */
 
         FrameList.append(currFrame);
         FrameCount++;
@@ -112,7 +129,8 @@ void TowerFrame::AddFrame(QTime Duration)
     }
 
     FrameList.append(n);
-    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(Duration));
+    FrameCount++;
+    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
 }
 
 int TowerFrame::AddFrame(int Index)
@@ -138,6 +156,7 @@ int TowerFrame::AddFrame(int Index)
 
         TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
         FrameList.append(n);
+        FrameCount++;
     }
     return 1;
 }
@@ -156,7 +175,8 @@ void TowerFrame::AddFrame(QTime Duration, int Position)
     }
 
     FrameList.insert(Position, n);
-    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(Duration));
+    FrameCount++;
+    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
 }
 
 int TowerFrame::AddFrame(int Index, int Position)
@@ -182,6 +202,7 @@ int TowerFrame::AddFrame(int Index, int Position)
 
         TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
         FrameList.insert(Position, n);
+        FrameCount++;
     }
     return 1;
 }
@@ -199,6 +220,7 @@ int TowerFrame::DeleteFrame(int Position)
         // Subtract qtime fduration from qtime tduration
         TDuration = TDuration.addMSecs(curr->FDuration.msecsTo(QTime(0,0,0,0)));
         FrameList.removeAt(Position);
+        FrameCount--;
     }
     delete(curr);
     return 1;
@@ -275,7 +297,7 @@ int TowerFrame::SetFrameDuration(QTime Duration, int Index)
     }
     else
     {
-        FrameList.at(Index)->FDuration = Duration;
+        FrameList.at(Index)->FDuration = SanitizeTime(Duration);
     }
     return 1;
 }
@@ -296,6 +318,7 @@ void TowerFrame::PrintTower()
         std::cout << std::endl;
         std::cout << "Frame: " << i << " size: " << sizeof(FrameList[i]->WorkArea) << std::endl;
         std::cout << FrameList[i] << std::endl;
+        std::cout << FrameList[i]->FDuration.msec() << std::endl;
         for (int j = 0; j < FHEIGHT; j++)
         {
             for (int k = 0; k < FWIDTH; k++)

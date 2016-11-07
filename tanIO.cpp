@@ -151,6 +151,7 @@ int GetNewTime(string line, QTime * nTime)
     *nTime = QTime(0, mins, secs, ms);
     QTime temp = QTime(0, mins, secs, ms);
 
+
     return 1;
 
 }
