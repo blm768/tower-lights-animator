@@ -148,7 +148,8 @@ int GetNewTime(string line, QTime * nTime)
     else
         ms = atoi(tok);
 
-    nTime->setHMS(0,mins, secs, ms);
+    *nTime = QTime(0, mins, secs, ms);
+    QTime temp = QTime(0, mins, secs, ms);
 
     return 1;
 
@@ -197,7 +198,7 @@ int ProcessValues(TowerFrame * animation, string line, int width, int level)
     for (int i = 1; i < width; i++)
     {
 
-        if(!(tok = strtok((char *) line.c_str(), " ")))
+        if(!(tok = strtok(NULL,  " ")))
         {
             Error(tok);
             return 0;

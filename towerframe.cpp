@@ -1,6 +1,8 @@
 #include <QColor>
 #include <QTime>
 #include <QList>
+#include <QString>
+#include <QDebug>
 #include <iostream>
 #include "towerframe.h"
 
