@@ -1,8 +1,6 @@
 #include <QColor>
 #include <QTime>
 #include <QList>
-#include <QString>
-#include <QDebug>
 #include <iostream>
 #include "towerframe.h"
 
@@ -71,6 +69,7 @@ int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
 {
     if(currFrame != NULL)
     {
+        currFrame->FDuration = QTime(0,0,0,0);
         /* I do not personally believe that these checks should go here. I'm fairly
          * certain that Nick's Sanitize time function does some of these things
          * but not all. So I need someone to write/modify Nick's function to make
@@ -81,7 +80,6 @@ int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
          * - Paden
          *
          */
-
         currFrame->FDuration = currFrame->FDuration.addMSecs(pTime.msecsTo(nTime));
         currFrame->FDuration = SanitizeTime(currFrame->FDuration);
 /*
