@@ -16,6 +16,8 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+signals:
+
 public slots:
     void setAnimation(Animation* animation);
 

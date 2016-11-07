@@ -20,18 +20,29 @@ public:
 signals:
     // Called when an animation is created or loaded.
     void animationSet(Animation* animation);
+    // Called on menu events
+    void cut();
+    void copy();
+    void paste();
+    void close();
 
 private slots:
     // Slots corresponding to menu actions
     void newFile();
     void saveFile();
     void saveFileAs();
+    void exportFile();
 
 private:
     // Menu actions
     QAction* actNewFile;
     QAction* actSaveFile;
     QAction* actSaveAs;
+    QAction* actExport;
+    QAction* actExit;
+    QAction* Cut;
+    QAction* Copy;
+    QAction* Paste;
 
     // Menus
     QMenu* menuFile;
