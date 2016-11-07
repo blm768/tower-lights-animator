@@ -8,4 +8,9 @@ public:
     Frame();
 };
 
+class Animation{
+public:
+    Animation();
+};
+
 #endif // FRAME_H

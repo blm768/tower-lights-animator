@@ -17,3 +17,14 @@ void FrameEditor::setPenColor(const QColor& color) {
 
 }
 
+void FrameEditor::onCopyEvent() {
+
+}
+
+void FrameEditor::onCutEvent() {
+
+}
+
+void FrameEditor::onPasteEvent() {
+
+}

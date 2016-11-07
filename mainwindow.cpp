@@ -13,3 +13,7 @@ MainWindow::~MainWindow()
 {
 
 }
+
+void MainWindow::setAnimation(Animation *animation) {
+
+}

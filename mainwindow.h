@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "mainmenu.h"
+#include "frame.h"
 
 class MainWindow;
 
@@ -16,6 +17,7 @@ public:
     ~MainWindow();
 
 public slots:
+    void setAnimation(Animation* animation);
 
 private:
     MainMenu _mainMenu;

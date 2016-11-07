@@ -24,6 +24,9 @@ public slots:
     void selectionChanged(QList<Frame*> selection);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
+    void onCopyEvent();
+    void onCutEvent();
+    void onPasteEvent();
 };
 
 #endif // FRAMEEDITOR_H

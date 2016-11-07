@@ -5,6 +5,8 @@
 #include <QAction>
 #include <QMenu>
 
+#include "frame.h"
+
 // Forward declaration
 class MainWindow;
 
@@ -16,6 +18,8 @@ public:
     explicit MainMenu(MainWindow* window);
 
 signals:
+    // Called when an animation is created or loaded.
+    void animationSet(Animation* animation);
 
 private slots:
     // Slots corresponding to menu actions

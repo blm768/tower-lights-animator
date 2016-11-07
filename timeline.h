@@ -16,6 +16,9 @@ signals:
 
 public slots:
     void animationLoaded(QList<Frame*> frames);
+    void onCopyEvent();
+    void onCutEvent();
+    void onPasteEvent();
 };
 
 #endif // TIMELINE_H
