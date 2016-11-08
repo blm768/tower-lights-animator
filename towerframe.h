@@ -4,7 +4,7 @@
 #include <QTime>
 #include <QList>
 
-class TowerFrame
+class Animation
 {
 private:
     static const int FHEIGHT = 20;
@@ -35,7 +35,7 @@ private:
                                         // value that is valid, rounds up
 
 public:
-    TowerFrame();
+    Animation();
 
             // Sets cell [row][column] to Color in frame located at Index
             // returns 0 if Index, row, or column are out of bounds

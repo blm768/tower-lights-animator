@@ -10,7 +10,7 @@ using namespace std;
 int lineNum = 0;            //used for handling headers... eventually
 int frameCount = 1;         //check to see if we collected all the frames
 
-int LoadTan(string fileName, TowerFrame * animation)
+int LoadTan(string fileName, Animation * animation)
 {
     QTime previousTime = QTime(0,0,0,0);
     QTime newTime = QTime(0,0,0,0);
@@ -148,15 +148,14 @@ int GetNewTime(string line, QTime * nTime)
     else
         ms = atoi(tok);
 
-    *nTime = QTime(0, mins, secs, ms);
-    QTime temp = QTime(0, mins, secs, ms);
+    nTime->setHMS(0,mins, secs, ms);
 
 
     return 1;
 
 }
 
-int ProcessValues(TowerFrame * animation, string line, int width, int level)
+int ProcessValues(Animation * animation, string line, int width, int level)
 {
     const char * tok;
     QColor newColor;
@@ -164,8 +163,35 @@ int ProcessValues(TowerFrame * animation, string line, int width, int level)
     int green;
     int blue;
 
-    //must initally break the first grouping then loop
 
+        // tokenizes the input into a list and then populates the
+        // cell using ColorCell, right now populates into top left
+        // in the future we should add an offset if we are importing
+        // a tan file vs a project file
+    QString qstr = QString::fromStdString(line);
+    QStringList list = qstr.split(" ", QString::SkipEmptyParts);
+    int size = list.count() / 3;
+    if (list.size() % 3 != 0)
+    {
+        // Error? integer division should automatically ignore trailing
+        // values but we should explicitly handle it in the future
+        cout << "Malformed Input" << endl;
+    }
+
+    for (int i = 0; i < size; i++) {
+        red = list.at(i).toInt();
+        cout << "Red: " << red << endl;
+
+        green = list.at(i+1).toInt();
+        cout << "Green: " << green << endl;
+
+        blue = list.at(i+2).toInt();
+        cout << "Blue: " << blue << endl;
+
+        animation->ColorCell(level-1, i, QColor(red, green, blue, 0));
+    }
+/*
+    //must initally break the first grouping then loop
     if(!(tok = strtok((char *) line.c_str(), " ")))
     {
         Error(tok);
@@ -199,7 +225,7 @@ int ProcessValues(TowerFrame * animation, string line, int width, int level)
     for (int i = 1; i < width; i++)
     {
 
-        if(!(tok = strtok(NULL,  " ")))
+        if(!(tok = strtok((char *) line.c_str(), " ")))
         {
             Error(tok);
             return 0;
@@ -227,10 +253,12 @@ int ProcessValues(TowerFrame * animation, string line, int width, int level)
 
         //animation->ColorCell(i, level, QColor(red, green, blue));
     }
+    */
+    return 1;
 }
 
-void ExportAnimationTan(TowerFrame * animation);
-void ExportAnimationProject(TowerFrame * animation);
+void ExportAnimationTan(Animation * animation);
+void ExportAnimationProject(Animation * animation);
 
 void Error(const char * tok)
 {

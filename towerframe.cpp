@@ -5,7 +5,7 @@
 #include "towerframe.h"
 
 
-TowerFrame::TowerFrame()
+Animation::Animation()
 {
     TDuration.setHMS(0, 0, 0, 0);
 }
@@ -20,7 +20,7 @@ TowerFrame::TowerFrame()
      * I tried to write it to quietly try to fix errors and return a valid time
      * as opposed to just returning error messages here
      */
-QTime TowerFrame::SanitizeTime(QTime InTime)
+QTime Animation::SanitizeTime(QTime InTime)
 {
     QTime OutTime = InTime;
     int MinMS = 25;
@@ -39,7 +39,7 @@ QTime TowerFrame::SanitizeTime(QTime InTime)
     return OutTime;
 }
 
-int TowerFrame::GetFrameDuration(int Index)
+int Animation::GetFrameDuration(int Index)
 {
     if (Index < 0 || Index > FrameList.count())
     {
@@ -52,7 +52,7 @@ int TowerFrame::GetFrameDuration(int Index)
     }
 }
 
-void TowerFrame::CreateNewFrame()
+void Animation::CreateNewFrame()
 {
     currFrame = new Frame;
 
@@ -65,7 +65,7 @@ void TowerFrame::CreateNewFrame()
     }
 }
 
-int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
+int Animation::AddColoredFrame(QTime pTime, QTime nTime)
 {
     if(currFrame != NULL)
     {
@@ -113,7 +113,7 @@ int TowerFrame::AddColoredFrame(QTime pTime, QTime nTime)
         return 0;
 }
 
-void TowerFrame::AddFrame(QTime Duration)
+void Animation::AddFrame(QTime Duration)
 {
     frameptr n = new Frame;
     n->FDuration = SanitizeTime(Duration);
@@ -131,11 +131,11 @@ void TowerFrame::AddFrame(QTime Duration)
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
 }
 
-int TowerFrame::AddFrame(int Index)
+int Animation::AddFrame(int Index)
 {
     if (Index < 0 || Index > FrameList.count())
     {
-        // Index is outside of the bounds of TowerFrame
+        // Index is outside of the bounds of Animation
         return 0;
     }
     else
@@ -159,7 +159,7 @@ int TowerFrame::AddFrame(int Index)
     return 1;
 }
 
-void TowerFrame::AddFrame(QTime Duration, int Position)
+void Animation::AddFrame(QTime Duration, int Position)
 {
     frameptr n = new Frame;
     n->FDuration = SanitizeTime(Duration);
@@ -177,11 +177,11 @@ void TowerFrame::AddFrame(QTime Duration, int Position)
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
 }
 
-int TowerFrame::AddFrame(int Index, int Position)
+int Animation::AddFrame(int Index, int Position)
 {
     if (Index < 0 || Index > FrameList.count())
     {
-        // Index is outside of the bounds of TowerFrame
+        // Index is outside of the bounds of Animation
         return 0;
     }
     else
@@ -205,7 +205,7 @@ int TowerFrame::AddFrame(int Index, int Position)
     return 1;
 }
 
-int TowerFrame::DeleteFrame(int Position)
+int Animation::DeleteFrame(int Position)
 {
     frameptr curr = FrameList.at(Position);
     if (FrameList.count() < Position || Position < 0)
@@ -224,7 +224,7 @@ int TowerFrame::DeleteFrame(int Position)
     return 1;
 }
 
-int TowerFrame::MoveFrame(int IndexFrom, int IndexTo)
+int Animation::MoveFrame(int IndexFrom, int IndexTo)
 {
     if (IndexFrom < 0 || IndexTo < 0 ||
         IndexFrom > FrameList.count() || IndexTo > FrameList.count())
@@ -239,7 +239,7 @@ int TowerFrame::MoveFrame(int IndexFrom, int IndexTo)
     }
 }
 
-int TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
+int Animation::ColorCell(int Index, int row, int column, QColor Color)
 {
     if (Index < 0 || Index > FrameList.count() || row < 0 || column < 0 ||
         row > FHEIGHT || column > FWIDTH)
@@ -258,7 +258,7 @@ int TowerFrame::ColorCell(int Index, int row, int column, QColor Color)
     return 1;
 }
 
-int TowerFrame::ColorCell(int row, int column, QColor Color)
+int Animation::ColorCell(int row, int column, QColor Color)
 {
     if (row < 0 || column < 0 || row > FHEIGHT || column > FWIDTH)
     {
@@ -281,12 +281,12 @@ int TowerFrame::ColorCell(int row, int column, QColor Color)
     return 1;
 }
 
-int TowerFrame::GetDuration()
+int Animation::GetDuration()
 {
     return (QTime(0,0,0,0).msecsTo(TDuration));
 }
 
-int TowerFrame::SetFrameDuration(QTime Duration, int Index)
+int Animation::SetFrameDuration(QTime Duration, int Index)
 {
     if (Index < 0 || Index > FrameList.count())
     {
@@ -308,15 +308,17 @@ int TowerFrame::SetFrameDuration(QTime Duration, int Index)
  */
 
 // NOTE: If this function is removed this file should no longer include iostream
-void TowerFrame::PrintTower()
+void Animation::PrintTower()
 {
+    QString qs;
     std::cout << std::endl;
     for (int i = 0; i < FrameList.count(); i++)
     {
         std::cout << std::endl;
         std::cout << "Frame: " << i << " size: " << sizeof(FrameList[i]->WorkArea) << std::endl;
         std::cout << FrameList[i] << std::endl;
-        std::cout << FrameList[i]->FDuration.msec() << std::endl;
+        qs = FrameList[i]->FDuration.toString("mm:ss.zzz");
+        std::cout << qs.toStdString() << std::endl;
         for (int j = 0; j < FHEIGHT; j++)
         {
             for (int k = 0; k < FWIDTH; k++)
@@ -328,5 +330,6 @@ void TowerFrame::PrintTower()
             std::cout << std::endl;
         }
     }
-    std::cout << TDuration.minute() << ":" << TDuration.second() << "." << TDuration.msec() << std::endl;
+    qs = TDuration.toString("mm:ss.zzz");
+    std::cout << qs.toStdString() << std::endl;
 }
