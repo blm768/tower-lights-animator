@@ -214,7 +214,7 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     else
         blue = atoi(tok);
 
-    //animation->ColorCell(1, level, QColor(red, green, blue));
+    animation->ColorCell(level-1, 0, QColor(red, green, blue));
 
     cout << red << " ";
     cout << blue << " ";
@@ -251,7 +251,7 @@ int ProcessValues(Animation * animation, string line, int width, int level)
         cout << blue << " ";
         cout << green << "\n";
 
-        //animation->ColorCell(i, level, QColor(red, green, blue));
+        animation->ColorCell(level-1, i, QColor(red, green, blue));
     }
     return 1;
 }
