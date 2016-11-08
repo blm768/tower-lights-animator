@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     frame.cpp \
     toolbar.cpp \
     mainmenu.cpp \
-    colorpicker.cpp
+    colorpicker.cpp \
+    towerframe.cpp \
+    tanIO.cpp
 
 HEADERS  += mainwindow.h \
     timeline.h \
@@ -27,4 +29,6 @@ HEADERS  += mainwindow.h \
     frame.h \
     toolbar.h \
     mainmenu.h \
-    colorpicker.h
+    colorpicker.h \
+    towerframe.h \
+    tanIO.h
