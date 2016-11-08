@@ -69,8 +69,8 @@ int LoadTan(string fileName, Animation * animation)
             if(!(ProcessValues(animation, line, frameWidth, frameLine)))
                 return 0;
             if(!getline(tanFile, line)){
-                //frameCount++;
-                //lineNum++;
+                frameCount++;
+                lineNum++;
                 if(!animation->AddColoredFrame(QTime(0,0,0,0), QTime(0,0,0,25)))
                     return 0;
                 break;
@@ -163,7 +163,7 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     int green;
     int blue;
 
-
+/*
         // tokenizes the input into a list and then populates the
         // cell using ColorCell, right now populates into top left
         // in the future we should add an offset if we are importing
@@ -180,17 +180,17 @@ int ProcessValues(Animation * animation, string line, int width, int level)
 
     for (int i = 0; i < size; i++) {
         red = list.at(i).toInt();
-        cout << "Red: " << red << endl;
+        cout << "Red: " << red << " ";
 
         green = list.at(i+1).toInt();
-        cout << "Green: " << green << endl;
+        cout << "Green: " << green << " ";
 
         blue = list.at(i+2).toInt();
         cout << "Blue: " << blue << endl;
 
         animation->ColorCell(level-1, i, QColor(red, green, blue, 0));
     }
-/*
+*/
     //must initally break the first grouping then loop
     if(!(tok = strtok((char *) line.c_str(), " ")))
     {
@@ -216,16 +216,16 @@ int ProcessValues(Animation * animation, string line, int width, int level)
 
     //animation->ColorCell(1, level, QColor(red, green, blue));
 
-    cout << "red: " << red << " ";
-    cout << "blue: " << blue << " ";
-    cout << "green:" << green << "\n";
+    cout << red << " ";
+    cout << blue << " ";
+    cout << green << "\n";
 
     //start looping through the rest
 
     for (int i = 1; i < width; i++)
     {
 
-        if(!(tok = strtok((char *) line.c_str(), " ")))
+        if(!(tok = strtok(NULL, " ")))
         {
             Error(tok);
             return 0;
@@ -247,13 +247,12 @@ int ProcessValues(Animation * animation, string line, int width, int level)
         else
             blue = atoi(tok);
 
-        cout << "red: " << red << " ";
-        cout << "blue: " << blue << " ";
-        cout << "green:" << green << "\n";
+        cout << red << " ";
+        cout << blue << " ";
+        cout << green << "\n";
 
         //animation->ColorCell(i, level, QColor(red, green, blue));
     }
-    */
     return 1;
 }
 
