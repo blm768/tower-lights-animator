@@ -90,6 +90,8 @@ int LoadTan(string fileName, Animation * animation)
             frameLine++;
         }
     }
+
+    return 1;
 }
 
 int GetMetaData(string line)
@@ -163,34 +165,6 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     int green;
     int blue;
 
-/*
-        // tokenizes the input into a list and then populates the
-        // cell using ColorCell, right now populates into top left
-        // in the future we should add an offset if we are importing
-        // a tan file vs a project file
-    QString qstr = QString::fromStdString(line);
-    QStringList list = qstr.split(" ", QString::SkipEmptyParts);
-    int size = list.count() / 3;
-    if (list.size() % 3 != 0)
-    {
-        // Error? integer division should automatically ignore trailing
-        // values but we should explicitly handle it in the future
-        cout << "Malformed Input" << endl;
-    }
-
-    for (int i = 0; i < size; i++) {
-        red = list.at(i).toInt();
-        cout << "Red: " << red << " ";
-
-        green = list.at(i+1).toInt();
-        cout << "Green: " << green << " ";
-
-        blue = list.at(i+2).toInt();
-        cout << "Blue: " << blue << endl;
-
-        animation->ColorCell(level-1, i, QColor(red, green, blue, 0));
-    }
-*/
     //must initally break the first grouping then loop
     if(!(tok = strtok((char *) line.c_str(), " ")))
     {
@@ -214,11 +188,7 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     else
         blue = atoi(tok);
 
-    //animation->ColorCell(1, level, QColor(red, green, blue));
-
-    cout << red << " ";
-    cout << blue << " ";
-    cout << green << "\n";
+    animation->ColorCell(1, level, QColor(red, green, blue));
 
     //start looping through the rest
 
@@ -247,11 +217,7 @@ int ProcessValues(Animation * animation, string line, int width, int level)
         else
             blue = atoi(tok);
 
-        cout << red << " ";
-        cout << blue << " ";
-        cout << green << "\n";
-
-        //animation->ColorCell(i, level, QColor(red, green, blue));
+        animation->ColorCell(i, level, QColor(red, green, blue));
     }
     return 1;
 }
