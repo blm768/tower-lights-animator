@@ -6,12 +6,13 @@
 
 class Animation
 {
-private:
+public:
     static const int FHEIGHT = 20;
     static const int FWIDTH = 12;
 
-    int FrameCount = 0;
-
+    /*!
+     * \brief A frame of animation
+     */
     struct Frame {
         QTime FDuration;
         // Does not requre dynamic allocation at this time
@@ -24,6 +25,10 @@ private:
         }*/
         QColor WorkArea[FHEIGHT][FWIDTH];
     };
+
+private:
+    int FrameCount = 0;
+
     typedef Frame *frameptr;
 
     frameptr currFrame;                 // Stores the current frame in the animation

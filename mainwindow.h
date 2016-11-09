@@ -4,10 +4,15 @@
 #include <QMainWindow>
 
 #include "mainmenu.h"
-#include "frame.h"
+#include "towerframe.h"
 
 class MainWindow;
 
+/*!
+ * \brief The main application window
+ *
+ * Contains and initializes the top-level application widgets
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -23,6 +28,7 @@ public slots:
 
 private:
     MainMenu _mainMenu;
+    Animation* _animation;
 };
 
 #endif // MAINWINDOW_H

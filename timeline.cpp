@@ -5,7 +5,7 @@ Timeline::Timeline(QWidget *parent) : QWidget(parent)
 
 }
 
-void Timeline::animationLoaded(QList<Frame*> frames) {
+void Timeline::animationLoaded(QList<Animation::Frame*> frames) {
 
 }
 

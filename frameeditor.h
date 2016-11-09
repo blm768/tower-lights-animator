@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "frame.h"
+#include "towerframe.h"
 
 class FrameEditor : public QWidget
 {
@@ -18,10 +18,10 @@ public:
     explicit FrameEditor(QWidget *parent = 0);
 
 signals:
-    void frameChanged(Frame* frame);
+    void frameChanged(Animation::Frame* frame);
 
 public slots:
-    void selectionChanged(QList<Frame*> selection);
+    void selectionChanged(QList<Animation::Frame*> selection);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
     void onCopyEvent();

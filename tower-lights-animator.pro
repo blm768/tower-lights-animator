@@ -16,7 +16,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     timeline.cpp \
     frameeditor.cpp \
-    frame.cpp \
     toolbar.cpp \
     mainmenu.cpp \
     colorpicker.cpp \
@@ -26,7 +25,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     timeline.h \
     frameeditor.h \
-    frame.h \
     toolbar.h \
     mainmenu.h \
     colorpicker.h \

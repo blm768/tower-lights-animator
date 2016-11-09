@@ -5,7 +5,7 @@
 #include <QAction>
 #include <QMenu>
 
-#include "frame.h"
+#include "towerframe.h"
 
 // Forward declaration
 class MainWindow;

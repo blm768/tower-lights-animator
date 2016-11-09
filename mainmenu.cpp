@@ -42,3 +42,7 @@ void MainMenu::saveFile() {
 void MainMenu::saveFileAs() {
 
 }
+
+void MainMenu::exportFile() {
+
+}

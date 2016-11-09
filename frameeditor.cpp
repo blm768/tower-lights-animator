@@ -5,7 +5,7 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 
 }
 
-void FrameEditor::selectionChanged(QList<Frame*> selection) {
+void FrameEditor::selectionChanged(QList<Animation::Frame*> selection) {
 
 }
 
