@@ -258,6 +258,20 @@ int Animation::ColorCell(int Index, int row, int column, QColor Color)
     return 1;
 }
 
+QColor Animation::GetCellColor(int Index, int row, int column)
+{
+    if (Index < 0 || Index > FrameList.count() || row < 0 || column < 0 ||
+        row > FHEIGHT || column > FWIDTH)
+    {
+        // Invalid index/row/column, returns black
+        return (QColor(Qt::black));
+    }
+    else
+    {
+        return (FrameList.at(Index)->WorkArea[row][column]);
+    }
+}
+
 int Animation::ColorCell(int row, int column, QColor Color)
 {
     if (row < 0 || column < 0 || row > FHEIGHT || column > FWIDTH)

@@ -42,6 +42,8 @@ public:
             // If Color is not valid it sets it to Qt::black
     int ColorCell(int Index, int row, int column, QColor Color);
 
+    QColor GetCellColor(int Index, int row, int column);
+
             // Does everything the previous one does excepts sets
             // the color of the currently selected frame in tan file
             // and no index cause we are going linearly
