@@ -370,4 +370,8 @@ void Animation::PrintTower()
     }
     qs = TDuration.toString("mm:ss.zzz");
     std::cout << qs.toStdString() << std::endl;
+    for (int i = 0; i < FrameList.count(); i++)
+    {
+        std::cout << std::endl << FrameList.at(i)->toMsec() << std::endl;
+    }
 }
