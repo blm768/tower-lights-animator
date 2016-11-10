@@ -41,10 +41,10 @@ QTime Animation::SanitizeTime(QTime InTime)
 
 int Animation::GetFrameDuration(int Index)
 {
-    if (Index < 0 || Index > FrameList.count())
+    if (!IsValidFrame(Index))
     {
         // Index out of bounds
-        return -1;
+        return 0;
     }
     else
     {
@@ -133,7 +133,7 @@ void Animation::AddFrame(QTime Duration)
 
 int Animation::AddFrame(int Index)
 {
-    if (Index < 0 || Index > FrameList.count())
+    if (!IsValidFrame(Index))
     {
         // Index is outside of the bounds of Animation
         return 0;
@@ -179,7 +179,7 @@ void Animation::AddFrame(QTime Duration, int Position)
 
 int Animation::AddFrame(int Index, int Position)
 {
-    if (Index < 0 || Index > FrameList.count())
+    if (!IsValidFrame(Index))
     {
         // Index is outside of the bounds of Animation
         return 0;
@@ -208,7 +208,7 @@ int Animation::AddFrame(int Index, int Position)
 int Animation::DeleteFrame(int Position)
 {
     frameptr curr = FrameList.at(Position);
-    if (FrameList.count() < Position || Position < 0)
+    if (!IsValidFrame(Position))
     {
         // Index is out of FrameList bounds
         return 0;
@@ -226,8 +226,7 @@ int Animation::DeleteFrame(int Position)
 
 int Animation::MoveFrame(int IndexFrom, int IndexTo)
 {
-    if (IndexFrom < 0 || IndexTo < 0 ||
-        IndexFrom > FrameList.count() || IndexTo > FrameList.count())
+    if (!IsValidFrame(IndexFrom) || !IsValidFrame(IndexTo))
     {
         // IndexFrom or IndexTo are outside of the bounds of FrameList
         return 0;
@@ -241,8 +240,7 @@ int Animation::MoveFrame(int IndexFrom, int IndexTo)
 
 int Animation::ColorCell(int Index, int row, int column, QColor Color)
 {
-    if (Index < 0 || Index > FrameList.count() || row < 0 || column < 0 ||
-        row > FHEIGHT || column > FWIDTH)
+    if (!IsValidFrameCell(Index, row, column))
     {
         // Index, row, or column are out of bounds
         return 0;
@@ -260,8 +258,7 @@ int Animation::ColorCell(int Index, int row, int column, QColor Color)
 
 QColor Animation::GetCellColor(int Index, int row, int column)
 {
-    if (Index < 0 || Index > FrameList.count() || row < 0 || column < 0 ||
-        row > FHEIGHT || column > FWIDTH)
+    if (!IsValidFrameCell(Index, row, column))
     {
         // Invalid index/row/column, returns black
         return (QColor(Qt::black));
@@ -274,7 +271,7 @@ QColor Animation::GetCellColor(int Index, int row, int column)
 
 int Animation::ColorCell(int row, int column, QColor Color)
 {
-    if (row < 0 || column < 0 || row > FHEIGHT || column > FWIDTH)
+    if (!IsValidCell(row, column))
     {
         // Row, or column are out of bounds
         return 0;
@@ -295,6 +292,33 @@ int Animation::ColorCell(int row, int column, QColor Color)
     return 1;
 }
 
+bool Animation::IsValidCell(int row, int column)
+{
+    if (row >= 0 && column >= 0 && row < FHEIGHT && column < FWIDTH)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Animation::IsValidFrame(int Index)
+{
+    if (Index >= 0 && Index < FrameList.count())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Animation::IsValidFrameCell(int Index, int row, int column)
+{
+    if (IsValidFrame(Index) && IsValidCell(row, column))
+    {
+        return true;
+    }
+    return false;
+}
+
 int Animation::GetDuration()
 {
     return (QTime(0,0,0,0).msecsTo(TDuration));
@@ -302,7 +326,7 @@ int Animation::GetDuration()
 
 int Animation::SetFrameDuration(QTime Duration, int Index)
 {
-    if (Index < 0 || Index > FrameList.count())
+    if(!IsValidFrame(Index))
     {
         // Index is out of FrameList bounds
         return 0;
