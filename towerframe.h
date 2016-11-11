@@ -6,13 +6,12 @@
 
 class Animation
 {
-public:
+private:
     static const int FHEIGHT = 20;
     static const int FWIDTH = 12;
 
-    /*!
-     * \brief A frame of animation
-     */
+    int FrameCount = 0;
+
     struct Frame {
         QTime FDuration;
         // Does not requre dynamic allocation at this time
@@ -24,11 +23,12 @@ public:
             }
         }*/
         QColor WorkArea[FHEIGHT][FWIDTH];
+        // Returns the duration of the frame in milliseconds
+        int toMsec()
+        {
+            return (QTime(0,0,0,0).msecsTo(FDuration));
+        }
     };
-
-private:
-    int FrameCount = 0;
-
     typedef Frame *frameptr;
 
     frameptr currFrame;                 // Stores the current frame in the animation
@@ -47,6 +47,10 @@ public:
             // If Color is not valid it sets it to Qt::black
     int ColorCell(int Index, int row, int column, QColor Color);
 
+            // Returns the color of the cell in frame Index at row and column
+            // returns Qt::black if any values are invalid
+    QColor GetCellColor(int Index, int row, int column);
+
             // Does everything the previous one does excepts sets
             // the color of the currently selected frame in tan file
             // and no index cause we are going linearly
@@ -60,7 +64,7 @@ public:
     int SetFrameDuration(QTime Duration, int Index);
 
             // Returns the duration of frame Index in ms
-            // returns -1 if Index is out of bounds
+            // returns 0 if Index is out of bounds
     int GetFrameDuration(int Index);
 
     void CreateNewFrame();
@@ -94,6 +98,18 @@ public:
             // Relocates frame at IndexFrom to before IndexTo
             // Returns 0 if either index is outside of list bounds
     int MoveFrame(int IndexFrom, int IndexTo);
+
+            // Returns true if frame Index exists and row and column are
+            // within the bounds of WorkArea, false otherwise
+    bool IsValidFrameCell(int Index, int row, int column);
+
+            // Returns true if frame Index exists, false otherwise
+    bool IsValidFrame(int Index);
+
+            // Returns true if row and column are within the bounds of
+            // Workarea, false otherwise
+    bool IsValidCell(int row, int column);
+
 
         // Testing only
     void PrintTower();
