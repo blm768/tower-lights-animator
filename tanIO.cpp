@@ -19,6 +19,7 @@ int LoadTan(string fileName, Animation * animation)
     int inputType;
     int frameWidth = 0;
     int frameHeight = 0;
+    bool foundFirst = false;
 
     tanFile.open(fileName, ifstream::in);
 
@@ -27,11 +28,41 @@ int LoadTan(string fileName, Animation * animation)
         return 0;
     }   
 
-    lineNum = 3;              //temporary placeholder till I hander headers
-    getline(tanFile,  line); // we should figure out a better way to handle the header
-    getline(tanFile,  line); // but for now I want to get to the meat of the problem
-    getline(tanFile,  line); //this line will matter because we are going to see
-                                       // whether or not we have a project or tan file
+    /* iterate to the first time stamp
+     * if we find a colon we set foundFirst
+     * to true
+     */
+
+    while(getline(tanFile, line))
+    {
+        lineNum++;
+        if(line.find(":") != std::string::npos)
+        {
+            foundFirst = true;
+            break;
+        }
+    }
+
+    /* if we found a frame we
+     * rewind the ifstream to the beginning
+     * and then we set lineNum to the one
+     * before that and iterate to the
+     * stamp that tells us if this
+     * is a project or .tan file
+     */
+
+    if(foundFirst == true)
+    {
+        lineNum = lineNum - 1;
+        tanFile.seekg(0, ios::beg);
+        for(int i = 0; i < lineNum; i++)
+            getline(tanFile, line);
+    }
+    else
+    {
+        cout << "ERROR tan file is misformed or has no frames";
+        return 0;
+    }
 
     if((inputType = GetMetaData(line)) == 1){      //if this format is a .tan file
         frameWidth = 4;
@@ -90,6 +121,10 @@ int LoadTan(string fileName, Animation * animation)
             frameLine++;
         }
     }
+
+    animation->PrintTower();
+
+    return 1;
 }
 
 int GetMetaData(string line)
@@ -162,35 +197,9 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     int red;
     int green;
     int blue;
+    int widthOffset = 0;
+    int heightOffset = 0;
 
-/*
-        // tokenizes the input into a list and then populates the
-        // cell using ColorCell, right now populates into top left
-        // in the future we should add an offset if we are importing
-        // a tan file vs a project file
-    QString qstr = QString::fromStdString(line);
-    QStringList list = qstr.split(" ", QString::SkipEmptyParts);
-    int size = list.count() / 3;
-    if (list.size() % 3 != 0)
-    {
-        // Error? integer division should automatically ignore trailing
-        // values but we should explicitly handle it in the future
-        cout << "Malformed Input" << endl;
-    }
-
-    for (int i = 0; i < size; i++) {
-        red = list.at(i).toInt();
-        cout << "Red: " << red << " ";
-
-        green = list.at(i+1).toInt();
-        cout << "Green: " << green << " ";
-
-        blue = list.at(i+2).toInt();
-        cout << "Blue: " << blue << endl;
-
-        animation->ColorCell(level-1, i, QColor(red, green, blue, 0));
-    }
-*/
     //must initally break the first grouping then loop
     if(!(tok = strtok((char *) line.c_str(), " ")))
     {
@@ -214,11 +223,13 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     else
         blue = atoi(tok);
 
-    animation->ColorCell(level-1, 0, QColor(red, green, blue));
+    if(width == 4)
+    {
+        widthOffset = 4;
+        heightOffset = 5;
+    }
 
-    cout << red << " ";
-    cout << blue << " ";
-    cout << green << "\n";
+    animation->ColorCell((level-1) + heightOffset, 0 + widthOffset, QColor(red, green, blue));
 
     //start looping through the rest
 
@@ -247,11 +258,7 @@ int ProcessValues(Animation * animation, string line, int width, int level)
         else
             blue = atoi(tok);
 
-        cout << red << " ";
-        cout << blue << " ";
-        cout << green << "\n";
-
-        animation->ColorCell(level-1, i, QColor(red, green, blue));
+        animation->ColorCell((level-1) + heightOffset, i + widthOffset, QColor(red, green, blue));
     }
     return 1;
 }
