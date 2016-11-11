@@ -80,8 +80,16 @@ int Animation::AddColoredFrame(QTime pTime, QTime nTime)
          * - Paden
          *
          */
+        if (pTime > nTime)
+        {
+            //Error handling?
+            currFrame->FDuration = QTime(0,0,0,25);
+        }
+        else
+        {
         currFrame->FDuration = currFrame->FDuration.addMSecs(pTime.msecsTo(nTime));
         currFrame->FDuration = SanitizeTime(currFrame->FDuration);
+        }
 /*
  *   I adjusted SanitizeTime to no longer return 0 ms, it now works properly in all cases
  *   -Nick
