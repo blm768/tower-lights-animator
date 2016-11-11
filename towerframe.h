@@ -32,7 +32,6 @@ private:
                                         // value that is valid, rounds up
 
 public:
-
     struct Frame {
         QTime FDuration;
         QColor WorkArea[FHEIGHT][FWIDTH];
@@ -42,6 +41,7 @@ public:
         {
             return (QTime(0,0,0,0).msecsTo(FDuration));
         }
+        QColor& cell(size_t width, size_t height);
     };
     typedef Frame *frameptr;
 

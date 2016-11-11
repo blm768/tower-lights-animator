@@ -4,6 +4,9 @@
 #include <iostream>
 #include "towerframe.h"
 
+QColor& Animation::Frame::cell(size_t x, size_t y) {
+    return WorkArea[y][x];
+}
 
 Animation::Animation()
 {
