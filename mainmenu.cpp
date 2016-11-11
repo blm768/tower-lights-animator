@@ -22,6 +22,30 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     actSaveAs->setStatusTip(tr("Save the animation to a new file"));
     connect(actSaveAs, &QAction::triggered, this, &MainMenu::saveFileAs);
 
+    actExport = new QAction(tr("&Export"), this);
+    actExport->setStatusTip(tr("Export the animation to a tan file"));
+    connect(actExport, &QAction::triggered, this, &MainMenu::exportFile);
+
+    actExit = new QAction(tr("&Exit"), this);
+    actExit->setShortcuts(QKeySequence::Quit);
+    actExit->setStatusTip(tr("Exit the program"));
+    connect(actExit, &QAction::triggered, this, &MainMenu::close);
+
+    Cut = new QAction(tr("&Cut"), this);
+    Cut->setShortcuts(QKeySequence::Cut);
+    Cut->setStatusTip(tr("Cut selection"));
+    connect(Cut, &QAction::triggered, this, &MainMenu::cut);
+
+    Copy = new QAction(tr("&Copy"), this);
+    Copy->setShortcuts(QKeySequence::Copy);
+    Copy->setStatusTip(tr("Copy selection"));
+    connect(Copy, &QAction::triggered, this, &MainMenu::copy);
+
+    Paste = new QAction(tr("&Paste"), this);
+    Paste->setShortcuts(QKeySequence::Paste);
+    Paste->setStatusTip(tr("Paste from clipboard"));
+    connect(Paste, &QAction::triggered, this, &MainMenu::paste);
+
     // Create menus and add to window.
 
     QMenuBar* mainMenu = window->menuBar();
@@ -29,6 +53,14 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     menuFile->addAction(actNewFile);
     menuFile->addAction(actSaveFile);
     menuFile->addAction(actSaveAs);
+    menuFile->addAction(actExport);
+    menuFile->addAction(actExit);
+
+    menuEdit = mainMenu->addMenu(tr("Edit"));
+    menuEdit->addAction(Cut);
+    menuEdit->addAction(Copy);
+    menuEdit->addAction(Paste);
+
 }
 
 void MainMenu::newFile() {
