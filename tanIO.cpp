@@ -263,3 +263,56 @@ void Error(const char * tok)
 {
     cout << "Error in tan file at line " << lineNum << " and token " << tok << "\n";
 }
+
+//Save functions
+int SaveTan( Animation *tower, string fileName ) {
+
+
+}
+
+int SaveTanTwo( Animation *tower, string fileName ) {
+
+    int index = 0;
+    QColor current;
+    int r,g,b;
+    int time = 0;
+
+    /*#QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly)) {
+
+        //#If file can't be written to, make an error and exit
+        return;
+    }#*/
+
+    ofstream output;
+    output.open( fileName );
+
+    output << "0.4" << endl;
+    output << "NoAudioFile" << endl;
+    output << /*Insert last color here*/endl;
+
+    while(tower->GetFrameDuration(index) != -1) {
+
+        output << time << endl;
+
+        //Sizes used are the static 14x20 that the tower is statically allocated to
+        for( int i=0; i<20; i++ ) {
+            for( int j = 0; j<14; j++ ) {
+
+                //Get color of a cell and write it to the file
+                current = tower->GetCellColor(index, i, j);
+                cout << "RGB: " << r << g << b << "   ";
+                current.getRgb(&r, &g, &b);
+                output << r << " " << g << " " << b << " ";
+            }
+            cout << endl;
+            output << endl;
+        }
+        time += tower->GetFrameDuration(index);
+            cout << "This is the last thing you see " << index << endl;
+        index++;
+    }
+    output.close();
+    return 0;
+}
+

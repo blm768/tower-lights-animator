@@ -14,6 +14,7 @@ void  ExportAnimationTan(Animation * animation);
 void  ExportAnimationProject(Animation * animation);
 void  Error(const char * tok);
 
-
+int   SaveTan( Animation * tower, std::string fileName );
+int   SaveTanTwo( Animation * tower, std::string fileName );
 
 #endif // TANIO_H
