@@ -18,7 +18,6 @@ public:
     FrameEditor(QPushButton *parent = 0);
     explicit FrameEditor(QWidget *parent = 0);
     void initializeLayout(QGridLayout *curLayout);
-    void FrameEditor::ChangeCellColor();
 
 signals:
     void frameChanged(Animation::Frame* frame);
@@ -27,6 +26,7 @@ public slots:
     void selectionChanged(QList<Animation::Frame*> selection);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
+    void onCellClickEvent();
     void onCopyEvent();
     void onCutEvent();
     void onPasteEvent();

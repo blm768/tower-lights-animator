@@ -5,13 +5,16 @@
 FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 {
     QGridLayout *EditorLayout = new QGridLayout(this);
+    EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     for (int i = 0; i < FHEIGHT; i++){
         for (int j = 0; j < FWIDTH; j++){
-            EditorLayout->addWidget(new QPushButton,i,j,1,1);
-
+            QPushButton *button = new QPushButton;
+            connect(button, SIGNAL(clicked()), this, SLOT(onCellClickEvent()));
+            EditorLayout->addWidget(button,i,j);
         }
     }
+    EditorLayout->setSpacing(2);
     initializeLayout(EditorLayout);
 
     setLayout(EditorLayout);
@@ -26,11 +29,16 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
         {
             QLayoutItem *layout = curLayout->itemAtPosition(i,j);
             QWidget *widget = layout->widget();
-            QPushButton *current = dynamic_cast<QPushButton*>(widget);
+            QPushButton *current = qobject_cast<QPushButton*>(widget);
 
             QPalette pal = current->palette();
             pal.setColor(QPalette::Button, QColor(Qt::black));
-
+            /*
+            if (i > 4 && i < 12 && j > 5 && j < 15)
+            {
+                pal.setColor(QPalette::Window, QColor(Qt::red));
+            }
+            */
             current->setMaximumSize(QSize(25,25));
             current->setMinimumSize(QSize(25,25));
 
@@ -41,8 +49,12 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
     }
 }
 
-void FrameEditor::ChangeCellColor()
+void FrameEditor::onCellClickEvent()
 {
+    QPushButton *current = qobject_cast<QPushButton*>(sender());
+    QPalette pal = current->palette();
+    pal.setColor(QPalette::Button, QColor(Qt::green));
+    current->setPalette(pal);
 
 }
 

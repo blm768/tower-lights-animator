@@ -4,25 +4,39 @@
 #include <QTime>
 #include <QList>
 
+#define FHEIGHT 20
+#define FWIDTH 12
+
 class Animation
 {
 private:
-    static const int FHEIGHT = 20;
-    static const int FWIDTH = 12;
+/*
+    struct Frame {
+        QTime FDuration;
+        QColor WorkArea[FHEIGHT][FWIDTH];
 
+        // Returns the duration of the frame in milliseconds
+        int toMsec()
+        {
+            return (QTime(0,0,0,0).msecsTo(FDuration));
+        }
+    };
+    typedef Frame *frameptr;
+        // Stores the current frame in the animation
+    frameptr currFrame;
+    QList<frameptr> FrameList;
+*/
     int FrameCount = 0;
+    QTime TDuration;                    // Stores duration of entire FrameList
+    QTime SanitizeTime(QTime InTime);   // Ensures InTime is valid and divisible by 25, returns a
+                                        // value that is valid, rounds up
+
+public:
 
     struct Frame {
         QTime FDuration;
-        // Does not requre dynamic allocation at this time
-        // allocation preserved for possible future use with selections
-        /*QColor **WorkArea = new QColor*[FHEIGHT];
-        Frame() {
-            for (int i = 0; i < FHEIGHT; i++) {
-                WorkArea[i] = new QColor[FWIDTH];
-            }
-        }*/
         QColor WorkArea[FHEIGHT][FWIDTH];
+
         // Returns the duration of the frame in milliseconds
         int toMsec()
         {
@@ -31,15 +45,10 @@ private:
     };
     typedef Frame *frameptr;
 
-    frameptr currFrame;                 // Stores the current frame in the animation
-
-    QTime TDuration;                    // Stores duration of entire FrameList
+        // Stores the current frame in the animation
+    frameptr currFrame;
     QList<frameptr> FrameList;
 
-    QTime SanitizeTime(QTime InTime);   // Ensures InTime is valid and divisible by 25, returns a
-                                        // value that is valid, rounds up
-
-public:
     Animation();
 
             // Sets cell [row][column] to Color in frame located at Index
