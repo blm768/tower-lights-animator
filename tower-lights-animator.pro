@@ -17,6 +17,7 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     timeline.cpp \
     frameeditor.cpp \
+    frameregion.cpp \
     toolbar.cpp \
     mainmenu.cpp \
     colorpicker.cpp \
