@@ -23,7 +23,6 @@ public:
     explicit FrameWidget(QWidget *parent, Animation::Frame* frame);
     explicit FrameWidget(Animation::Frame* frame);
 
-
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *event);
 signals:
@@ -38,10 +37,18 @@ protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    Animation::Frame *_frame;
+    // TODO: review selection model stuff.
     bool _selected;
     // Horizontal scale in pixels per millisecond
+    // TODO: just pull from parent timeline?
     qreal _scale;
+};
+
+// TODO: implement fully.
+class FrameSelection {
+public:
+    Animation* animation;
+    size_t start, end;
 };
 
 /*!
@@ -63,7 +70,7 @@ public slots:
      * \brief Sets the selected frame(s)
      * \param frames The selected frames
      */
-    void setSelection(QList<FrameWidget*> frames);
+    void setSelection(const FrameSelection& frames);
 
 private:
     QWidget *_frameDuration;
@@ -74,25 +81,33 @@ private:
 class Timeline : public QWidget {
     Q_OBJECT
 public:
+    // TODO: base this on other constants.
+    /*!
+     * \brief The default scale in pixels per millisecond
+     */
+    static constexpr qreal defaultScale = 10.0 * 10 / 25;
+
     explicit Timeline(QWidget *parent = 0);
 
 signals:
-    void selectionChanged(QList<Animation::Frame*> frames);
+    void selectionChanged(const FrameSelection& frames);
 
 public slots:
-    void animationLoaded(QList<Animation::Frame*> frames);
+    void animationLoaded(Animation* animation);
     /*!
      * \brief Adds a blank frame to the timeline
      */
     void addFrame();
-    // TODO: take indices instead?
-    void onFrameSelected(FrameWidget *frame);
-    void onFrameDeselected(FrameWidget *frame);
     void onCopyEvent();
     void onCutEvent();
     void onPasteEvent();
+
+private slots:
+    void onFrameClicked(FrameWidget *frame);
+
 private:
-    size_t _selectionStart, _selectionEnd;
+    Animation* _animation;
+    FrameSelection _selection;
     TimelineToolbar* _toolbar;
     //! Holds the frame widgets
     QWidget* _frameBox;

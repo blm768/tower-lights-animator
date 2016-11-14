@@ -15,18 +15,22 @@ FrameWidget::FrameWidget(QWidget *parent, Animation::Frame *frame) : QWidget(par
     setMinimumWidth(minWidth);
 
     // DEBUG
-    _frame->cell(1, 3) = QColor(255, 255, 255);
+    //_frame->cell(1, 3) = QColor(255, 255, 255);
 }
 
 FrameWidget::FrameWidget(Animation::Frame *frame) : FrameWidget(nullptr, frame) {}
 
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
+    /*
     int width = _frame->toMsec() * _scale;
     if(width < minimumWidth()) {
         width = minimumWidth();
     }
     return QSize(width, height());
+    */
+    // TODO: re-implement.
+    return 50;
 }
 
 // Makes sure this widget gets the width it needs.
@@ -118,7 +122,7 @@ TimelineToolbar::TimelineToolbar(QWidget *parent) : QWidget(parent) {
     layout->addStretch(1);
 }
 
-void TimelineToolbar::setSelection(QList<FrameWidget *> frames) {
+void TimelineToolbar::setSelection(const FrameSelection& frames) {
     // TODO: implement.
 }
 
@@ -146,12 +150,10 @@ Timeline::Timeline(QWidget *parent) :
 
 void Timeline::addFrame() {
     // TODO: pick a proper insertion location.
-    Animation::Frame *frame = new Animation::Frame;
+    // TODO: break out a constant.
+    _animation->insertFrame(QTime(0, 0, 0, 25));
     // TODO: copy duration of previous frame?
-    frame->FDuration = defaultFrameDuration;
     FrameWidget *widget = new FrameWidget(frame);
-    // TODO: add the frame to the Animation object.
-    //_frames.insert(0, frame);
     _frameLayout->insertWidget(0, widget, 0);
     widget->setScale(_scale);
     // TODO: figure out how to not need this.
@@ -169,8 +171,9 @@ void Timeline::onFrameDeselected(FrameWidget *frame) {
     //selectionChanged(_selection);
 }
 
-void Timeline::animationLoaded(QList<Animation::Frame*> frames) {
-
+void Timeline::animationLoaded(Animation* animation) {
+    // TODO: clear out previous frames.
+    _animation = animation;
 }
 
 void Timeline::onCopyEvent() {
