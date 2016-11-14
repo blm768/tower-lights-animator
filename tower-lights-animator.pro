@@ -12,8 +12,9 @@ TARGET = tower-lights-animator
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += main.cpp \
+    animationmodel.cpp \
+    mainwindow.cpp \
     timeline.cpp \
     frameeditor.cpp \
     toolbar.cpp \
@@ -22,9 +23,11 @@ SOURCES += main.cpp\
     towerframe.cpp \
     tanIO.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += animationmodel.h \
+    mainwindow.h \
     timeline.h \
     frameeditor.h \
+    frameregion.h \
     toolbar.h \
     mainmenu.h \
     colorpicker.h \
