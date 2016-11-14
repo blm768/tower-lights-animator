@@ -41,13 +41,15 @@ bool AnimationModel::setData(const QModelIndex& index, const QVariant &value, in
             // TODO: implement.
             //return frame->
         case FrameDurationRole:
-            // TODO: implement.
-            //if()
-            dataChanged(index, index, roles);
-            return true;
-        default:
-            return false;
+            if(value.canConvert<int>()) {
+                frame->FDuration = QTime(0, 0, 0, value.value<int>());
+                dataChanged(index, index, roles);
+                return true;
+            }
+            break;
     }
+
+    return false;
 }
 
 Qt::ItemFlags AnimationModel::flags(const QModelIndex &index) const {

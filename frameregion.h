@@ -2,6 +2,7 @@
 #define _FRAME_REGION_H
 
 #include <QColor>
+#include <QRect>
 #include <QVector>
 
 // Forward declaration
@@ -28,11 +29,17 @@ class FrameRegion {
 
     /*!
      * \brief Returns the subregion of the FrameRegion corresponding to the
-     * given coordinates
+     * given QRect
      *
      * The caller is responsible for freeing the returned pointer.
      */
-    DynamicFrameRegion* subregion(size_t x, size_t y, size_t width, size_t height);
+    DynamicFrameRegion* subregion(QRect area);
+
+    /*!
+     * \brief Copies the contents of the given FrameRegion to the given
+     * coordinates in this FrameRegion
+     */
+    void copyRegion(int x, int y, FrameRegion& region);
 };
 
 /*!
