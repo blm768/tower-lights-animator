@@ -11,7 +11,7 @@
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
 const QColor FrameWidget::borderSelectedColor = QColor(127, 127, 255);
 
-FrameWidget::FrameWidget(QWidget *parent, Animation::Frame *frame) : QWidget(parent), _frame(frame), _selected(false) {
+FrameWidget::FrameWidget(QWidget *parent, Animation::Frame *frame) : QWidget(parent), _selected(false) {
     setMinimumWidth(minWidth);
 
     // DEBUG
@@ -30,7 +30,7 @@ QSize FrameWidget::sizeHint() const {
     return QSize(width, height());
     */
     // TODO: re-implement.
-    return 50;
+    return QSize(50, height());
 }
 
 // Makes sure this widget gets the width it needs.
@@ -84,7 +84,8 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     painter.scale(frameWidth / FWIDTH, frameHeight / FHEIGHT);
     for(size_t x = 0; x < FWIDTH; ++x) {
         for(size_t y = 0; y < FHEIGHT; ++y) {
-            painter.setBrush(_frame->cell(x, y));
+            // TODO: re-implement.
+            //painter.setBrush(_frame->cell(x, y));
             painter.drawRect(x, y, 1, 1);
         }
     }
@@ -151,26 +152,23 @@ Timeline::Timeline(QWidget *parent) :
 void Timeline::addFrame() {
     // TODO: pick a proper insertion location.
     // TODO: break out a constant.
-    _animation->insertFrame(QTime(0, 0, 0, 25));
+    _animation->AddFrame(QTime(0, 0, 0, 25));
     // TODO: copy duration of previous frame?
-    FrameWidget *widget = new FrameWidget(frame);
-    _frameLayout->insertWidget(0, widget, 0);
-    widget->setScale(_scale);
+    // TODO: re-implement.
+    //FrameWidget *widget = new FrameWidget(frame);
+    //_frameLayout->insertWidget(0, widget, 0);
+    //widget->setScale(_scale);
     // TODO: figure out how to not need this.
-    widget->show();
+    //widget->show();
 }
 
-void Timeline::onFrameSelected(FrameWidget *frame) {
+void Timeline::onFrameClicked(FrameWidget *frame) {
     // TODO: implement properly.
     //_selection.insert(frame);
     //selectionChanged(_selection);
 }
 
-void Timeline::onFrameDeselected(FrameWidget *frame) {
-    //_selection.remove(frame);
-    //selectionChanged(_selection);
-}
-
+// TODO: rename.
 void Timeline::animationLoaded(Animation* animation) {
     // TODO: clear out previous frames.
     _animation = animation;
