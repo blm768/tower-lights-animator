@@ -11,7 +11,8 @@
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
 const QColor FrameWidget::borderSelectedColor = QColor(127, 127, 255);
 
-FrameWidget::FrameWidget(QWidget *parent, Frame *frame) : QWidget(parent), _selected(false) {
+FrameWidget::FrameWidget(QWidget *parent, Frame* frame) :
+        QWidget(parent), _frame(frame) {
     setMinimumWidth(minWidth);
 
     // DEBUG
@@ -19,6 +20,10 @@ FrameWidget::FrameWidget(QWidget *parent, Frame *frame) : QWidget(parent), _sele
 }
 
 FrameWidget::FrameWidget(Frame *frame) : FrameWidget(nullptr, frame) {}
+
+int FrameWidget::index() {
+    return dynamic_cast<QWidget*>(parent())->layout()->indexOf(this);
+}
 
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
@@ -172,8 +177,10 @@ void Timeline::onFrameClicked(FrameWidget *frame) {
 
 // TODO: rename.
 void Timeline::animationLoaded(Animation* animation) {
-    // TODO: clear out previous frames.
+    // TODO: clear selection
+    // TODO: clear out previous frame widgets.
     _animation = animation;
+    // TODO: create new frame widgets.
 }
 
 void Timeline::onCopyEvent() {

@@ -23,6 +23,14 @@ public:
     explicit FrameWidget(QWidget *parent, Frame* frame);
     explicit FrameWidget(Frame* frame);
 
+    /*!
+     * \brief The index of this widget inside its parent container
+     *
+     * This widget must have a parent, and the parent must an instance of
+     * QWidget (or one of its subclasses).
+     */
+    int index();
+
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *event);
 signals:
@@ -42,6 +50,8 @@ private:
     // Horizontal scale in pixels per millisecond
     // TODO: just pull from parent timeline?
     qreal _scale;
+    //! The frame of animation
+    Frame* _frame;
 };
 
 // TODO: implement fully.
