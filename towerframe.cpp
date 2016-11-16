@@ -42,6 +42,10 @@ QTime Animation::SanitizeTime(QTime InTime)
     return OutTime;
 }
 
+Frame* Animation::GetFrame(int index) {
+    return FrameList[index];
+}
+
 int Animation::GetFrameDuration(int Index)
 {
     if (!IsValidFrame(Index))

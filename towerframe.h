@@ -37,6 +37,11 @@ public:
 
     Animation();
 
+    /*!
+     * \brief Gets a pointer to the raw frame at the given index
+     */
+    Frame* GetFrame(int index);
+
             // Sets cell [row][column] to Color in frame located at Index
             // returns 0 if Index, row, or column are out of bounds
             // If Color is not valid it sets it to Qt::black

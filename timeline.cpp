@@ -11,20 +11,25 @@
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
 const QColor FrameWidget::borderSelectedColor = QColor(127, 127, 255);
 
-FrameWidget::FrameWidget(QWidget *parent, Frame* frame) :
-        QWidget(parent), _frame(frame) {
+FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
+        QWidget(parent), _timeline(timeline), _frame(frame) {
     setMinimumWidth(minWidth);
 }
 
-FrameWidget::FrameWidget(Frame *frame) : FrameWidget(nullptr, frame) {}
+FrameWidget::FrameWidget(Timeline* timeline, Frame *frame) :
+        FrameWidget(nullptr, timeline, frame) {}
 
 int FrameWidget::index() {
     return dynamic_cast<QWidget*>(parent())->layout()->indexOf(this);
 }
 
+bool FrameWidget::isSelected() {
+    return _timeline->selection().includes(index());
+}
+
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
-    int width = _frame->toMsec() * _scale;
+    int width = _frame->toMsec() * _timeline->scale();
     if(width < minimumWidth()) {
         width = minimumWidth();
     }
@@ -39,17 +44,8 @@ void FrameWidget::resizeEvent(QResizeEvent *event) {
     }
 }
 
-void FrameWidget::select() {
-    _selected = true;
-}
-
-void FrameWidget::deselect() {
-    _selected = false;
-}
-
-// TODO:
-void FrameWidget::setScale(qreal pixelsPerMillisecond) {
-    _scale = pixelsPerMillisecond;
+// TODO: wire this up.
+void FrameWidget::rescale() {
     updateGeometry();
 }
 
@@ -59,7 +55,7 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     painter.scale(1, 1);
 
     // Draw background/border.
-    if(_selected) {
+    if(isSelected()) {
         painter.setBrush(borderSelectedColor);
     } else {
         painter.setBrush(borderColor);
@@ -82,8 +78,7 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     painter.scale(frameWidth / FWIDTH, frameHeight / FHEIGHT);
     for(size_t x = 0; x < FWIDTH; ++x) {
         for(size_t y = 0; y < FHEIGHT; ++y) {
-            // TODO: re-implement.
-            //painter.setBrush(_frame->cell(x, y));
+            painter.setBrush(_frame->WorkArea[y][x]);
             painter.drawRect(x, y, 1, 1);
         }
     }
@@ -151,13 +146,14 @@ void Timeline::addFrame() {
     // TODO: pick a proper insertion location.
     // TODO: break out a constant.
     _animation->AddFrame(QTime(0, 0, 0, 25));
+    // TODO: get at the index of insertion.
+    Frame* frame = _animation->GetFrame(0);
     // TODO: copy duration of previous frame?
     // TODO: re-implement.
-    //FrameWidget *widget = new FrameWidget(frame);
-    //_frameLayout->insertWidget(0, widget, 0);
-    //widget->setScale(_scale);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(0, widget, 0);
     // TODO: figure out how to not need this.
-    //widget->show();
+    widget->show();
 }
 
 void Timeline::onFrameClicked(FrameWidget *frame) {

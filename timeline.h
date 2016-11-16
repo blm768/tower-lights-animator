@@ -7,6 +7,10 @@
 
 #include "towerframe.h"
 
+// Forward declarations
+
+class Timeline;
+
 /*!
  * \brief A frame in the timeline
  *
@@ -20,8 +24,8 @@ public:
     static const QColor borderSelectedColor;
     static const size_t borderWidth = 2;
 
-    explicit FrameWidget(QWidget *parent, Frame* frame);
-    explicit FrameWidget(Frame* frame);
+    explicit FrameWidget(QWidget* parent, Timeline* timeline, Frame* frame);
+    explicit FrameWidget(Timeline* timeline, Frame* frame);
 
     /*!
      * \brief The index of this widget inside its parent container
@@ -31,25 +35,27 @@ public:
      */
     int index();
 
+    /*!
+     * \brief Returns whether this FrameWidget is selected
+     */
+    bool isSelected();
+
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *event);
 signals:
+    void clicked(FrameWidget* widget);
 
 public slots:
-    void select();
-    void deselect();
-    // TODO: setter for duration (disallowing 0 duration?)
-    void setScale(qreal pixelsPerMillisecond);
+    //! Rescales the widget to handle changes to timeline scale or duration
+    void rescale();
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    // TODO: review selection model stuff.
-    bool _selected;
     // Horizontal scale in pixels per millisecond
-    // TODO: just pull from parent timeline?
-    qreal _scale;
+    //! The parent timeline
+    Timeline* _timeline;
     //! The frame of animation
     Frame* _frame;
 };
@@ -57,8 +63,14 @@ private:
 // TODO: implement fully.
 class FrameSelection {
 public:
-    Animation* animation;
-    size_t start, end;
+    // The start of the selection (inclusive)
+    int start;
+    // The end of the selection (exclusive)
+    int end;
+    //! Returns whether the given index is part of the selection
+    bool includes(int index) {
+        return index >= start && index < end;
+    }
 };
 
 /*!
@@ -97,10 +109,26 @@ public:
      */
     static constexpr qreal defaultScale = 10.0 * 10 / 25;
 
+    /*!
+     * Returns the current selection
+     */
+    FrameSelection selection() {
+        return _selection;
+    }
+
+    /*!
+     * Returns the current scaling factor (in pixels per millisecond)
+     */
+    qreal scale() {
+        return _scale;
+    }
+
     explicit Timeline(QWidget *parent = 0);
 
 signals:
  //   void selectionChanged(QList<Frame*> frames);
+    //! Called when the scale factor is changed
+    void scaleChanged(qreal pixelsPerMillisecond);
 
 public slots:
     void setAnimation(Animation* animation);
