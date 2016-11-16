@@ -22,7 +22,7 @@ public:
     static const int minWidth = 4;
     static const QColor borderColor;
     static const QColor borderSelectedColor;
-    static const size_t borderWidth = 2;
+    static const size_t borderWidth = 3;
 
     explicit FrameWidget(QWidget* parent, Timeline* timeline, Frame* frame);
     explicit FrameWidget(Timeline* timeline, Frame* frame);
@@ -42,6 +42,10 @@ public:
 
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *event);
+
+protected:
+    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+
 signals:
     void clicked(FrameWidget* widget);
 
@@ -126,9 +130,9 @@ public:
     explicit Timeline(QWidget *parent = 0);
 
 signals:
- //   void selectionChanged(QList<Frame*> frames);
     //! Called when the scale factor is changed
     void scaleChanged(qreal pixelsPerMillisecond);
+    void selectionChanged(FrameSelection selection);
 
 public slots:
     void setAnimation(Animation* animation);
@@ -141,7 +145,6 @@ public slots:
     void onCutEvent();
     void onPasteEvent();
 
-private slots:
     void onFrameClicked(FrameWidget *frame);
 
 private:

@@ -9,11 +9,14 @@
 //-------------//
 
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
-const QColor FrameWidget::borderSelectedColor = QColor(127, 127, 255);
+const QColor FrameWidget::borderSelectedColor = QColor(255, 255, 127);
 
 FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
         QWidget(parent), _timeline(timeline), _frame(frame) {
     setMinimumWidth(minWidth);
+    connect(this, &FrameWidget::clicked, _timeline, &Timeline::onFrameClicked);
+    // We need the cast to determine which overload to use.
+    connect(_timeline, &Timeline::selectionChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::update));
 }
 
 FrameWidget::FrameWidget(Timeline* timeline, Frame *frame) :
@@ -42,6 +45,11 @@ void FrameWidget::resizeEvent(QResizeEvent *event) {
     if(width() != sizeHint().width()) {
         updateGeometry();
     }
+}
+
+void FrameWidget::mousePressEvent(QMouseEvent* event) {
+    // TODO: check button.
+    clicked(this);
 }
 
 // TODO: wire this up.
@@ -149,17 +157,16 @@ void Timeline::addFrame() {
     // TODO: get at the index of insertion.
     Frame* frame = _animation->GetFrame(0);
     // TODO: copy duration of previous frame?
-    // TODO: re-implement.
     FrameWidget* widget = new FrameWidget(this, frame);
     _frameLayout->insertWidget(0, widget, 0);
-    // TODO: figure out how to not need this.
-    widget->show();
 }
 
-void Timeline::onFrameClicked(FrameWidget *frame) {
+void Timeline::onFrameClicked(FrameWidget* frame) {
     // TODO: implement properly.
-    //_selection.insert(frame);
-    //selectionChanged(_selection);
+    int index = frame->index();
+    _selection.start = index;
+    _selection.end = index + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::setAnimation(Animation* animation) {
