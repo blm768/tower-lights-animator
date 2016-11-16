@@ -103,11 +103,7 @@ signals:
  //   void selectionChanged(QList<Frame*> frames);
 
 public slots:
-    void animationLoaded(QList<Frame*> frames);
- //   void selectionChanged(const FrameSelection& frames);
-
-public slots:
-    void animationLoaded(Animation* animation);
+    void setAnimation(Animation* animation);
     /*!
      * \brief Adds a blank frame to the timeline
      */
