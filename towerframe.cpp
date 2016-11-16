@@ -70,16 +70,7 @@ int Animation::AddColoredFrame(QTime pTime, QTime nTime)
     if(currFrame != NULL)
     {
         currFrame->FDuration = QTime(0,0,0,0);
-        /* I do not personally believe that these checks should go here. I'm fairly
-         * certain that Nick's Sanitize time function does some of these things
-         * but not all. So I need someone to write/modify Nick's function to make
-         * sure all these checks happen
-         * 1) The duration is not negative.
-         * 2) Is greater than 25 ms
-         * 3) Is in a valid format
-         * - Paden
-         *
-         */
+
         if (pTime > nTime)
         {
             //Error handling?
@@ -90,27 +81,6 @@ int Animation::AddColoredFrame(QTime pTime, QTime nTime)
         currFrame->FDuration = currFrame->FDuration.addMSecs(pTime.msecsTo(nTime));
         currFrame->FDuration = SanitizeTime(currFrame->FDuration);
         }
-/*
- *   I adjusted SanitizeTime to no longer return 0 ms, it now works properly in all cases
- *   -Nick
- */
-        /*
-        if(!currFrame->FDuration.isValid())
-        {
-            std::cout << "Error - timestamp in wrong format";
-            return 0;
-        }
-        if(currFrame->FDuration <= QTime(0,0,0,0))
-        {
-            std::cout << "Error - previous timestamp greater than current timestamp or has no duration";
-            return 0;
-        }
-        if(currFrame->FDuration < QTime(0,0,0,25))
-        {
-            std::cout << "Error - Timestamp does not meet minumum requirement";
-            return 0;
-        }
-        */
 
         FrameList.append(currFrame);
         FrameCount++;

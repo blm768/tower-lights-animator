@@ -7,43 +7,29 @@
 #define FHEIGHT 20
 #define FWIDTH 12
 
+
+struct Frame
+{
+       QTime FDuration;
+       QColor WorkArea[FHEIGHT][FWIDTH];
+
+       // Returns the duration of the frame in milliseconds
+       int toMsec()
+       {
+            return (QTime(0,0,0,0).msecsTo(FDuration));
+       }
+};
+typedef Frame *frameptr;
+
 class Animation
 {
 private:
-/*
-    struct Frame {
-        QTime FDuration;
-        QColor WorkArea[FHEIGHT][FWIDTH];
-
-        // Returns the duration of the frame in milliseconds
-        int toMsec()
-        {
-            return (QTime(0,0,0,0).msecsTo(FDuration));
-        }
-    };
-    typedef Frame *frameptr;
-        // Stores the current frame in the animation
-    frameptr currFrame;
-    QList<frameptr> FrameList;
-*/
     int FrameCount = 0;
     QTime TDuration;                    // Stores duration of entire FrameList
     QTime SanitizeTime(QTime InTime);   // Ensures InTime is valid and divisible by 25, returns a
                                         // value that is valid, rounds up
 
 public:
-
-    struct Frame {
-        QTime FDuration;
-        QColor WorkArea[FHEIGHT][FWIDTH];
-
-        // Returns the duration of the frame in milliseconds
-        int toMsec()
-        {
-            return (QTime(0,0,0,0).msecsTo(FDuration));
-        }
-    };
-    typedef Frame *frameptr;
 
         // Stores the current frame in the animation
     frameptr currFrame;

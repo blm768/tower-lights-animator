@@ -12,10 +12,10 @@ public:
     explicit Timeline(QWidget *parent = 0);
 
 signals:
-    void selectionChanged(QList<Animation::Frame*> frames);
+    void selectionChanged(QList<Frame*> frames);
 
 public slots:
-    void animationLoaded(QList<Animation::Frame*> frames);
+    void animationLoaded(QList<Frame*> frames);
     void onCopyEvent();
     void onCutEvent();
     void onPasteEvent();

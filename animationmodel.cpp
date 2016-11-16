@@ -14,7 +14,7 @@ QVariant AnimationModel::data(const QModelIndex& index, int role) const {
     if(!index.isValid()) {
         return QVariant();
     }
-    Animation::Frame* frame = _animation->FrameList[index.row()];
+    Frame* frame = _animation->FrameList[index.row()];
 
     switch(role) {
         case FrameDataRole:
@@ -31,7 +31,7 @@ bool AnimationModel::setData(const QModelIndex& index, const QVariant &value, in
     if(!index.isValid()) {
         return false;
     }
-    Animation::Frame* frame = _animation->FrameList[index.row()];
+    Frame* frame = _animation->FrameList[index.row()];
     // For the dataChanged event
     QVector<int> roles(1);
     roles[0] = role;

@@ -58,7 +58,7 @@ void FrameEditor::onCellClickEvent()
 
 }
 
-void FrameEditor::selectionChanged(QList<Animation::Frame*> selection)
+void FrameEditor::selectionChanged(QList<Frame*> selection)
 {
 
 }
