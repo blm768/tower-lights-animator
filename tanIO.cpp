@@ -256,9 +256,6 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     return 1;
 }
 
-void ExportAnimationTan(Animation * animation);
-void ExportAnimationProject(Animation * animation);
-
 void Error(const char * tok)
 {
     cout << "Error in tan file at line " << lineNum << " and token " << tok << "\n";
