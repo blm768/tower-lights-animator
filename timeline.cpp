@@ -180,7 +180,11 @@ void Timeline::setAnimation(Animation* animation) {
         delete child;
     }
     _animation = animation;
-    // TODO: create new frame widgets.
+    for(int i = 0; i < _animation->FrameCount(); ++i) {
+        Frame* frame = _animation->GetFrame(i);
+        FrameWidget* widget = new FrameWidget(this, frame);
+        _frameLayout->insertWidget(i, widget, 0);
+    }
 }
 
 void Timeline::onCopyEvent() {

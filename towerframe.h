@@ -24,7 +24,6 @@ typedef Frame *frameptr;
 class Animation
 {
 private:
-    int FrameCount = 0;
     QTime TDuration;                    // Stores duration of entire FrameList
     QTime SanitizeTime(QTime InTime);   // Ensures InTime is valid and divisible by 25, returns a
                                         // value that is valid, rounds up
@@ -41,6 +40,11 @@ public:
      * \brief Gets a pointer to the raw frame at the given index
      */
     Frame* GetFrame(int index);
+
+    /*!
+     * \brief Returns the number of frames in the animation
+     */
+    int FrameCount() const;
 
             // Sets cell [row][column] to Color in frame located at Index
             // returns 0 if Index, row, or column are out of bounds

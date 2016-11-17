@@ -46,6 +46,10 @@ Frame* Animation::GetFrame(int index) {
     return FrameList[index];
 }
 
+int Animation::FrameCount() const {
+    return FrameList.count();
+}
+
 int Animation::GetFrameDuration(int Index)
 {
     if (!IsValidFrame(Index))
@@ -90,7 +94,6 @@ int Animation::AddColoredFrame(QTime pTime, QTime nTime)
         }
 
         FrameList.append(currFrame);
-        FrameCount++;
         TDuration = TDuration.addMSecs(pTime.msecsTo(nTime));
         return 1;
     }
@@ -112,7 +115,6 @@ void Animation::AddFrame(QTime Duration)
     }
 
     FrameList.append(n);
-    FrameCount++;
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
 }
 
@@ -139,7 +141,6 @@ int Animation::AddFrame(int Index)
 
         TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
         FrameList.append(n);
-        FrameCount++;
     }
     return 1;
 }
@@ -158,7 +159,6 @@ void Animation::AddFrame(QTime Duration, int Position)
     }
 
     FrameList.insert(Position, n);
-    FrameCount++;
     TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
 }
 
@@ -185,7 +185,6 @@ int Animation::AddFrame(int Index, int Position)
 
         TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
         FrameList.insert(Position, n);
-        FrameCount++;
     }
     return 1;
 }
@@ -203,7 +202,6 @@ int Animation::DeleteFrame(int Position)
         // Subtract qtime fduration from qtime tduration
         TDuration = TDuration.addMSecs(curr->FDuration.msecsTo(QTime(0,0,0,0)));
         FrameList.removeAt(Position);
-        FrameCount--;
     }
     delete(curr);
     return 1;
