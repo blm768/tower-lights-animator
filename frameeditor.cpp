@@ -116,9 +116,17 @@ void FrameEditor::onCellClickEvent()
     current->setStyleSheet(css);
 }
 
-void FrameEditor::selectionChanged(QList<Frame*> selection)
+void FrameEditor::setSelection(FrameSelection selection)
 {
-
+    if(selection.length() == 1)
+    {
+        // TODO: switch frames
+    }
+    else
+    {
+        // We can't edit 0 or multiple frames.
+        // TODO: disable this widget?
+    }
 }
 
 void FrameEditor::selectTool(ToolType tool)

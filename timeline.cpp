@@ -165,8 +165,12 @@ void Timeline::addFrame() {
     // TODO: select the new frame?
 }
 
+void Timeline::onFrameChanged(int index) {
+    QWidget* widget = _frameLayout->itemAt(index)->widget();
+    widget->update();
+}
+
 void Timeline::onFrameClicked(FrameWidget* frame) {
-    // TODO: implement properly.
     int index = frame->index();
     _selection.start = index;
     _selection.end = index + 1;
