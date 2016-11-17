@@ -263,6 +263,99 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     return 1;
 }
 
+//Save functions
+//Saves the animation in a tan file which is
+//readable by the Tower of Lights player
+int SaveTan( string fileName, Animation *tower ) {
+
+    int index = 0;
+    QColor current;
+    int r,g,b;
+    int timeMs = 0;
+    int timeS = 0;
+    int timeM = 0;
+
+    ofstream output;
+    output.open( fileName );
+
+    output << "0.3" << endl;
+    output << "NoAudioFile" << endl;
+    output << /*Insert last color here*/endl;
+
+    while((tower->GetFrameDuration(index))) {
+
+        while( timeMs > 999 ) {
+
+            timeMs -= 1000;
+            timeS++;
+        }
+        while( timeS > 59 ) {
+
+            timeS -= 60;
+            timeM++;
+        }
+        output << setfill('0') << setw(2) << timeM << ":";
+        output << setfill('0') << setw(2) << timeS << ".";
+        output << setfill('0') << setw(3) << timeMs << endl;
+
+        //Sizes used are the static 14x20 that the tower is statically allocated to
+        for( int i=5; i<15; i++ ) {
+            for( int j=5; j<10; j++ ) {
+
+                //Get color of a cell and write it to the file
+                current = tower->GetCellColor(index, i, j);
+                current.getRgb(&r, &g, &b);
+                output << r << " " << g << " " << b << " ";
+            }
+            cout << endl;
+            output << endl;
+        }
+        timeMs += tower->GetFrameDuration(index);
+        index++;
+    }
+    output.close();
+    return 0;
+}
+
+    //Saves animation to a project file, time is in ms
+    //and tower width is 14x20
+int SaveProject( string fileName, Animation *tower ) {
+
+    int index = 0;
+    QColor current;
+    int r,g,b;
+    int time = 0;
+
+    ofstream output;
+    output.open( fileName );
+
+    //Following writes put the time into the correct format
+    output << "0.4" << endl;
+    output << "NoAudioFile" << endl;
+    output << /*Insert last color here*/endl;
+
+    while((tower->GetFrameDuration(index))) {
+
+        output << time << endl;
+
+        for( int i=0; i<20; i++ ) {
+            for( int j = 0; j<14; j++ ) {
+
+                //Get color of a cell and write its RGB values
+                current = tower->GetCellColor(index, i, j);
+                current.getRgb(&r, &g, &b);
+                output << r << " " << g << " " << b << " ";
+            }
+            cout << endl;
+            output << endl;
+        }
+        time += tower->GetFrameDuration(index);
+        index++;
+    }
+    output.close();
+    return 0;
+}
+
 void Error(const char * tok)
 {
     cout << "Error in tan file at line " << lineNum << " and token " << tok << "\n";
