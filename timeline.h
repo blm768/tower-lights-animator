@@ -64,7 +64,6 @@ private:
     Frame* _frame;
 };
 
-// TODO: implement fully.
 class FrameSelection {
 public:
     // The start of the selection (inclusive)
@@ -74,6 +73,14 @@ public:
     //! Returns whether the given index is part of the selection
     bool includes(int index) {
         return index >= start && index < end;
+    }
+
+    int length() const {
+        return std::max(end - start, 0);
+    }
+
+    void clear() {
+        start = end = 0;
     }
 };
 

@@ -151,14 +151,18 @@ Timeline::Timeline(QWidget *parent) :
 }
 
 void Timeline::addFrame() {
+    int insertionLocation = 0;
+    if(_selection.length() > 0) {
+        insertionLocation = _selection.end;
+    }
     // TODO: pick a proper insertion location.
     // TODO: break out a constant.
-    _animation->AddFrame(QTime(0, 0, 0, 25));
-    // TODO: get at the index of insertion.
-    Frame* frame = _animation->GetFrame(0);
+    _animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+    Frame* frame = _animation->GetFrame(insertionLocation);
     // TODO: copy duration of previous frame?
     FrameWidget* widget = new FrameWidget(this, frame);
-    _frameLayout->insertWidget(0, widget, 0);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    // TODO: select the new frame?
 }
 
 void Timeline::onFrameClicked(FrameWidget* frame) {
@@ -170,8 +174,11 @@ void Timeline::onFrameClicked(FrameWidget* frame) {
 }
 
 void Timeline::setAnimation(Animation* animation) {
-    // TODO: clear selection
-    // TODO: clear out previous frame widgets.
+    _selection.clear();
+    selectionChanged(_selection);
+    while(QWidget* child = _frameBox->findChild<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
+        delete child;
+    }
     _animation = animation;
     // TODO: create new frame widgets.
 }
