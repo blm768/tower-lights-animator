@@ -4,7 +4,20 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QLabel>
 #include "towerframe.h"
+
+class ClickableLabel : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit ClickableLabel( const QString& text="", QWidget* parent=0 );
+    ~ClickableLabel();
+signals:
+    void clicked();
+protected:
+    void mousePressEvent(QMouseEvent* event);
+};
 
 class FrameEditor : public QWidget
 {
@@ -20,10 +33,10 @@ public:
     void initializeLayout(QGridLayout *curLayout);
 
 signals:
-    void frameChanged(Frame* frame);
+    void frameChanged(Animation::Frame* frame);
 
 public slots:
-    void selectionChanged(QList<Frame*> selection);
+    void selectionChanged(QList<Animation::Frame*> selection);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
     void onCellClickEvent();
