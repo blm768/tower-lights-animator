@@ -20,8 +20,8 @@ public:
     static const QColor borderSelectedColor;
     static const size_t borderWidth = 2;
 
-    explicit FrameWidget(QWidget *parent, Animation::Frame* frame);
-    explicit FrameWidget(Animation::Frame* frame);
+    explicit FrameWidget(QWidget *parent, Frame* frame);
+    explicit FrameWidget(Frame* frame);
 
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *event);
@@ -90,13 +90,11 @@ public:
     explicit Timeline(QWidget *parent = 0);
 
 signals:
-<<<<<<< HEAD
-    void selectionChanged(QList<Frame*> frames);
+ //   void selectionChanged(QList<Frame*> frames);
 
 public slots:
     void animationLoaded(QList<Frame*> frames);
-=======
-    void selectionChanged(const FrameSelection& frames);
+ //   void selectionChanged(const FrameSelection& frames);
 
 public slots:
     void animationLoaded(Animation* animation);
@@ -104,7 +102,7 @@ public slots:
      * \brief Adds a blank frame to the timeline
      */
     void addFrame();
->>>>>>> 4c06a2c466aba78220968ecd325435cf0eb4b526
+
     void onCopyEvent();
     void onCutEvent();
     void onPasteEvent();

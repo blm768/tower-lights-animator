@@ -11,14 +11,14 @@
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
 const QColor FrameWidget::borderSelectedColor = QColor(127, 127, 255);
 
-FrameWidget::FrameWidget(QWidget *parent, Animation::Frame *frame) : QWidget(parent), _selected(false) {
+FrameWidget::FrameWidget(QWidget *parent, Frame *frame) : QWidget(parent), _selected(false) {
     setMinimumWidth(minWidth);
 
     // DEBUG
     //_frame->cell(1, 3) = QColor(255, 255, 255);
 }
 
-FrameWidget::FrameWidget(Animation::Frame *frame) : FrameWidget(nullptr, frame) {}
+FrameWidget::FrameWidget(Frame *frame) : FrameWidget(nullptr, frame) {}
 
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
@@ -92,12 +92,11 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     painter.restore();
 }
 
-<<<<<<< HEAD
 void Timeline::animationLoaded(QList<Frame*> frames) {
-=======
 //-----------------//
 // TimelineToolbar //
 //-----------------//
+}
 
 TimelineToolbar::TimelineToolbar(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *layout = new QHBoxLayout;
@@ -170,7 +169,6 @@ void Timeline::onFrameClicked(FrameWidget *frame) {
     //_selection.insert(frame);
     //selectionChanged(_selection);
 }
->>>>>>> 4c06a2c466aba78220968ecd325435cf0eb4b526
 
 // TODO: rename.
 void Timeline::animationLoaded(Animation* animation) {

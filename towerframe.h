@@ -30,21 +30,6 @@ private:
                                         // value that is valid, rounds up
 
 public:
-<<<<<<< HEAD
-=======
-    struct Frame {
-        QTime FDuration;
-        QColor WorkArea[FHEIGHT][FWIDTH];
-
-        // Returns the duration of the frame in milliseconds
-        int toMsec()
-        {
-            return (QTime(0,0,0,0).msecsTo(FDuration));
-        }
-        QColor& cell(size_t width, size_t height);
-    };
-    typedef Frame *frameptr;
->>>>>>> 4c06a2c466aba78220968ecd325435cf0eb4b526
 
         // Stores the current frame in the animation
     frameptr currFrame;
