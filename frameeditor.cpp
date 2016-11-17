@@ -116,7 +116,7 @@ void FrameEditor::onCellClickEvent()
     current->setStyleSheet(css);
 }
 
-void FrameEditor::selectionChanged(QList<Animation::Frame*> selection)
+void FrameEditor::selectionChanged(QList<Frame*> selection)
 {
 
 }

@@ -33,10 +33,10 @@ public:
     void initializeLayout(QGridLayout *curLayout);
 
 signals:
-    void frameChanged(Animation::Frame* frame);
+    void frameChanged(Frame* frame);
 
 public slots:
-    void selectionChanged(QList<Animation::Frame*> selection);
+    void selectionChanged(QList<Frame*> selection);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
     void onCellClickEvent();
