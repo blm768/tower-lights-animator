@@ -12,6 +12,7 @@ int   GetNewTime(std::string line, QTime * nTime);
 int   ProcessValues(Animation * animation, std::string line, int width, int level);
 void  Error(const char * tok);
 
-
+int   SaveTan( std::string fileName, Animation * tower );
+int   SaveProject( std::string fileName, Animation * tower );
 
 #endif // TANIO_H
