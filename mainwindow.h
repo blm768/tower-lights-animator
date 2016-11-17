@@ -22,6 +22,10 @@ public:
     ~MainWindow();
 
 signals:
+    /*!
+     * \brief Triggered when the animation is changed
+     */
+    void animationSet(Animation* animation);
 
 public slots:
     void setAnimation(Animation* animation);

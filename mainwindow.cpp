@@ -5,10 +5,17 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), _mainMenu(this)
 {
-    //Timeline* timeline = new Timeline(this);
-    //setCentralWidget(timeline);
-    FrameEditor* frameeditor = new FrameEditor(this);
-    setCentralWidget(frameeditor);
+    QWidget* mainBox = new QWidget;
+    QBoxLayout* mainLayout = new QVBoxLayout;
+    mainBox->setLayout(mainLayout);
+    setCentralWidget(mainBox);
+
+    FrameEditor* frameEditor = new FrameEditor(this);
+    mainLayout->addWidget(frameEditor);
+
+    Timeline* timeline = new Timeline(this);
+    mainLayout->addWidget(timeline);
+    connect(this, &MainWindow::animationSet, timeline, &Timeline::setAnimation);
 }
 
 MainWindow::~MainWindow()
@@ -17,5 +24,6 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setAnimation(Animation *animation) {
-
+    _animation = animation;
+    animationSet(animation);
 }

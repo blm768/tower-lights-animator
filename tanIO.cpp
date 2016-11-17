@@ -1,5 +1,6 @@
 #include <QTime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -26,7 +27,7 @@ int LoadTan(string fileName, Animation * animation)
     if(!tanFile){
         cout << "Error opening .tan file\n" << fileName;
         return 0;
-    }   
+    }
 
     /* iterate to the first time stamp
      * if we find a colon we set foundFirst

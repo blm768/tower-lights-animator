@@ -9,28 +9,34 @@
 //-------------//
 
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
-const QColor FrameWidget::borderSelectedColor = QColor(127, 127, 255);
+const QColor FrameWidget::borderSelectedColor = QColor(255, 255, 127);
 
-FrameWidget::FrameWidget(QWidget *parent, Frame *frame) : QWidget(parent), _selected(false) {
+FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
+        QWidget(parent), _timeline(timeline), _frame(frame) {
     setMinimumWidth(minWidth);
-
-    // DEBUG
-    //_frame->cell(1, 3) = QColor(255, 255, 255);
+    connect(this, &FrameWidget::clicked, _timeline, &Timeline::onFrameClicked);
+    // We need the cast to determine which overload to use.
+    connect(_timeline, &Timeline::selectionChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::update));
 }
 
-FrameWidget::FrameWidget(Frame *frame) : FrameWidget(nullptr, frame) {}
+FrameWidget::FrameWidget(Timeline* timeline, Frame *frame) :
+        FrameWidget(nullptr, timeline, frame) {}
+
+int FrameWidget::index() {
+    return dynamic_cast<QWidget*>(parent())->layout()->indexOf(this);
+}
+
+bool FrameWidget::isSelected() {
+    return _timeline->selection().includes(index());
+}
 
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
-    /*
-    int width = _frame->toMsec() * _scale;
+    int width = _frame->toMsec() * _timeline->scale();
     if(width < minimumWidth()) {
         width = minimumWidth();
     }
     return QSize(width, height());
-    */
-    // TODO: re-implement.
-    return QSize(50, height());
 }
 
 // Makes sure this widget gets the width it needs.
@@ -41,17 +47,13 @@ void FrameWidget::resizeEvent(QResizeEvent *event) {
     }
 }
 
-void FrameWidget::select() {
-    _selected = true;
+void FrameWidget::mousePressEvent(QMouseEvent* event) {
+    // TODO: check button.
+    clicked(this);
 }
 
-void FrameWidget::deselect() {
-    _selected = false;
-}
-
-// TODO:
-void FrameWidget::setScale(qreal pixelsPerMillisecond) {
-    _scale = pixelsPerMillisecond;
+// TODO: wire this up.
+void FrameWidget::rescale() {
     updateGeometry();
 }
 
@@ -61,7 +63,7 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     painter.scale(1, 1);
 
     // Draw background/border.
-    if(_selected) {
+    if(isSelected()) {
         painter.setBrush(borderSelectedColor);
     } else {
         painter.setBrush(borderColor);
@@ -84,19 +86,16 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     painter.scale(frameWidth / FWIDTH, frameHeight / FHEIGHT);
     for(size_t x = 0; x < FWIDTH; ++x) {
         for(size_t y = 0; y < FHEIGHT; ++y) {
-            // TODO: re-implement.
-            //painter.setBrush(_frame->cell(x, y));
+            painter.setBrush(_frame->WorkArea[y][x]);
             painter.drawRect(x, y, 1, 1);
         }
     }
     painter.restore();
 }
 
-void Timeline::animationLoaded(QList<Frame*> frames) {
 //-----------------//
 // TimelineToolbar //
 //-----------------//
-}
 
 TimelineToolbar::TimelineToolbar(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *layout = new QHBoxLayout;
@@ -152,28 +151,40 @@ Timeline::Timeline(QWidget *parent) :
 }
 
 void Timeline::addFrame() {
+    int insertionLocation = 0;
+    if(_selection.length() > 0) {
+        insertionLocation = _selection.end;
+    }
     // TODO: pick a proper insertion location.
     // TODO: break out a constant.
-    _animation->AddFrame(QTime(0, 0, 0, 25));
+    _animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+    Frame* frame = _animation->GetFrame(insertionLocation);
     // TODO: copy duration of previous frame?
-    // TODO: re-implement.
-    //FrameWidget *widget = new FrameWidget(frame);
-    //_frameLayout->insertWidget(0, widget, 0);
-    //widget->setScale(_scale);
-    // TODO: figure out how to not need this.
-    //widget->show();
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    // TODO: select the new frame?
 }
 
-void Timeline::onFrameClicked(FrameWidget *frame) {
+void Timeline::onFrameClicked(FrameWidget* frame) {
     // TODO: implement properly.
-    //_selection.insert(frame);
-    //selectionChanged(_selection);
+    int index = frame->index();
+    _selection.start = index;
+    _selection.end = index + 1;
+    selectionChanged(_selection);
 }
 
-// TODO: rename.
-void Timeline::animationLoaded(Animation* animation) {
-    // TODO: clear out previous frames.
+void Timeline::setAnimation(Animation* animation) {
+    _selection.clear();
+    selectionChanged(_selection);
+    while(QWidget* child = _frameBox->findChild<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
+        delete child;
+    }
     _animation = animation;
+    for(int i = 0; i < _animation->FrameCount(); ++i) {
+        Frame* frame = _animation->GetFrame(i);
+        FrameWidget* widget = new FrameWidget(this, frame);
+        _frameLayout->insertWidget(i, widget, 0);
+    }
 }
 
 void Timeline::onCopyEvent() {

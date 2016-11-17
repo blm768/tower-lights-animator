@@ -7,6 +7,10 @@
 
 #include "towerframe.h"
 
+// Forward declarations
+
+class Timeline;
+
 /*!
  * \brief A frame in the timeline
  *
@@ -18,37 +22,66 @@ public:
     static const int minWidth = 4;
     static const QColor borderColor;
     static const QColor borderSelectedColor;
-    static const size_t borderWidth = 2;
+    static const size_t borderWidth = 3;
 
-    explicit FrameWidget(QWidget *parent, Frame* frame);
-    explicit FrameWidget(Frame* frame);
+    explicit FrameWidget(QWidget* parent, Timeline* timeline, Frame* frame);
+    explicit FrameWidget(Timeline* timeline, Frame* frame);
+
+    /*!
+     * \brief The index of this widget inside its parent container
+     *
+     * This widget must have a parent, and the parent must an instance of
+     * QWidget (or one of its subclasses).
+     */
+    int index();
+
+    /*!
+     * \brief Returns whether this FrameWidget is selected
+     */
+    bool isSelected();
 
     QSize sizeHint() const;
     void resizeEvent(QResizeEvent *event);
+
+protected:
+    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+
 signals:
+    void clicked(FrameWidget* widget);
 
 public slots:
-    void select();
-    void deselect();
-    // TODO: setter for duration (disallowing 0 duration?)
-    void setScale(qreal pixelsPerMillisecond);
+    //! Rescales the widget to handle changes to timeline scale or duration
+    void rescale();
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    // TODO: review selection model stuff.
-    bool _selected;
     // Horizontal scale in pixels per millisecond
-    // TODO: just pull from parent timeline?
-    qreal _scale;
+    //! The parent timeline
+    Timeline* _timeline;
+    //! The frame of animation
+    Frame* _frame;
 };
 
-// TODO: implement fully.
 class FrameSelection {
 public:
-    Animation* animation;
-    size_t start, end;
+    // The start of the selection (inclusive)
+    int start;
+    // The end of the selection (exclusive)
+    int end;
+    //! Returns whether the given index is part of the selection
+    bool includes(int index) {
+        return index >= start && index < end;
+    }
+
+    int length() const {
+        return std::max(end - start, 0);
+    }
+
+    void clear() {
+        start = end = 0;
+    }
 };
 
 /*!
@@ -87,17 +120,29 @@ public:
      */
     static constexpr qreal defaultScale = 10.0 * 10 / 25;
 
+    /*!
+     * Returns the current selection
+     */
+    FrameSelection selection() {
+        return _selection;
+    }
+
+    /*!
+     * Returns the current scaling factor (in pixels per millisecond)
+     */
+    qreal scale() {
+        return _scale;
+    }
+
     explicit Timeline(QWidget *parent = 0);
 
 signals:
- //   void selectionChanged(QList<Frame*> frames);
+    //! Called when the scale factor is changed
+    void scaleChanged(qreal pixelsPerMillisecond);
+    void selectionChanged(FrameSelection selection);
 
 public slots:
-    void animationLoaded(QList<Frame*> frames);
- //   void selectionChanged(const FrameSelection& frames);
-
-public slots:
-    void animationLoaded(Animation* animation);
+    void setAnimation(Animation* animation);
     /*!
      * \brief Adds a blank frame to the timeline
      */
@@ -107,7 +152,6 @@ public slots:
     void onCutEvent();
     void onPasteEvent();
 
-private slots:
     void onFrameClicked(FrameWidget *frame);
 
 private:

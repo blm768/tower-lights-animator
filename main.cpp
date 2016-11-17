@@ -4,12 +4,15 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+
+    Animation* animation = new Animation;
+
     MainWindow w;
     w.show();
+    w.setAnimation(animation);
 
-    return a.exec();
+    return app.exec();
 
-    Animation  * animation = new Animation;
     //LoadTan("/home/kwben_000/tower-lights-animator/untitled.tan", animation);
 }
