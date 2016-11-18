@@ -5,6 +5,9 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QLabel>
+#include <QLine>
+#include <QPainter>
+
 
 #include "towerframe.h"
 #include "timeline.h"
