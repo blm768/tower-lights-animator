@@ -5,7 +5,12 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QLabel>
+#include <QLine>
+#include <QPainter>
+
+
 #include "towerframe.h"
+#include "timeline.h"
 
 class ClickableLabel : public QLabel
 {
@@ -33,10 +38,10 @@ public:
     void initializeLayout(QGridLayout *curLayout);
 
 signals:
-    void frameChanged(Frame* frame);
+    void frameChanged(int index);
 
 public slots:
-    void selectionChanged(QList<Frame*> selection);
+    void setSelection(FrameSelection selection);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
     void onCellClickEvent();

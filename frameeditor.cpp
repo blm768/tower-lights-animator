@@ -2,6 +2,11 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QLabel>
+#include <QPainter>
+#include <QPoint>
+#include <QPointer>
+#include <QEvent>
+#include <QPen>
 #include "frameeditor.h"
 
 #define cellsize 27
@@ -11,6 +16,24 @@
  * Clickable labels adapted from
  * https://wiki.qt.io/Clickable_QLabel
  */
+
+class Overlay : public QWidget {
+public:
+    Overlay(QWidget * parent = 0) : QWidget(parent) {
+        setAttribute(Qt::WA_NoSystemBackground);
+        setAttribute(Qt::WA_TransparentForMouseEvents);
+    }
+protected:
+    void paintEvent(QPaintEvent *) {
+        QPainter p(this);
+        QPen pen(Qt::red);
+        pen.setWidth(5);
+        p.setPen(pen);
+
+        p.drawRect(rect());
+    }
+};
+
 
 ClickableLabel::ClickableLabel(const QString& text, QWidget* parent)
     : QLabel(parent)
@@ -46,6 +69,7 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 */
 
     QGridLayout *EditorLayout = new QGridLayout(this);
+
     EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     for (int i = 0; i < FHEIGHT; i++){
@@ -57,6 +81,17 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
     }
     EditorLayout->setSpacing(cellspace);
     initializeLayout(EditorLayout);
+
+    for(int i = 5; i < FHEIGHT - 5; i++){
+        for(int j = 4; j < FWIDTH - 4; j++){
+            Overlay *m = new Overlay;
+            EditorLayout->addWidget(m,i,j);
+        }
+    }
+
+
+
+
 
     setLayout(EditorLayout);
 
@@ -93,6 +128,17 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
 
         }
     }
+    /*
+  QPainter painter(this);
+  painter.setPen(Qt::black);
+  QPoint p1(1,1);
+  QPoint p2(25,25);
+  painter.drawLine(p1,p2);
+  painter.end();
+*/
+
+
+
 }
 
 void FrameEditor::onCellClickEvent()
@@ -116,9 +162,17 @@ void FrameEditor::onCellClickEvent()
     current->setStyleSheet(css);
 }
 
-void FrameEditor::selectionChanged(QList<Frame*> selection)
+void FrameEditor::setSelection(FrameSelection selection)
 {
-
+    if(selection.length() == 1)
+    {
+        // TODO: switch frames
+    }
+    else
+    {
+        // We can't edit 0 or multiple frames.
+        // TODO: disable this widget?
+    }
 }
 
 void FrameEditor::selectTool(ToolType tool)

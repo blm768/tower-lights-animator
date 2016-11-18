@@ -147,6 +147,11 @@ public slots:
      * \brief Adds a blank frame to the timeline
      */
     void addFrame();
+    /*!
+     * \brief Should be called when the contents of the frame at the given index
+     * are changed
+     */
+    void onFrameChanged(int index);
 
     void onCopyEvent();
     void onCutEvent();
