@@ -77,7 +77,7 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     menuEdit->addAction(Copy);
     menuEdit->addAction(Paste);
 
-    resetWindow = window;
+    _window = window;
 
 }
 
@@ -93,13 +93,13 @@ void MainMenu::newFile() {
         std::string stdFileName = fileName.toStdString();
         SaveProject(stdFileName, animation);
         animation = new Animation;
-        resetWindow->setAnimation(animation);
+        _window->setAnimation(animation);
         break;
     }
     case QMessageBox::Discard:{
         delete animation;
         animation = new Animation;
-        resetWindow->setAnimation(animation);
+        _window->setAnimation(animation);
         break;
     }
     case QMessageBox::Cancel:
@@ -148,17 +148,17 @@ void MainMenu::openFile() {
         stdFileName = fileName.toStdString();
         LoadTan(stdFileName, animation);
         previousFile = stdFileName;
-        resetWindow->setAnimation(animation);
+        _window->setAnimation(animation);
         break;
     }
     case QMessageBox::Discard:{
         delete animation;
         animation = new Animation;
-        resetWindow->setAnimation(animation);
+        _window->setAnimation(animation);
         fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
         std::string stdFileName = fileName.toStdString();
         LoadTan(stdFileName, animation);
-        resetWindow->setAnimation(animation);
+        _window->setAnimation(animation);
         break;
     }
     case QMessageBox::Cancel:

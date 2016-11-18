@@ -50,7 +50,7 @@ private:
     QMenu* menuFile;
     QMenu* menuEdit;
 
-    MainWindow *resetWindow;
+    MainWindow *_window;
 };
 
 #endif // MAINMENU_H
