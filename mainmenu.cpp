@@ -70,11 +70,14 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     menuFile->addAction(actSaveAs);
     menuFile->addAction(actExport);
     menuFile->addAction(actExit);
+    menuFile->addAction(actOpenFile);
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(Cut);
     menuEdit->addAction(Copy);
     menuEdit->addAction(Paste);
+
+    resetWindow = window;
 
 }
 
@@ -89,12 +92,14 @@ void MainMenu::newFile() {
         QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
         std::string stdFileName = fileName.toStdString();
         SaveProject(stdFileName, animation);
+        animation = new Animation;
+        resetWindow->setAnimation(animation);
         break;
     }
     case QMessageBox::Discard:{
-        //delete animation;
-        //animation = new Animation;
-        //w.setAnimation(animation);
+        delete animation;
+        animation = new Animation;
+        resetWindow->setAnimation(animation);
         break;
     }
     case QMessageBox::Cancel:
@@ -127,19 +132,33 @@ void MainMenu::saveFileAs() {
 
 void MainMenu::openFile() {
     QMessageBox newFileBox;
+    QString fileName;
     newFileBox.setText("Do you want to save your current animation?");
     newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     int ret = newFileBox.exec();
 
     switch(ret) {
     case QMessageBox::Save:{
-        QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+        fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
         std::string stdFileName = fileName.toStdString();
         SaveProject(stdFileName, animation);
-        //TODO need to clear
+        delete animation;
+        animation = new Animation;
+        fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
+        stdFileName = fileName.toStdString();
+        LoadTan(stdFileName, animation);
+        previousFile = stdFileName;
+        resetWindow->setAnimation(animation);
         break;
     }
     case QMessageBox::Discard:{
+        delete animation;
+        animation = new Animation;
+        resetWindow->setAnimation(animation);
+        fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
+        std::string stdFileName = fileName.toStdString();
+        LoadTan(stdFileName, animation);
+        resetWindow->setAnimation(animation);
         break;
     }
     case QMessageBox::Cancel:

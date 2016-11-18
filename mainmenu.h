@@ -49,6 +49,8 @@ private:
     // Menus
     QMenu* menuFile;
     QMenu* menuEdit;
+
+    MainWindow *resetWindow;
 };
 
 #endif // MAINMENU_H
