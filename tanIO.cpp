@@ -123,8 +123,6 @@ int LoadTan(string fileName, Animation * animation)
         }
     }
 
-    animation->PrintTower();
-
     return 1;
 }
 

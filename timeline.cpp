@@ -187,6 +187,7 @@ void Timeline::setAnimation(Animation* animation) {
     }
 }
 
+
 void Timeline::onCopyEvent() {
 
 }

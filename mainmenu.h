@@ -31,6 +31,7 @@ private slots:
     void newFile();
     void saveFile();
     void saveFileAs();
+    void openFile();
     void exportFile();
 
 private:
@@ -38,6 +39,7 @@ private:
     QAction* actNewFile;
     QAction* actSaveFile;
     QAction* actSaveAs;
+    QAction* actOpenFile;
     QAction* actExport;
     QAction* actExit;
     QAction* Cut;

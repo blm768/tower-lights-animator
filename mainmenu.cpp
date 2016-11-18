@@ -1,8 +1,18 @@
 #include "mainmenu.h"
 
 #include <QMenuBar>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QString>
+#include <string>
+#include <iostream>
 
 #include "mainwindow.h"
+#include "tanIO.h"
+
+extern Animation *animation;
+extern MainWindow w;
+std::string previousFile = "";
 
 MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     // Create actions.
@@ -21,6 +31,11 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     actSaveAs->setShortcuts(QKeySequence::SaveAs);
     actSaveAs->setStatusTip(tr("Save the animation to a new file"));
     connect(actSaveAs, &QAction::triggered, this, &MainMenu::saveFileAs);
+
+    actOpenFile = new QAction(tr("&Open"), this);
+    actOpenFile->setShortcuts(QKeySequence::Open);
+    actOpenFile->setStatusTip(tr("Open an animation"));
+    connect(actOpenFile, &QAction::triggered, this, &MainMenu::openFile);
 
     actExport = new QAction(tr("&Export"), this);
     actExport->setStatusTip(tr("Export the animation to a tan file"));
@@ -64,15 +79,76 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
 }
 
 void MainMenu::newFile() {
+    QMessageBox newFileBox;
+    newFileBox.setText("Do you want to save your current animation?");
+    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    int ret = newFileBox.exec();
+
+    switch(ret) {
+    case QMessageBox::Save:{
+        QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+        std::string stdFileName = fileName.toStdString();
+        SaveProject(stdFileName, animation);
+        break;
+    }
+    case QMessageBox::Discard:{
+        //delete animation;
+        //animation = new Animation;
+        //w.setAnimation(animation);
+        break;
+    }
+    case QMessageBox::Cancel:
+        return;
+        break;
+    default:
+        std::cout << "Something bad happened\n";
+        break;
+    }
 
 }
 
 void MainMenu::saveFile() {
-
+    if(previousFile.empty()){
+        QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+        std::string stdFileName = fileName.toStdString();
+        SaveProject(stdFileName, animation);
+        previousFile = stdFileName;
+    }
+    else
+        SaveProject(previousFile, animation);
 }
 
 void MainMenu::saveFileAs() {
+    QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+    std::string stdFileName = fileName.toStdString();
+    SaveProject(stdFileName, animation);
+    previousFile = stdFileName;
+}
 
+void MainMenu::openFile() {
+    QMessageBox newFileBox;
+    newFileBox.setText("Do you want to save your current animation?");
+    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    int ret = newFileBox.exec();
+
+    switch(ret) {
+    case QMessageBox::Save:{
+        QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+        std::string stdFileName = fileName.toStdString();
+        SaveProject(stdFileName, animation);
+        //TODO need to clear
+        break;
+    }
+    case QMessageBox::Discard:{
+        break;
+    }
+    case QMessageBox::Cancel:
+        return;
+        break;
+    default:
+        std::cout << "Something bad happened\n";
+        break;
+    }
 }
 
 void MainMenu::exportFile() {

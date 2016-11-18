@@ -1,12 +1,11 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "tanIO.h"
+
+Animation* animation = new Animation;
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
-    Animation* animation = new Animation;
 
     MainWindow w;
     w.show();
@@ -14,5 +13,4 @@ int main(int argc, char *argv[])
 
     return app.exec();
 
-    //LoadTan("/home/kwben_000/tower-lights-animator/untitled.tan", animation);
 }
