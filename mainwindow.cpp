@@ -24,6 +24,7 @@ MainWindow::~MainWindow()
 
 }
 
+// TODO: free the old animation after sending animationSet.
 void MainWindow::setAnimation(Animation *animation) {
     _animation = animation;
     animationSet(animation);
