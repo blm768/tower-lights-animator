@@ -338,7 +338,7 @@ int SaveProject( string fileName, Animation *tower ) {
         output << time << endl;
 
         for( int i=0; i<20; i++ ) {
-            for( int j = 0; j<14; j++ ) {
+            for( int j = 0; j<12; j++ ) {
 
                 //Get color of a cell and write its RGB values
                 current = tower->GetCellColor(index, i, j);
