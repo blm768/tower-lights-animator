@@ -171,5 +171,8 @@ void MainMenu::openFile() {
 }
 
 void MainMenu::exportFile() {
-
+    QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+    std::string stdFileName = fileName.toStdString();
+    SaveTan(stdFileName, animation);
+    previousFile = stdFileName;
 }
