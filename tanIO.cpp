@@ -5,6 +5,7 @@
 #include <cstring>
 #include <string>
 #include "tanIO.h"
+#include "error.h"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ int LoadTan(string fileName, Animation * animation)
     tanFile.open(fileName, ifstream::in);
 
     if(!tanFile){
-        cout << "Error opening .tan file\n" << fileName;
+        errOpeningTan();
         return 0;
     }
 
@@ -61,7 +62,7 @@ int LoadTan(string fileName, Animation * animation)
     }
     else
     {
-        cout << "ERROR tan file is misformed or has no frames";
+        errBadTan();
         return 0;
     }
 
@@ -123,6 +124,8 @@ int LoadTan(string fileName, Animation * animation)
         }
     }
 
+    lineNum = 0;
+    frameCount = 1;
     return 1;
 }
 
@@ -135,23 +138,23 @@ int GetMetaData(string line)
 
     tok = (const char *) strtok((char *) line.c_str(), " ");     //framecount
     if(!(frameCount = atoi(tok)))
-        Error(tok);
+      errBadTanLine(tok, lineNum);
     tok = strtok(NULL, " ");
     if(!(height = atoi(tok)))                                    //height of tower
-        Error(tok);
+      errBadTanLine(tok, lineNum);
     tok = strtok(NULL, " ");
     if(!(width = atoi(tok)))                                     //width of tower
-        Error(tok);
+      errBadTanLine(tok, lineNum);
 
     if((tok = strtok(NULL, " ")))
-        Error(tok);
+      errBadTanLine(tok, lineNum);
 
     if(width == 4 && height == 10)
         return 1;
     else if (width == 12 && height == 20)
         return 2;
     else{
-        cout << "Error at line " << lineNum << ". The height or width of the tan file is incorrect\n";
+        errBadHeaderStamp(lineNum);
         return 0;
     }
 }
@@ -164,19 +167,19 @@ int GetNewTime(string line, QTime * nTime)
     int ms   = 0;
 
     if(!(tok = strtok((char *) line.c_str(), ":"))){              //get minutes
-        cout << "Error in timestamp at line " << lineNum;
+        errBadTimeStamp(lineNum);
         return 0;
     }
     else
         mins = atoi(tok);
     if(!(tok = strtok(NULL, "."))){                                //get seconds
-        cout << "Error in timestamp at line " << lineNum;
+        errBadTimeStamp(lineNum);
         return 0;
     }
     else
         secs = atoi(tok);
     if(!(tok = strtok(NULL , " "))){                               //get milliseconds
-        cout << "Error in timestamp at line " << lineNum;
+        errBadTimeStamp(lineNum);
         return 0;
     }
     else
@@ -202,21 +205,21 @@ int ProcessValues(Animation * animation, string line, int width, int level)
     //must initally break the first grouping then loop
     if(!(tok = strtok((char *) line.c_str(), " ")))
     {
-        Error(tok);
+        errBadTanLine(tok, lineNum);
         return 0;
     }
     else
         red = atoi(tok);
     if(!(tok = strtok(NULL, " ")))
     {
-        Error(tok);
+        errBadTanLine(tok, lineNum);
         return 0;
     }
     else
         green = atoi(tok);
     if(!(tok = strtok(NULL, " ")))
     {
-        Error(tok);
+        errBadTanLine(tok, lineNum);
         return 0;
     }
     else
@@ -237,21 +240,21 @@ int ProcessValues(Animation * animation, string line, int width, int level)
 
         if(!(tok = strtok(NULL, " ")))
         {
-            Error(tok);
+            errBadTanLine(tok, lineNum);
             return 0;
         }
         else
             red = atoi(tok);
         if(!(tok = strtok(NULL, " ")))
         {
-            Error(tok);
+            errBadTanLine(tok, lineNum);
             return 0;
         }
         else
             green = atoi(tok);
         if(!(tok = strtok(NULL, " ")))
         {
-            Error(tok);
+            errBadTanLine(tok, lineNum);
             return 0;
         }
         else
@@ -353,9 +356,4 @@ int SaveProject( string fileName, Animation *tower ) {
     }
     output.close();
     return 0;
-}
-
-void Error(const char * tok)
-{
-    cout << "Error in tan file at line " << lineNum << " and token " << tok << "\n";
 }

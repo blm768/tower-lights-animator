@@ -6,6 +6,7 @@
 #include <QString>
 #include <string>
 #include <iostream>
+#include <QDebug>
 
 #include "mainwindow.h"
 #include "tanIO.h"
