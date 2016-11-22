@@ -14,6 +14,7 @@ const QColor FrameWidget::borderSelectedColor = QColor(255, 255, 127);
 FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
         QWidget(parent), _timeline(timeline), _frame(frame) {
     setMinimumWidth(minWidth);
+    setMinimumHeight(minHeight);
     connect(this, &FrameWidget::clicked, _timeline, &Timeline::onFrameClicked);
     // We need the cast to determine which overload to use.
     connect(_timeline, &Timeline::selectionChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::update));
@@ -152,14 +153,19 @@ Timeline::Timeline(QWidget *parent) :
 
 void Timeline::addFrame() {
     int insertionLocation = 0;
-    if(_selection.length() > 0) {
+
+    if(_selection.length() == 0) {
+        // Add the frame to the beginning.
+        // TODO: break out a constant for default frame duration.
+        _animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+    } else {
+        // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _animation->AddFrame(insertionLocation - 1, insertionLocation);
     }
-    // TODO: pick a proper insertion location.
-    // TODO: break out a constant.
-    _animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+
     Frame* frame = _animation->GetFrame(insertionLocation);
-    // TODO: copy duration of previous frame?
     FrameWidget* widget = new FrameWidget(this, frame);
     _frameLayout->insertWidget(insertionLocation, widget, 0);
     // TODO: select the new frame?
@@ -190,7 +196,6 @@ void Timeline::setAnimation(Animation* animation) {
         _frameLayout->insertWidget(i, widget, 0);
     }
 }
-
 
 void Timeline::onCopyEvent() {
 
