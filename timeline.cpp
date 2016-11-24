@@ -1,8 +1,10 @@
 #include "timeline.h"
 
+#include <limits>
+
 #include <QLabel>
-#include <QLineEdit>
 #include <QPainter>
+#include <QScrollArea>
 
 //-------------//
 // FrameWidget //
@@ -98,7 +100,7 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
 // TimelineToolbar //
 //-----------------//
 
-TimelineToolbar::TimelineToolbar(QWidget *parent) : QWidget(parent) {
+TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     QHBoxLayout *layout = new QHBoxLayout;
     setLayout(layout);
 
@@ -107,26 +109,56 @@ TimelineToolbar::TimelineToolbar(QWidget *parent) : QWidget(parent) {
     QLabel *frameDurationLabel = new QLabel(tr("Frame duration"));
     layout->addWidget(frameDurationLabel, 0, Qt::AlignLeft);
 
-    _frameDuration = new QLineEdit;
-    layout->addWidget(_frameDuration);
+    _frameDurationBox = new QSpinBox;
+    // TODO: get the minimum from a constant.
+    _frameDurationBox->setRange(25, std::numeric_limits<int>::max());
+    layout->addWidget(_frameDurationBox);
 
-    _buttons = new QWidget;
+    connect(_frameDurationBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &TimelineToolbar::setDuration);
+
+    _buttonBox = new QWidget;
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
-    _buttons->setLayout(buttonsLayout);
-    layout->addWidget(_buttons);
+    _buttonBox->setLayout(buttonsLayout);
+    layout->addWidget(_buttonBox);
 
-    // TODO: add icon.
+    // TODO: replace text with an icon?
     _buttonNew = new QPushButton(tr("New frame"));
     buttonsLayout->addWidget(_buttonNew, 0, Qt::AlignLeft);
-    connect(_buttonNew, SIGNAL(clicked(bool)), this, SIGNAL(addFrame()));
+    connect(_buttonNew, &QPushButton::clicked, this, &TimelineToolbar::addFrame);
 
     // Pushes all the controls left.
     buttonsLayout->addStretch(1);
     layout->addStretch(1);
 }
 
-void TimelineToolbar::setSelection(const FrameSelection& frames) {
-    // TODO: implement.
+void TimelineToolbar::setSelection(const FrameSelection& selection) {
+    _selection = selection;
+
+    if(selection.length() == 0) {
+        // TODO: disable the frame duration widget.
+    } else {
+        int duration = 0;
+        for(int i = selection.start; i < selection.end; ++i) {
+            const Frame* frame = selection.animation->GetFrame(i);
+            duration += frame->toMsec();
+        }
+
+        _frameDurationBox->setValue(duration);
+    }
+}
+
+void TimelineToolbar::setDuration(int duration) {
+    if(_selection.length() == 0) {
+        return;
+    }
+
+    Timeline* timeline = dynamic_cast<Timeline*>(parent());
+    int individualDuration = duration / _selection.length();
+    for(int i = _selection.start; i < _selection.end; ++i) {
+        Frame* frame = _selection.animation->GetFrame(i);
+        frame->FDuration = QTime(0, 0, 0, individualDuration);
+        timeline->onFrameChanged(i);
+    }
 }
 
 //----------//
@@ -143,12 +175,19 @@ Timeline::Timeline(QWidget *parent) :
     layout->addWidget(_toolbar, 0);
 
     _frameBox = new QWidget();
+    _frameBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+
     _frameLayout = new QHBoxLayout;
     _frameBox->setLayout(_frameLayout);
-    layout->addWidget(_frameBox, 1);
     _frameLayout->addStretch(1);
 
+    QScrollArea* frameScrollBox = new QScrollArea();
+    frameScrollBox->setWidget(_frameBox);
+    frameScrollBox->setWidgetResizable(true);
+    layout->addWidget(frameScrollBox, 1);
+
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
+    connect(this, &Timeline::selectionChanged, _toolbar, &TimelineToolbar::setSelection);
 }
 
 void Timeline::addFrame() {
@@ -157,15 +196,15 @@ void Timeline::addFrame() {
     if(_selection.length() == 0) {
         // Add the frame to the beginning.
         // TODO: break out a constant for default frame duration.
-        _animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+        _selection.animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
         // insertionLocation is guaranteed to be one _past_ the last selected frame.
-        _animation->AddFrame(insertionLocation - 1, insertionLocation);
+        _selection.animation->AddFrame(insertionLocation - 1, insertionLocation);
     }
 
-    Frame* frame = _animation->GetFrame(insertionLocation);
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
     FrameWidget* widget = new FrameWidget(this, frame);
     _frameLayout->insertWidget(insertionLocation, widget, 0);
     // TODO: select the new frame?
@@ -173,6 +212,7 @@ void Timeline::addFrame() {
 
 void Timeline::onFrameChanged(int index) {
     QWidget* widget = _frameLayout->itemAt(index)->widget();
+    widget->updateGeometry();
     widget->update();
 }
 
@@ -189,9 +229,9 @@ void Timeline::setAnimation(Animation* animation) {
     while(QWidget* child = _frameBox->findChild<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
         delete child;
     }
-    _animation = animation;
-    for(int i = 0; i < _animation->FrameCount(); ++i) {
-        Frame* frame = _animation->GetFrame(i);
+    _selection.animation = animation;
+    for(int i = 0; i < _selection.animation->FrameCount(); ++i) {
+        Frame* frame = _selection.animation->GetFrame(i);
         FrameWidget* widget = new FrameWidget(this, frame);
         _frameLayout->insertWidget(i, widget, 0);
     }

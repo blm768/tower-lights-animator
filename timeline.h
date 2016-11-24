@@ -3,6 +3,7 @@
 
 #include <QLayout>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QWidget>
 
 #include "towerframe.h"
@@ -65,12 +66,18 @@ private:
     Frame* _frame;
 };
 
+/*!
+ * \brief Represents a span of selected frames in an animation
+ */
 class FrameSelection {
 public:
-    // The start of the selection (inclusive)
+    //! The animation that contains the frames
+    Animation* animation;
+    //! The start of the selection (inclusive)
     int start;
-    // The end of the selection (exclusive)
+    //! The end of the selection (exclusive)
     int end;
+
     //! Returns whether the given index is part of the selection
     bool includes(int index) {
         return index >= start && index < end;
@@ -81,6 +88,7 @@ public:
     }
 
     void clear() {
+        animation = nullptr;
         start = end = 0;
     }
 };
@@ -91,7 +99,7 @@ public:
 class TimelineToolbar : public QWidget {
     Q_OBJECT
 public:
-    explicit TimelineToolbar(QWidget *parent = 0);
+    explicit TimelineToolbar(Timeline* parent = 0);
 
 signals:
     /*!
@@ -101,15 +109,20 @@ signals:
 
 public slots:
     /*!
-     * \brief Sets the selected frame(s)
-     * \param frames The selected frames
+     * \brief Sets the selection
+     * \param selection The selection
      */
-    void setSelection(const FrameSelection& frames);
+    void setSelection(const FrameSelection& selection);
+
+private slots:
+    void setDuration(int duration);
 
 private:
-    QWidget *_frameDuration;
-    QWidget *_buttons;
-    QPushButton *_buttonNew;
+    FrameSelection _selection;
+
+    QSpinBox* _frameDurationBox;
+    QWidget* _buttonBox;
+    QPushButton* _buttonNew;
 };
 
 class Timeline : public QWidget {
@@ -143,14 +156,19 @@ signals:
     void selectionChanged(FrameSelection selection);
 
 public slots:
+    /*!
+     * \brief Sets the animation to display in the timeline
+     */
     void setAnimation(Animation* animation);
+
     /*!
      * \brief Adds a blank frame to the timeline
      */
     void addFrame();
+
     /*!
-     * \brief Should be called when the contents of the frame at the given index
-     * are changed
+     * \brief Should be called when the contents or duration of the frame at the
+     * given index are changed
      */
     void onFrameChanged(int index);
 
@@ -161,7 +179,6 @@ public slots:
     void onFrameClicked(FrameWidget *frame);
 
 private:
-    Animation* _animation;
     FrameSelection _selection;
     TimelineToolbar* _toolbar;
     //! Holds the frame widgets

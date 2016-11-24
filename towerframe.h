@@ -14,7 +14,7 @@ struct Frame
        QColor WorkArea[FHEIGHT][FWIDTH];
 
        // Returns the duration of the frame in milliseconds
-       int toMsec()
+       int toMsec() const
        {
             return (QTime(0,0,0,0).msecsTo(FDuration));
        }
