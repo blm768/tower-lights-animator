@@ -13,7 +13,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    animationmodel.cpp \
     mainwindow.cpp \
     timeline.cpp \
     frameeditor.cpp \
@@ -25,8 +24,7 @@ SOURCES += main.cpp \
     tanIO.cpp \
     error.cpp
 
-HEADERS  += animationmodel.h \
-    mainwindow.h \
+HEADERS  += mainwindow.h \
     timeline.h \
     frameeditor.h \
     frameregion.h \
