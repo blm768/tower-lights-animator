@@ -282,7 +282,7 @@ int SaveTan( string fileName, Animation *tower ) {
 
     output << "0.3" << endl;
     output << "NoAudioFile" << endl;
-    output << /*Insert last color here*/endl;
+    output << tower->FrameCount() << " " << "10" << " " << "4" << endl;
 
     while((tower->GetFrameDuration(index))) {
 
@@ -320,13 +320,16 @@ int SaveTan( string fileName, Animation *tower ) {
 }
 
     //Saves animation to a project file, time is in ms
-    //and tower width is 14x20
+    //and tower width is 12x20
 int SaveProject( string fileName, Animation *tower ) {
 
     int index = 0;
     QColor current;
     int r,g,b;
     int time = 0;
+    int timeMs = 0;
+    int timeS = 0;
+    int timeM = 0;
 
     ofstream output;
     output.open( fileName );
@@ -334,16 +337,29 @@ int SaveProject( string fileName, Animation *tower ) {
     //Following writes put the time into the correct format
     output << "0.4" << endl;
     output << "NoAudioFile" << endl;
-    output << /*Insert last color here*/endl;
+    output << tower->FrameCount() << " " << "20" << " " << "12" << endl;
 
     while((tower->GetFrameDuration(index))) {
 
-        output << time << endl;
+        while( timeMs > 999 ) {
 
+            timeMs -= 1000;
+            timeS++;
+        }
+        while( timeS > 59 ) {
+
+            timeS -= 60;
+            timeM++;
+        }
+        output << setfill('0') << setw(2) << timeM << ":";
+        output << setfill('0') << setw(2) << timeS << ".";
+        output << setfill('0') << setw(3) << timeMs << endl;
+
+        //Sizes used are the static 14x20 that the tower is statically allocated to
         for( int i=0; i<20; i++ ) {
-            for( int j = 0; j<12; j++ ) {
+            for( int j=0; j<12; j++ ) {
 
-                //Get color of a cell and write its RGB values
+                //Get color of a cell and write it to the file
                 current = tower->GetCellColor(index, i, j);
                 current.getRgb(&r, &g, &b);
                 output << r << " " << g << " " << b << " ";
@@ -351,7 +367,7 @@ int SaveProject( string fileName, Animation *tower ) {
             cout << endl;
             output << endl;
         }
-        time += tower->GetFrameDuration(index);
+        timeMs += tower->GetFrameDuration(index);
         index++;
     }
     output.close();
