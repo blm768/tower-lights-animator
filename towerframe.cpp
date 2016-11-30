@@ -72,12 +72,7 @@ int Animation::SanitizeTime(int OutTime)
 }
 
 Frame* Animation::GetFrame(int index) {
-    if (!IsValidFrame(index)){
-        return FrameList.at(index);
-    }
-    else if (FrameList.count() > 0){
-        return FrameList.at(0);
-    }
+    return FrameList.at(index);
 }
 
 int Animation::FrameCount() const {

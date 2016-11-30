@@ -51,10 +51,6 @@ protected:
 signals:
     void clicked(FrameWidget* widget, bool isShiftClick);
 
-public slots:
-    //! Rescales the widget to handle changes to timeline scale or duration
-    void rescale();
-
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
