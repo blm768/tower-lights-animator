@@ -137,6 +137,33 @@ int Animation::AddColoredFrame(QTime pTime, QTime nTime)
         return 0;
 }
 
+/*int Animation::AddColoredFrame(Frame *coloredFrame, int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < FHEIGHT; i++)
+        {
+            for (int j = 0; j < FWIDTH; j++)
+            {
+                n->WorkArea[i][j] = curr->WorkArea[i][j];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}*/
+
 void Animation::AddFrame(int Duration)
 {
     frameptr n = new Frame;
