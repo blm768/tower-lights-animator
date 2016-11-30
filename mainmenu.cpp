@@ -177,3 +177,4 @@ void MainMenu::exportFile() {
     SaveTan(stdFileName, animation);
     previousFile = stdFileName;
 }
+

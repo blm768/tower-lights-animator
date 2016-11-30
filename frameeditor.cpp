@@ -26,10 +26,10 @@ public:
 protected:
     void paintEvent(QPaintEvent *) {
         QPainter p(this);
-        QPen pen(Qt::red);
+        QPen pen(Qt::magenta);
         pen.setWidth(5);
+        pen.setStyle(Qt::DotLine);
         p.setPen(pen);
-
         p.drawRect(rect());
     }
 };
@@ -67,7 +67,7 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
     pal.setColor(QPalette::Foreground, Qt::black);
     border->setPalette(pal);
 */
-
+    curCol.setRgb(0,0,0);
     QGridLayout *EditorLayout = new QGridLayout(this);
 
     EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
@@ -81,6 +81,8 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
     }
     EditorLayout->setSpacing(cellspace);
     initializeLayout(EditorLayout);
+
+
 
     for(int i = 5; i < FHEIGHT - 5; i++){
         for(int j = 4; j < FWIDTH - 4; j++){
@@ -128,14 +130,6 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
 
         }
     }
-    /*
-  QPainter painter(this);
-  painter.setPen(Qt::black);
-  QPoint p1(1,1);
-  QPoint p2(25,25);
-  painter.drawLine(p1,p2);
-  painter.end();
-*/
 
 
 
@@ -153,12 +147,32 @@ void FrameEditor::onCellClickEvent()
     int y = current->y();
 
     // This sets the text of the buttons to their x and y coordinate, note it's not their index
-    current->setText(QString::number(x) + "," + QString::number(y));
+    //current->setText(QString::number(x) + "," + QString::number(y));
 
-    QString back = "00ffff";
+    //QString back = "00ffff";
     //QString border = "000000";
 
-    QString css = "background-color: #" + back + "; border: 1px solid #777777";
+    //QString css = "background-color: #" + back + "; border: 1px solid #777777";
+
+    int r,g,b;
+    curCol.getRgb(&r,&g,&b);
+
+    QString red, green, blue, css;
+    red = QString::number(r);
+    blue = QString::number(b);
+    green = QString::number(g);
+
+    css = "background-color : rgb(";
+    css.append(red);
+    css.append(",");
+    css.append(green);
+    css.append(",");
+    css.append(blue);
+    css.append("); ");
+    css.append("border: 1px solid #777777");
+
+
+
     current->setStyleSheet(css);
 }
 
@@ -182,6 +196,9 @@ void FrameEditor::selectTool(ToolType tool)
 
 void FrameEditor::setPenColor(const QColor& color)
 {
+int r,g,b;
+color.getRgb(&r,&g,&b);
+curCol.setRgb(r,g,b);
 
 }
 

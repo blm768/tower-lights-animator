@@ -2,19 +2,35 @@
 #define COLORPICKER_H
 
 #include <QWidget>
+#include <QGridLayout>
+#include <QColor>
+#include <QLabel>
+#include <QColorDialog>
 
 class ColorPicker : public QWidget
 {
     Q_OBJECT
+private:
+    QColor col;
+    QLabel *ColSel;
+    QColorDialog *ColDiag;
 public:
+    static const int Height = 3;
+    static const int Width = 3;
+
     explicit ColorPicker(QWidget *parent = 0);
+    void initializeLayout(QGridLayout *curLayout);
+
 
 signals:
-    void colorSet(QColor color);
+    void colorSet();
+    void sendColor(const QColor color);
 
 
 public slots:
-    void setColor(QColor color);
+    void setColor();
+    void colorChange();
+    void diagOpt(QColor color);
 
 };
 

@@ -27,6 +27,8 @@ protected:
 class FrameEditor : public QWidget
 {
     Q_OBJECT
+private:
+    QColor curCol;
 public:
     enum ToolType {
         PEN,
