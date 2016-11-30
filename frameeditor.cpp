@@ -10,66 +10,12 @@
 #include "frameeditor.h"
 
 #define cellsize 27
-#define cellspace 4
-
-/*
- * Clickable labels adapted from
- * https://wiki.qt.io/Clickable_QLabel
- */
-
-class Overlay : public QWidget {
-public:
-    Overlay(QWidget * parent = 0) : QWidget(parent) {
-        setAttribute(Qt::WA_NoSystemBackground);
-        setAttribute(Qt::WA_TransparentForMouseEvents);
-    }
-protected:
-    void paintEvent(QPaintEvent *) {
-        QPainter p(this);
-        QPen pen(Qt::red);
-        pen.setWidth(5);
-        p.setPen(pen);
-
-        p.drawRect(rect());
-    }
-};
-
-
-ClickableLabel::ClickableLabel(const QString& text, QWidget* parent)
-    : QLabel(parent)
-{
-    setText(text);
-}
-
-ClickableLabel::~ClickableLabel()
-{
-}
-
-void ClickableLabel::mousePressEvent(QMouseEvent* event)
-{
-    emit clicked();
-}
+#define cellspace 1
 
 FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 {
-/*
-    This is an example of a frame, the end result needs to be four QFrame::Line objects bordering our central area
-
-    QFrame *border = new QFrame(parent);
-    border->setFrameStyle(QFrame::Box);
-    //border->setFrameShadow(QFrame::Raised);
-    //border->setAutoFillBackground(true);
-
-    border->setFixedSize((cellsize * 4) + (cellspace * 4),(cellsize * 10) + (cellspace * 10));
-    border->setLineWidth(3);
-    border->move((cellsize * 4) + (cellspace * 4.5)+5,(cellsize * 5) + (cellspace * 4.5) + 29);
-    QPalette pal;
-    pal.setColor(QPalette::Foreground, Qt::black);
-    border->setPalette(pal);
-*/
 
     QGridLayout *EditorLayout = new QGridLayout(this);
-
     EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     for (int i = 0; i < FHEIGHT; i++){
@@ -81,17 +27,6 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
     }
     EditorLayout->setSpacing(cellspace);
     initializeLayout(EditorLayout);
-
-    for(int i = 5; i < FHEIGHT - 5; i++){
-        for(int j = 4; j < FWIDTH - 4; j++){
-            Overlay *m = new Overlay;
-            EditorLayout->addWidget(m,i,j);
-        }
-    }
-
-
-
-
 
     setLayout(EditorLayout);
 
@@ -109,18 +44,15 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
             QWidget *widget = layout->widget();
             QPushButton *current = qobject_cast<QPushButton*>(widget);
 
-            //Palette is no longer used, stylesheet is now used
-
-            //QPalette pal;
-            //pal.setColor(QPalette::Button, QColor(Qt::black));
-            //current->setFrameShape(QFrame::WinPanel);
-            //current->setFrameShadow(QFrame::Sunken);
-            //current->setPalette(pal);
-
             current->setMaximumSize(QSize(cellsize,cellsize));
             current->setMinimumSize(QSize(cellsize,cellsize));
-
-            QString css = "background-color: #000000; border: 2px solid #777777";
+            QString border = "777777";
+            if (i > 4 && i < FHEIGHT - 5){
+                if (j > 3 && j < FWIDTH - 4){
+                    border = "ff0000";
+                }
+            }
+            QString css = "background-color: #000000; border: 2px solid #" + border;
             current->setStyleSheet(css);
 
             current->setFlat(true);
@@ -128,37 +60,29 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
 
         }
     }
-    /*
-  QPainter painter(this);
-  painter.setPen(Qt::black);
-  QPoint p1(1,1);
-  QPoint p2(25,25);
-  painter.drawLine(p1,p2);
-  painter.end();
-*/
-
-
-
 }
 
 void FrameEditor::onCellClickEvent()
 {
     QPushButton *current = qobject_cast<QPushButton*>(sender());
 
-    //QPalette pal = current->palette();
-    //pal.setColor(QPalette::Button, QColor(Qt::green));
-    //current->setPalette(pal);
+    QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
+    int index = layout->indexOf(current);
+    int row, column, rs, cs;
+    layout->getItemPosition(index, &row, &column, &rs, &cs);
 
-    int x = current->x();
-    int y = current->y();
-
-    // This sets the text of the buttons to their x and y coordinate, note it's not their index
-    current->setText(QString::number(x) + "," + QString::number(y));
+    QString border = "777777";
+    if (row > 4 && row < FHEIGHT - 5){
+        if (column > 3 && column < FWIDTH - 4){
+            border = "ff0000";
+        }
+    }
 
     QString back = "00ffff";
-    //QString border = "000000";
 
-    QString css = "background-color: #" + back + "; border: 1px solid #777777";
+    current->setText(QString("%1,%2").arg(row).arg(column));
+
+    QString css = "background-color: #" + back + "; border: 2px solid #" + border;
     current->setStyleSheet(css);
 }
 

@@ -10,40 +10,74 @@
 
 Animation::Animation()
 {
-    TDuration.setHMS(0, 0, 0, 0);
+    TDuration = 0;
 }
 
-    /*
-     * SanitizeTime should always return a value that is:
-     * 1) isValid() = true (this means nonnegative and formatted correctly)
-     * 2) is divisible by 25 ms (with the lowest accepted value being 25)
-     * 3) rounded up to the nearest number that is divisible by 25 if it fails
-     *    the second check, or just set to 25ms if it fails the first
-     *
-     * I tried to write it to quietly try to fix errors and return a valid time
-     * as opposed to just returning error messages here
-     */
-QTime Animation::SanitizeTime(QTime InTime)
+bool Animation::FrameSelected()
 {
-    QTime OutTime = InTime;
-    int MinMS = 25;
-    if (!OutTime.isValid() || OutTime < QTime(0,0,0,MinMS))
+    return (currFrame != NULL);
+}
+
+int Animation::SelectFrame(int Index)
+{
+    if (!IsValidFrame(Index)){
+        return 0;
+    } else {
+        currFrame = FrameList.at(Index);
+    }
+    return 1;
+}
+
+int Animation::SetSelectedColor(int row, int column, QColor Color)
+{
+    if (currFrame == NULL)
     {
-        OutTime = QTime(0,0,0,MinMS);
+        // currFrame is not set
+        return 0;
+    }
+    if (!Color.isValid())
+    {
+        Color = QColor(Qt::black);
+    }
+    currFrame->WorkArea[row][column] = Color;
+    return 1;
+}
+
+QColor Animation::GetSelectedColor(int row, int column)
+{
+    if (currFrame == NULL)
+    {
+        // currFrame is not set
+        return (QColor(Qt::black));
+    }
+    return (currFrame->WorkArea[row][column]);
+}
+
+int Animation::SanitizeTime(int OutTime)
+{
+    int MinMS = 25;
+    if (OutTime < 0)
+    {
+        OutTime = MinMS;
     }
     else
     {
-        int remainder = (OutTime.msec() % MinMS);
+        int remainder = (OutTime % MinMS);
         if (remainder != 0)
         {
-            OutTime = OutTime.addMSecs(MinMS - remainder);
+            OutTime += (MinMS - remainder);
         }
     }
     return OutTime;
 }
 
 Frame* Animation::GetFrame(int index) {
-    return FrameList[index];
+    if (!IsValidFrame(index)){
+        return FrameList.at(index);
+    }
+    else if (FrameList.count() > 0){
+        return FrameList.at(0);
+    }
 }
 
 int Animation::FrameCount() const {
@@ -59,7 +93,7 @@ int Animation::GetFrameDuration(int Index)
     }
     else
     {
-        return (QTime(0,0,0,0).msecsTo(FrameList.at(Index)->FDuration));
+        return (FrameList.at(Index)->FDuration);
     }
 }
 
@@ -80,28 +114,30 @@ int Animation::AddColoredFrame(QTime pTime, QTime nTime)
 {
     if(currFrame != NULL)
     {
-        currFrame->FDuration = QTime(0,0,0,0);
+        currFrame->FDuration = 0;
+        int mpTime = QTime(0,0,0,0).msecsTo(pTime);
+        int mnTime = QTime(0,0,0,0).msecsTo(nTime);
 
         if (pTime > nTime)
         {
             //Error handling?
-            currFrame->FDuration = QTime(0,0,0,25);
+            currFrame->FDuration = 25;
         }
         else
         {
-        currFrame->FDuration = currFrame->FDuration.addMSecs(pTime.msecsTo(nTime));
+        currFrame->FDuration += (mnTime - mpTime); //currFrame->FDuration.addMSecs(pTime.msecsTo(nTime));
         currFrame->FDuration = SanitizeTime(currFrame->FDuration);
         }
 
         FrameList.append(currFrame);
-        TDuration = TDuration.addMSecs(pTime.msecsTo(nTime));
+        TDuration += (mnTime - mpTime); //TDuration.addMSecs(pTime.msecsTo(nTime));
         return 1;
     }
     else
         return 0;
 }
 
-void Animation::AddFrame(QTime Duration)
+void Animation::AddFrame(int Duration)
 {
     frameptr n = new Frame;
     n->FDuration = SanitizeTime(Duration);
@@ -115,10 +151,10 @@ void Animation::AddFrame(QTime Duration)
     }
 
     FrameList.append(n);
-    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
+    TDuration = n->FDuration;
 }
 
-int Animation::AddFrame(int Index)
+int Animation::CopyFrame(int Index)
 {
     if (!IsValidFrame(Index))
     {
@@ -139,13 +175,13 @@ int Animation::AddFrame(int Index)
             }
         }
 
-        TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
+        TDuration += curr->FDuration;
         FrameList.append(n);
     }
     return 1;
 }
 
-void Animation::AddFrame(QTime Duration, int Position)
+void Animation::AddFrame(int Duration, int Position)
 {
     frameptr n = new Frame;
     n->FDuration = SanitizeTime(Duration);
@@ -159,10 +195,10 @@ void Animation::AddFrame(QTime Duration, int Position)
     }
 
     FrameList.insert(Position, n);
-    TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(n->FDuration));
+    TDuration += n->FDuration;
 }
 
-int Animation::AddFrame(int Index, int Position)
+int Animation::CopyFrame(int Index, int Position)
 {
     if (!IsValidFrame(Index))
     {
@@ -183,7 +219,7 @@ int Animation::AddFrame(int Index, int Position)
             }
         }
 
-        TDuration = TDuration.addMSecs(QTime(0,0,0,0).msecsTo(curr->FDuration));
+        TDuration += curr->FDuration;
         FrameList.insert(Position, n);
     }
     return 1;
@@ -200,7 +236,7 @@ int Animation::DeleteFrame(int Position)
     else
     {
         // Subtract qtime fduration from qtime tduration
-        TDuration = TDuration.addMSecs(curr->FDuration.msecsTo(QTime(0,0,0,0)));
+        TDuration -= curr->FDuration;
         FrameList.removeAt(Position);
     }
     delete(curr);
@@ -221,7 +257,7 @@ int Animation::MoveFrame(int IndexFrom, int IndexTo)
     }
 }
 
-int Animation::ColorCell(int Index, int row, int column, QColor Color)
+int Animation::SetCellColor(int Index, int row, int column, QColor Color)
 {
     if (!IsValidFrameCell(Index, row, column))
     {
@@ -304,10 +340,10 @@ bool Animation::IsValidFrameCell(int Index, int row, int column)
 
 int Animation::GetDuration()
 {
-    return (QTime(0,0,0,0).msecsTo(TDuration));
+    return TDuration;
 }
 
-int Animation::SetFrameDuration(QTime Duration, int Index)
+int Animation::SetFrameDuration(int Duration, int Index)
 {
     if(!IsValidFrame(Index))
     {
@@ -332,13 +368,14 @@ int Animation::SetFrameDuration(QTime Duration, int Index)
 void Animation::PrintTower()
 {
     QString qs;
+    QTime temp;
     std::cout << std::endl;
     for (int i = 0; i < FrameList.count(); i++)
     {
         std::cout << std::endl;
         std::cout << "Frame: " << i << " size: " << sizeof(FrameList[i]->WorkArea) << std::endl;
         std::cout << FrameList[i] << std::endl;
-        qs = FrameList[i]->FDuration.toString("mm:ss.zzz");
+        qs = FrameList[i]->toQTime().toString("mm:ss.zzz");
         std::cout << qs.toStdString() << std::endl;
         for (int j = 0; j < FHEIGHT; j++)
         {
@@ -351,10 +388,10 @@ void Animation::PrintTower()
             std::cout << std::endl;
         }
     }
-    qs = TDuration.toString("mm:ss.zzz");
+    //qs = TDuration.toString("mm:ss.zzz");
     std::cout << qs.toStdString() << std::endl;
     for (int i = 0; i < FrameList.count(); i++)
     {
-        std::cout << std::endl << FrameList.at(i)->toMsec() << std::endl;
+        std::cout << std::endl << FrameList.at(i)->FDuration << std::endl;
     }
 }

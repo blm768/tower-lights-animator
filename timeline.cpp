@@ -35,7 +35,7 @@ bool FrameWidget::isSelected() {
 
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
-    int width = _frame->toMsec() * _timeline->scale();
+    int width = _frame->FDuration * _timeline->scale();
     if(width < minimumWidth()) {
         width = minimumWidth();
     }
@@ -140,7 +140,7 @@ void TimelineToolbar::setSelection(const FrameSelection& selection) {
         int duration = 0;
         for(int i = selection.start; i < selection.end; ++i) {
             const Frame* frame = selection.animation->GetFrame(i);
-            duration += frame->toMsec();
+            duration += frame->FDuration;
         }
 
         _frameDurationBox->setValue(duration);
@@ -156,7 +156,7 @@ void TimelineToolbar::setDuration(int duration) {
     int individualDuration = duration / _selection.length();
     for(int i = _selection.start; i < _selection.end; ++i) {
         Frame* frame = _selection.animation->GetFrame(i);
-        frame->FDuration = QTime(0, 0, 0, individualDuration);
+        frame->FDuration = individualDuration;
         timeline->onFrameChanged(i);
     }
 }
@@ -196,7 +196,7 @@ void Timeline::addFrame() {
     if(_selection.length() == 0) {
         // Add the frame to the beginning.
         // TODO: break out a constant for default frame duration.
-        _selection.animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+        _selection.animation->AddFrame(25, insertionLocation);
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
