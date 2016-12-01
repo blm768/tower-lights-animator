@@ -90,6 +90,7 @@ void FrameEditor::setSelection(FrameSelection selection)
     if(selection.length() == 1)
     {
         QString rgb, css, border;
+        int frame;
         for (int i = 0; i < FHEIGHT; i++){
             for (int j = 0; j < FWIDTH; j++){
 
@@ -97,7 +98,9 @@ void FrameEditor::setSelection(FrameSelection selection)
                 QWidget *widget = layout->widget();
                 QPushButton *current = qobject_cast<QPushButton*>(widget);
 
-                rgb = selection.animation->GetCellColor(0,i,j).name();
+                frame = selection.start;
+
+                rgb = selection.animation->GetCellColor(frame,i,j).name();
                 border = "777777";
                 if (i > 4 && i < FHEIGHT - 5){
                     if (j > 3 && j < FWIDTH - 4){
