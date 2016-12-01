@@ -63,8 +63,9 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
 
 void FrameEditor::onCellClickEvent()
 {
+    //TODO remove this once pen color changes with color picker
+        pen = QColor(Qt::white);
     QPushButton *current = qobject_cast<QPushButton*>(sender());
-
     QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
     int index = layout->indexOf(current);
     int row, column, rs, cs;
@@ -76,12 +77,14 @@ void FrameEditor::onCellClickEvent()
             border = "ff0000";
         }
     }
+    QString back = "#000000";
 
-    QString back = "00ffff";
+    if (animation != NULL){
+        animation->SetSelectedColor(row, column, pen);
+        back = pen.name();
+    }
 
-    //current->setText(QString("%1,%2").arg(row).arg(column));
-
-    QString css = "background-color: #" + back + "; border: 2px solid #" + border;
+    QString css = "background-color: " + back + "; border: 2px solid #" + border;
     current->setStyleSheet(css);
 }
 
@@ -89,8 +92,11 @@ void FrameEditor::setSelection(FrameSelection selection)
 {
     if(selection.length() == 1)
     {
+        if (animation != NULL){
+            animation->SelectFrame(selection.start);
+        }
         QString rgb, css, border;
-        int frame;
+        //int frame;
         for (int i = 0; i < FHEIGHT; i++){
             for (int j = 0; j < FWIDTH; j++){
 
@@ -98,9 +104,7 @@ void FrameEditor::setSelection(FrameSelection selection)
                 QWidget *widget = layout->widget();
                 QPushButton *current = qobject_cast<QPushButton*>(widget);
 
-                frame = selection.start;
-
-                rgb = selection.animation->GetCellColor(frame,i,j).name();
+                rgb = animation->GetSelectedColor(i,j).name();
                 border = "777777";
                 if (i > 4 && i < FHEIGHT - 5){
                     if (j > 3 && j < FWIDTH - 4){
@@ -119,6 +123,10 @@ void FrameEditor::setSelection(FrameSelection selection)
         // TODO: disable this widget?
     }
 
+}
+
+void FrameEditor::setAnimation(Animation *newAnimation){
+    animation = newAnimation;
 }
 
 void FrameEditor::selectTool(ToolType tool)

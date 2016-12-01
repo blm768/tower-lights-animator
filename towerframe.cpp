@@ -11,6 +11,7 @@
 Animation::Animation()
 {
     TDuration = 0;
+    currFrame = NULL;
 }
 
 bool Animation::FrameSelected()
