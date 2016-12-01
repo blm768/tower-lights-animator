@@ -123,42 +123,47 @@ void ColorPicker::initializeLayout(QGridLayout *curLayout){
  void ColorPicker::setColor(){
 
      QPushButton *current = qobject_cast<QPushButton*>(sender());
-     int x = current->x();
-     int y = current->y();
+     QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
+     int index = layout->indexOf(current);
+     int x, y, rs, cs;
+     layout->getItemPosition(index, &x, &y, &rs, &cs);
 
-     if(x == 12 && y == 12) {
+     //int x = current->x();
+     //int y = current->y();
+
+     if(x == 0 && y == 0) {
        col.setRgb(0,0,255); //blue
 
      }
-     if(x == 53 && y == 12){
+     if(x == 1 && y == 0){
        col.setRgb(255,0,0); //red
 
      }
-     if(x == 94 && y == 12){
+     if(x == 2 && y == 0){
        col.setRgb(255,255,0); //yellow
 
      }
-     if(x == 12 && y == 53){
+     if(x == 0 && y == 1){
        col.setRgb(255,165,0); //orange
 
      }
-     if(x == 53 && y == 53){
+     if(x == 1 && y == 1){
        col.setRgb(0,255,0); //Green
 
      }
-     if(x == 94 && y == 53){
+     if(x == 2 && y == 1){
        col.setRgb(255,0,255); //Purple
 
      }
-     if(x == 12 && y == 94){
+     if(x == 0 && y == 3){
         col.setRgb(0,0,0); //Black
 
      }
-     if(x == 53 && y == 94){
+     if(x == 1 && y == 3){
         col.setRgb(255,255,255); //White
 
      }
-     if(x == 94 && y == 94) {
+     if(x == 2 && y == 3) {
         ColDiag = new QColorDialog(this);
 
         ColDiag->open();

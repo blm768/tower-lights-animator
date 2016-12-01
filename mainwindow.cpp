@@ -36,10 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::animationSet, frameEditor, &FrameEditor::setAnimation);
     connect(frameEditor, &FrameEditor::frameChanged, timeline, &Timeline::onFrameChanged);
 
-    connect(colorPick, SIGNAL(sendColor(QColor)), frameEditor, SLOT(setPenColor(QColor)));
-
+    //connect(colorPick, SIGNAL(sendColor(QColor)), frameEditor, SLOT(setPenColor(QColor)));
+    connect(colorPick, &ColorPicker::sendColor, frameEditor, &FrameEditor::setPenColor);
     connect(timeline, &Timeline::selectionChanged, frameEditor, &FrameEditor::setSelection);
-
 }
 
 MainWindow::~MainWindow()

@@ -10,52 +10,11 @@
 #include "frameeditor.h"
 
 #define cellsize 27
-#define cellspace 4
-
-/*
- * Clickable labels adapted from
- * https://wiki.qt.io/Clickable_QLabel
- */
-
-class Overlay : public QWidget {
-public:
-    Overlay(QWidget * parent = 0) : QWidget(parent) {
-        setAttribute(Qt::WA_NoSystemBackground);
-        setAttribute(Qt::WA_TransparentForMouseEvents);
-    }
-protected:
-    void paintEvent(QPaintEvent *) {
-        QPainter p(this);
-        QPen pen(Qt::magenta);
-        pen.setWidth(5);
-        pen.setStyle(Qt::DotLine);
-        p.setPen(pen);
-        p.drawRect(rect());
-    }
-};
-
+#define cellspace 1
 
 FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 {
-/*
-    This is an example of a frame, the end result needs to be four QFrame::Line objects bordering our central area
-
-    QFrame *border = new QFrame(parent);
-    border->setFrameStyle(QFrame::Box);
-    //border->setFrameShadow(QFrame::Raised);
-    //border->setAutoFillBackground(true);
-
-    border->setFixedSize((cellsize * 4) + (cellspace * 4),(cellsize * 10) + (cellspace * 10));
-    border->setLineWidth(3);
-    border->move((cellsize * 4) + (cellspace * 4.5)+5,(cellsize * 5) + (cellspace * 4.5) + 29);
-    QPalette pal;
-    pal.setColor(QPalette::Foreground, Qt::black);
-    border->setPalette(pal);
-*/
-    curCol.setRgb(0,0,0);
-    QGridLayout *EditorLayout = new QGridLayout(this);
-
-    EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
+    curCol = QColor(Qt::black);
 
     for (int i = 0; i < FHEIGHT; i++){
         for (int j = 0; j < FWIDTH; j++){
@@ -66,16 +25,6 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
     }
     EditorLayout->setSpacing(cellspace);
     initializeLayout(EditorLayout);
-
-
-
-    for(int i = 5; i < FHEIGHT - 5; i++){
-        for(int j = 4; j < FWIDTH - 4; j++){
-            Overlay *m = new Overlay;
-            EditorLayout->addWidget(m,i,j);
-        }
-    }
-
 
     setLayout(EditorLayout);
 
@@ -113,33 +62,11 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
 
 void FrameEditor::onCellClickEvent()
 {
-    //TODO remove this once pen color changes with color picker
-        pen = QColor(Qt::white);
     QPushButton *current = qobject_cast<QPushButton*>(sender());
     QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
     int index = layout->indexOf(current);
     int row, column, rs, cs;
     layout->getItemPosition(index, &row, &column, &rs, &cs);
-
-
-    int r,g,b;
-    curCol.getRgb(&r,&g,&b);
-
-    QString red, green, blue, css;
-    red = QString::number(r);
-    blue = QString::number(b);
-    green = QString::number(g);
-
-    css = "background-color : rgb(";
-    css.append(red);
-    css.append(",");
-    css.append(green);
-    css.append(",");
-    css.append(blue);
-    css.append("); ");
-    
-
-
 
     QString border = "777777";
     if (row > 4 && row < FHEIGHT - 5){
@@ -148,17 +75,16 @@ void FrameEditor::onCellClickEvent()
         }
     }
 
-    css.append("border: 1px solid #" + border);
-
-    
-    QString back = "#000000";
+    QString back = "#FFFFFF";
 
     if (animation != NULL){
-        animation->SetSelectedColor(row, column, pen);
-        back = pen.name();
+        animation->SetSelectedColor(row, column, curCol);
+    }
+    if (curCol.isValid()){
+        back = curCol.name();
     }
 
-    
+    QString css = "background-color: " + back + "; border: 2px solid #" + border;
     current->setStyleSheet(css);
 }
 
@@ -170,7 +96,6 @@ void FrameEditor::setSelection(FrameSelection selection)
             animation->SelectFrame(selection.start);
         }
         QString rgb, css, border;
-        //int frame;
         for (int i = 0; i < FHEIGHT; i++){
             for (int j = 0; j < FWIDTH; j++){
 
@@ -210,10 +135,12 @@ void FrameEditor::selectTool(ToolType tool)
 
 void FrameEditor::setPenColor(const QColor& color)
 {
-int r,g,b;
-color.getRgb(&r,&g,&b);
-curCol.setRgb(r,g,b);
-
+    /*
+    int r,g,b;
+    color.getRgb(&r,&g,&b);
+    curCol.setRgb(r,g,b);
+    */
+    curCol = color;
 }
 
 void FrameEditor::onCopyEvent()

@@ -15,7 +15,10 @@ class FrameEditor : public QWidget
 {
     Q_OBJECT
 private:
+    QGridLayout *EditorLayout = new QGridLayout(this);
+    Animation *animation;
     QColor curCol;
+
 public:
     enum ToolType {
         PEN,
@@ -26,9 +29,6 @@ public:
     explicit FrameEditor(QWidget *parent = 0);
     void initializeLayout(QGridLayout *curLayout);
 
-    QGridLayout *EditorLayout = new QGridLayout(this);
-    Animation *animation;
-    QColor pen;
 
 signals:
     void frameChanged(int index);
