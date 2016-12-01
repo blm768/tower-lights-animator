@@ -312,46 +312,168 @@ void Timeline::shiftLU() {
     int insertionLocation = 0;
 
     if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
         // insertionLocation is guaranteed to be one _past_ the last selected frame.
-        _selection.animation->AddFrame(insertionLocation - 1, insertionLocation);
+        _selection.animation->ShiftFrameLU(insertionLocation - 1, insertionLocation);
     }
 
     Frame* frame = _selection.animation->GetFrame(insertionLocation);
     FrameWidget* widget = new FrameWidget(this, frame);
     _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftL() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameL(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftLD() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameLD(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftUp() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameUp(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftDown() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameDown(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftRU() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameRU(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftR() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameR(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftRD() {
+    int insertionLocation = 0;
 
+    if(_selection.length() == 0) {
+        //There is no frame to be shifted. Pop up error box
+        errNoShift();
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->ShiftFrameRD(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::onCopyEvent() {
