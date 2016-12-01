@@ -35,21 +35,6 @@ protected:
 };
 
 
-ClickableLabel::ClickableLabel(const QString& text, QWidget* parent)
-    : QLabel(parent)
-{
-    setText(text);
-}
-
-ClickableLabel::~ClickableLabel()
-{
-}
-
-void ClickableLabel::mousePressEvent(QMouseEvent* event)
-{
-    emit clicked();
-}
-
 FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 {
 /*
@@ -166,7 +151,7 @@ void FrameEditor::onCellClickEvent()
     css.append("border: 1px solid #" + border);
 
     
-
+    QString back = "#000000";
 
     if (animation != NULL){
         animation->SetSelectedColor(row, column, pen);
