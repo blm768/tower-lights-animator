@@ -57,11 +57,6 @@ void FrameWidget::mousePressEvent(QMouseEvent* event) {
     clicked(this, event->modifiers() == Qt::ShiftModifier);
 }
 
-// TODO: wire this up.
-void FrameWidget::rescale() {
-    updateGeometry();
-}
-
 void FrameWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setPen(Qt::NoPen);
@@ -79,7 +74,6 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     QRect interior(borderWidth, borderWidth, width() - borderWidth * 2, height() - borderWidth * 2);
 
     // Draw frame data.
-    // TODO: proper border math.
     painter.save();
     // Frame height matches interior height.
     qreal frameHeight = (qreal)interior.height();
@@ -89,6 +83,7 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     // Draw cells.
     painter.translate(interior.top(), interior.left());
     painter.scale(frameWidth / FWIDTH, frameHeight / FHEIGHT);
+    // TODO: just draw the interior area.
     for(size_t x = 0; x < FWIDTH; ++x) {
         for(size_t y = 0; y < FHEIGHT; ++y) {
             painter.setBrush(_frame->WorkArea[y][x]);
@@ -186,6 +181,9 @@ void TimelineToolbar::setSelection(const FrameSelection& selection) {
             duration += frame->FDuration;
         }
 
+        // We don't want to fire the changed signal because it will force an
+        // update to the frames.
+        const QSignalBlocker blocker(_frameDurationBox);
         _frameDurationBox->setValue(duration);
     }
 }
@@ -253,7 +251,7 @@ void Timeline::addFrame() {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
         // insertionLocation is guaranteed to be one _past_ the last selected frame.
-        _selection.animation->AddFrame(insertionLocation - 1, insertionLocation);
+        _selection.animation->CopyFrame(insertionLocation - 1, insertionLocation);
     }
 
     Frame* frame = _selection.animation->GetFrame(insertionLocation);
