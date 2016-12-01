@@ -122,6 +122,11 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     _buttonBox->setLayout(buttonsLayout);
     layout->addWidget(_buttonBox);
 
+    _shiftBox = new QWidget;
+    QGridLayout *shiftLayout = new QGridLayout;
+    _shiftBox->setLayout(shiftLayout);
+    layout->addWidget(_shiftBox);
+
     // TODO: replace text with an icon?
     QPushButton* buttonAdd = new QPushButton(tr("Add frame"));
     buttonsLayout->addWidget(buttonAdd, 0, Qt::AlignLeft);
@@ -130,6 +135,38 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     QPushButton* buttonDelete = new QPushButton(tr("Delete frame"));
     buttonsLayout->addWidget(buttonDelete, 0, Qt::AlignLeft);
     connect(buttonDelete, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sLeftUp = new QPushButton(tr("Up Left"));
+    shiftLayout->addWidget(sLeftUp, 0, 0);
+    connect(sLeftUp, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sLeft = new QPushButton(tr("Left"));
+    shiftLayout->addWidget(sLeft, 1, 0);
+    connect(sLeft, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sLeftDown = new QPushButton(tr("Down Left"));
+    shiftLayout->addWidget(sLeftDown, 2, 0);
+    connect(sLeftDown, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sUp = new QPushButton(tr("Up"));
+    shiftLayout->addWidget(sUp, 0, 1);
+    connect(sUp, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sDown = new QPushButton(tr("Down"));
+    shiftLayout->addWidget(sDown, 2, 1);
+    connect(sDown, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sRightUp = new QPushButton(tr("Right Up"));
+    shiftLayout->addWidget(sRightUp, 0, 2);
+    connect(sRightUp, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sRight = new QPushButton(tr("Right"));
+    shiftLayout->addWidget(sRight, 1, 2);
+    connect(sRight, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QPushButton* sRightDown = new QPushButton(tr("Right Down"));
+    shiftLayout->addWidget(sRightDown, 2, 2);
+    connect(sRightDown, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
 
     // Pushes all the controls left.
     buttonsLayout->addStretch(1);

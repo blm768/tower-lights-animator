@@ -126,6 +126,8 @@ private:
 
     QSpinBox* _frameDurationBox;
     QWidget* _buttonBox;
+    QWidget* _shiftBox;
+
 };
 
 class Timeline : public QWidget {
