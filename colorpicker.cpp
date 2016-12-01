@@ -10,6 +10,16 @@
 
 ColorPicker::ColorPicker(QWidget *parent) : QWidget(parent)
 {
+    DefaultColors[0][0] = (QColor(Qt::blue));
+    DefaultColors[0][1] = (QColor(Qt::red));
+    DefaultColors[0][2] = (QColor(Qt::yellow));
+    DefaultColors[1][0] = (QColor(255,165,0,0));
+    DefaultColors[1][1] = (QColor(Qt::green));
+    DefaultColors[1][2] = (QColor(255,0,255,0));
+    DefaultColors[2][0] = (QColor(Qt::black));
+    DefaultColors[2][1] = (QColor(Qt::white));
+    DefaultColors[2][2] = (QColor(150,150,150,00));
+
     col.setRgb(0,0,0);
     QWidget* hozBox = new QWidget();
     QWidget* gridBox = new QWidget();
@@ -50,70 +60,26 @@ ColorPicker::ColorPicker(QWidget *parent) : QWidget(parent)
 }
 
 void ColorPicker::initializeLayout(QGridLayout *curLayout){
+
     for (int i = 0; i < Height; i++)
     {
         for (int j = 0; j < Width; j++)
         {
-
             QLayoutItem *layout = curLayout->itemAtPosition(i,j);
             QWidget *widget = layout->widget();
             QPushButton *current = qobject_cast<QPushButton*>(widget);
 
-
-
             current->setMaximumSize(QSize(27,27));
             current->setMinimumSize(QSize(27,27));
 
-            if(i == 0 && j == 0){
-            QString css = "background-color: blue; border: 2px solid #777777";
-            current->setStyleSheet(css);
+            QString css = "background-color: " + DefaultColors[i][j].name() + "; border: 2px solid #777777";
+            if (i == Height-1 && j == Width-1){
+                css.append("; font: bold 8px");
+                current->setText("more");
             }
-
-            if(i == 0 && j == 1){
-            QString css = "background-color: red; border: 2px solid #777777";
             current->setStyleSheet(css);
-            }
-
-            if(i == 0 && j == 2){
-            QString css = "background-color: yellow; border: 2px solid #777777";
-            current->setStyleSheet(css);
-            }
-
-            if(i == 1 && j == 0){
-            QString css = "background-color: orange; border: 2px solid #777777";
-            current->setStyleSheet(css);
-            }
-
-            if(i == 1 && j == 1){
-            QString css = "background-color: green; border: 2px solid #777777";
-            current->setStyleSheet(css);
-            }
-
-            if(i == 1 && j == 2){
-            QString css = "background-color: purple; border: 2px solid #777777";
-            current->setStyleSheet(css);
-            }
-
-            if(i == 2 && j == 0){
-            QString css = "background-color: black; border: 2px solid #777777";
-            current->setStyleSheet(css);
-            }
-
-            if(i == 2 && j == 1){
-            QString css = "background-color: white; border: 2px solid #777777";
-            current->setStyleSheet(css);
-            }
-
-            if(i == 2 && j == 2){
-            QString css = "background-color: grey; border: 2px solid #777777; font: bold 8px";
-            current->setStyleSheet(css);
-            current->setText("more");
-            }
-
-
             current->setFlat(true);
             current->setAutoFillBackground(true);
-
         }
     }
 
@@ -128,42 +94,9 @@ void ColorPicker::initializeLayout(QGridLayout *curLayout){
      int x, y, rs, cs;
      layout->getItemPosition(index, &x, &y, &rs, &cs);
 
-     //int x = current->x();
-     //int y = current->y();
+     col = DefaultColors[x][y];
 
-     if(x == 0 && y == 0) {
-       col.setRgb(0,0,255); //blue
-
-     }
-     if(x == 1 && y == 0){
-       col.setRgb(255,0,0); //red
-
-     }
-     if(x == 2 && y == 0){
-       col.setRgb(255,255,0); //yellow
-
-     }
-     if(x == 0 && y == 1){
-       col.setRgb(255,165,0); //orange
-
-     }
-     if(x == 1 && y == 1){
-       col.setRgb(0,255,0); //Green
-
-     }
-     if(x == 2 && y == 1){
-       col.setRgb(255,0,255); //Purple
-
-     }
-     if(x == 0 && y == 3){
-        col.setRgb(0,0,0); //Black
-
-     }
-     if(x == 1 && y == 3){
-        col.setRgb(255,255,255); //White
-
-     }
-     if(x == 2 && y == 3) {
+     if(x == 2 && y == 2) {
         ColDiag = new QColorDialog(this);
 
         ColDiag->open();

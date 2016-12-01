@@ -14,10 +14,11 @@ private:
     QColor col;
     QLabel *ColSel;
     QColorDialog *ColDiag;
-public:
     static const int Height = 3;
     static const int Width = 3;
+    QColor DefaultColors[Width][Height];
 
+public:
     explicit ColorPicker(QWidget *parent = 0);
     void initializeLayout(QGridLayout *curLayout);
 
