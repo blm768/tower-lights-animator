@@ -34,10 +34,10 @@ void errBadTan()
 {
   QMessageBox errorBox;
   errorBox.setIcon(QMessageBox::Warning);
-  errorBox.setText(".tan file empty or misformed");
+  errorBox.setText("Error .tan file empty or misformed");
   errorBox.setStandardButtons(QMessageBox::Ok);
   errorBox.exec();
-  lineNum = 0;
+  lineNum = 0;void errNoShift();
   frameCount = 1;
 }
 
@@ -61,4 +61,13 @@ void errBadTimeStamp(int linenum)
   errorBox.exec();
   lineNum = 0;
   frameCount = 1;
+}
+
+void errNoShift()
+{
+    QMessageBox errorBox;
+    errorBox.setIcon(QMessageBox::Warning);
+    errorBox.setText(QString("Error: There is no frame to shift"));
+    errorBox.setStandardButtons(QMessageBox::Ok);
+    errorBox.exec();
 }

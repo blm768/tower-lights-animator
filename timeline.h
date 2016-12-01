@@ -107,6 +107,38 @@ signals:
      */
     void addFrame();
     /*!
+      * \brief Signals to add a frame shifted left and up
+      */
+    void shiftLU();
+    /*!
+      * \brief Signals to add a frame shifted left
+      */
+    void shiftL();
+    /*!
+      * \brief Signals to add a frame shifted left and down
+      */
+    void shiftLD();
+    /*!
+      * \brief Signals to add a frame shifted Up
+      */
+    void shiftUp();
+    /*!
+      * \brief Signals to add a frame shifted Down
+      */
+    void shiftDown();
+    /*!
+      * \brief Signals to add a frame shifted right and up
+      */
+    void shiftRU();
+    /*!
+      * \brief Signals to add a frame shifted right
+      */
+    void shiftR();
+    /*!
+      * \brief Signals to add a frame shifted right and down
+      */
+    void shiftRD();
+    /*!
      * \brief Signals that the frames in the selection are to be deleted
      */
     void deleteSelection();
@@ -175,6 +207,38 @@ public slots:
      * \brief Deletes the frames in the current selection
      */
     void deleteSelection();
+    /*!
+      * \brief copies the previous frame and shifts left and up
+      */
+    void shiftLU();
+    /*!
+      * \brief copies the previous frame and shifts left
+      */
+    void shiftL();
+    /*!
+      * \brief copies the previous frame and shifts left and down
+      */
+    void shiftLD();
+    /*!
+      * \brief copies the previous frame and shifts up
+      */
+    void shiftUp();
+    /*!
+      * \brief copies the previous frame and shifts down
+      */
+    void shiftDown();
+    /*!
+      * \brief copies the previous frame and shifts right and up
+      */
+    void shiftRU();
+    /*!
+      * \brief copies the previous frame and shifts right
+      */
+    void shiftR();
+    /*!
+      * \brief copies the previous frame and shifts right and down
+      */
+    void shiftRD();
 
     /*!
      * \brief Should be called when the contents or duration of the frame at the

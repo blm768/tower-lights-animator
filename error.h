@@ -4,19 +4,34 @@
 
 /* Load Errors */
 
-//Tan file is bad
+/*!
+ * \brief Tan file is bad
+ */
 void errBadTan();
 
-//Bad timestamp in tan file
+/*!
+ * \brief sends error that the timestamp in the file is bad
+ */
 void errBadTimeStamp(int linenum);
 
-//Bad line in tan file
+/*!
+ * \brief sends error that a towerl line in the file is bad
+ */
 void errBadTanLine(const char * tok, int linenum);
 
-//Can't open file
+/*!
+ * \brief sends error that there was a problem opening the file
+ */
 void errOpeningTan();
 
-//Bad width or height or header timestamp
+/*!
+ * \brief sends error that the tower header is bad
+ */
 void errBadHeaderStamp(int linenum);
+
+/*!
+ * \brief sends error that there is no frame to shift yet
+ */
+void errNoShift();
 
 #endif // ERROR_H

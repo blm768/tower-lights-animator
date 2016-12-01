@@ -1,4 +1,5 @@
 #include "timeline.h"
+#include "error.h"
 
 #include <limits>
 
@@ -138,35 +139,35 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
 
     QPushButton* sLeftUp = new QPushButton(tr("Up Left"));
     shiftLayout->addWidget(sLeftUp, 0, 0);
-    connect(sLeftUp, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sLeftUp, &QPushButton::clicked, this, &TimelineToolbar::shiftLU);
 
     QPushButton* sLeft = new QPushButton(tr("Left"));
     shiftLayout->addWidget(sLeft, 1, 0);
-    connect(sLeft, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sLeft, &QPushButton::clicked, this, &TimelineToolbar::shiftL);
 
     QPushButton* sLeftDown = new QPushButton(tr("Down Left"));
     shiftLayout->addWidget(sLeftDown, 2, 0);
-    connect(sLeftDown, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sLeftDown, &QPushButton::clicked, this, &TimelineToolbar::shiftLD);
 
     QPushButton* sUp = new QPushButton(tr("Up"));
     shiftLayout->addWidget(sUp, 0, 1);
-    connect(sUp, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sUp, &QPushButton::clicked, this, &TimelineToolbar::shiftUp);
 
     QPushButton* sDown = new QPushButton(tr("Down"));
     shiftLayout->addWidget(sDown, 2, 1);
-    connect(sDown, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sDown, &QPushButton::clicked, this, &TimelineToolbar::shiftDown);
 
     QPushButton* sRightUp = new QPushButton(tr("Right Up"));
     shiftLayout->addWidget(sRightUp, 0, 2);
-    connect(sRightUp, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sRightUp, &QPushButton::clicked, this, &TimelineToolbar::shiftRU);
 
     QPushButton* sRight = new QPushButton(tr("Right"));
     shiftLayout->addWidget(sRight, 1, 2);
-    connect(sRight, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sRight, &QPushButton::clicked, this, &TimelineToolbar::shiftR);
 
     QPushButton* sRightDown = new QPushButton(tr("Right Down"));
     shiftLayout->addWidget(sRightDown, 2, 2);
-    connect(sRightDown, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+    connect(sRightDown, &QPushButton::clicked, this, &TimelineToolbar::shiftRD);
 
     // Pushes all the controls left.
     buttonsLayout->addStretch(1);
@@ -230,6 +231,14 @@ Timeline::Timeline(QWidget *parent) :
 
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
     connect(_toolbar, &TimelineToolbar::deleteSelection, this, &Timeline::deleteSelection);
+    connect(_toolbar, &TimelineToolbar::shiftLU, this, &Timeline::shiftLU);
+    connect(_toolbar, &TimelineToolbar::shiftL, this, &Timeline::shiftL);
+    connect(_toolbar, &TimelineToolbar::shiftLD, this, &Timeline::shiftLD);
+    connect(_toolbar, &TimelineToolbar::shiftUp, this, &Timeline::shiftUp);
+    connect(_toolbar, &TimelineToolbar::shiftDown, this, &Timeline::shiftDown);
+    connect(_toolbar, &TimelineToolbar::shiftRU, this, &Timeline::shiftRU);
+    connect(_toolbar, &TimelineToolbar::shiftR, this, &Timeline::shiftR);
+    connect(_toolbar, &TimelineToolbar::shiftRD, this, &Timeline::shiftRD);
     connect(this, &Timeline::selectionChanged, _toolbar, &TimelineToolbar::setSelection);
 }
 
@@ -299,6 +308,52 @@ void Timeline::setAnimation(Animation* animation) {
         FrameWidget* widget = new FrameWidget(this, frame);
         _frameLayout->insertWidget(i, widget, 0);
     }
+}
+
+void Timeline::shiftLU() {
+    int insertionLocation = 0;
+
+    if(_selection.length() == 0) {
+        errNoShift();
+        return;
+    } else {
+        // Copy the last selected frame and put the new frame after it.
+        insertionLocation = _selection.end;
+        // insertionLocation is guaranteed to be one _past_ the last selected frame.
+        _selection.animation->AddFrame(insertionLocation - 1, insertionLocation);
+    }
+
+    Frame* frame = _selection.animation->GetFrame(insertionLocation);
+    FrameWidget* widget = new FrameWidget(this, frame);
+    _frameLayout->insertWidget(insertionLocation, widget, 0);
+}
+
+void Timeline::shiftL() {
+
+}
+
+void Timeline::shiftLD() {
+
+}
+
+void Timeline::shiftUp() {
+
+}
+
+void Timeline::shiftDown() {
+
+}
+
+void Timeline::shiftRU() {
+
+}
+
+void Timeline::shiftR() {
+
+}
+
+void Timeline::shiftRD() {
+
 }
 
 void Timeline::onCopyEvent() {
