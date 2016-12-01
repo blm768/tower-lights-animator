@@ -10,13 +10,13 @@
 
 struct Frame
 {
-       QTime FDuration;
+       int FDuration;
        QColor WorkArea[FHEIGHT][FWIDTH];
 
-       // Returns the duration of the frame in milliseconds
-       int toMsec() const
+       // Returns the duration of the frame as QTime
+       QTime toQTime()
        {
-            return (QTime(0,0,0,0).msecsTo(FDuration));
+           return (QTime(0,0,0,0).addMSecs(FDuration));
        }
 };
 typedef Frame *frameptr;
@@ -24,16 +24,18 @@ typedef Frame *frameptr;
 class Animation
 {
 private:
-    QTime TDuration;                    // Stores duration of entire FrameList
-    QTime SanitizeTime(QTime InTime);   // Ensures InTime is valid and divisible by 25, returns a
+    int TDuration;                      // Stores duration of entire FrameList
+    int SanitizeTime(int OutTimeT);       // Ensures InTime is valid and divisible by 25, returns a
                                         // value that is valid, rounds up
+
 
 public:
 
         // Stores the current frame in the animation
-    frameptr currFrame;
+
     QList<frameptr> FrameList;
 
+    frameptr currFrame;
     Animation();
 
     /*!
@@ -46,10 +48,21 @@ public:
      */
     int FrameCount() const;
 
+    bool FrameSelected();
+
+            // Points currFrame to the Animation Frame at Index
+    int SelectFrame(int Index);
+
+            // Sets cell [row][column] to Color in currFrame
+    int SetSelectedColor(int row, int column, QColor Color);
+
+            // Returns the color of selected frame at cell [row][column]
+    QColor GetSelectedColor(int row, int column);
+
             // Sets cell [row][column] to Color in frame located at Index
             // returns 0 if Index, row, or column are out of bounds
             // If Color is not valid it sets it to Qt::black
-    int ColorCell(int Index, int row, int column, QColor Color);
+    int SetCellColor(int Index, int row, int column, QColor Color);
 
             // Returns the color of the cell in frame Index at row and column
             // returns Qt::black if any values are invalid
@@ -63,9 +76,11 @@ public:
             // Returns the length of the entire sequence in ms
     int GetDuration();
 
+    //QTime GetDuration();
+
             // Sets the frame at Index's duration to Duration
             // returns 0 if Index is out of bounds
-    int SetFrameDuration(QTime Duration, int Index);
+    int SetFrameDuration(int Duration, int Index);
 
             // Returns the duration of frame Index in ms
             // returns 0 if Index is out of bounds
@@ -80,21 +95,21 @@ public:
             // from the tan file to a tower animation
 
             // Add a frame with Duration to end
-    void AddFrame(QTime Duration);
+    void AddFrame(int Duration);
 
             // Add a copy of frame at Index to end
             // returns 0 if Index is out of bounds
-    int AddFrame(int Index);
+    int CopyFrame(int Index);
 
 
     // If Position is outside of the bounds of the List it will be
     // appended or prepended automatically
             // Add a new frame to Position with Duration
-    void AddFrame(QTime Duration, int Position);
+    void AddFrame(int Duration, int Position);
 
             // Add a copy of frame at Index to Position
             // return 0 if Index is out of bounds
-    int AddFrame(int Index, int Position);
+    int CopyFrame(int Index, int Position);
 
             // Deletes frame at Position, returns 0 if position is out of bounds
     int DeleteFrame(int Position);

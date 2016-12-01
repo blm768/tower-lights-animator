@@ -3,6 +3,7 @@
 #include <limits>
 
 #include <QLabel>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
 
@@ -35,7 +36,7 @@ bool FrameWidget::isSelected() {
 
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
-    int width = _frame->toMsec() * _timeline->scale();
+    int width = _frame->FDuration * _timeline->scale();
     if(width < minimumWidth()) {
         width = minimumWidth();
     }
@@ -52,7 +53,7 @@ void FrameWidget::resizeEvent(QResizeEvent *event) {
 
 void FrameWidget::mousePressEvent(QMouseEvent* event) {
     // TODO: check button.
-    clicked(this);
+    clicked(this, event->modifiers() == Qt::ShiftModifier);
 }
 
 // TODO: wire this up.
@@ -122,9 +123,13 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     layout->addWidget(_buttonBox);
 
     // TODO: replace text with an icon?
-    _buttonNew = new QPushButton(tr("New frame"));
-    buttonsLayout->addWidget(_buttonNew, 0, Qt::AlignLeft);
-    connect(_buttonNew, &QPushButton::clicked, this, &TimelineToolbar::addFrame);
+    QPushButton* buttonAdd = new QPushButton(tr("Add frame"));
+    buttonsLayout->addWidget(buttonAdd, 0, Qt::AlignLeft);
+    connect(buttonAdd, &QPushButton::clicked, this, &TimelineToolbar::addFrame);
+
+    QPushButton* buttonDelete = new QPushButton(tr("Delete frame"));
+    buttonsLayout->addWidget(buttonDelete, 0, Qt::AlignLeft);
+    connect(buttonDelete, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
 
     // Pushes all the controls left.
     buttonsLayout->addStretch(1);
@@ -140,7 +145,7 @@ void TimelineToolbar::setSelection(const FrameSelection& selection) {
         int duration = 0;
         for(int i = selection.start; i < selection.end; ++i) {
             const Frame* frame = selection.animation->GetFrame(i);
-            duration += frame->toMsec();
+            duration += frame->FDuration;
         }
 
         _frameDurationBox->setValue(duration);
@@ -156,7 +161,7 @@ void TimelineToolbar::setDuration(int duration) {
     int individualDuration = duration / _selection.length();
     for(int i = _selection.start; i < _selection.end; ++i) {
         Frame* frame = _selection.animation->GetFrame(i);
-        frame->FDuration = QTime(0, 0, 0, individualDuration);
+        frame->FDuration = individualDuration;
         timeline->onFrameChanged(i);
     }
 }
@@ -187,6 +192,7 @@ Timeline::Timeline(QWidget *parent) :
     layout->addWidget(frameScrollBox, 1);
 
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
+    connect(_toolbar, &TimelineToolbar::deleteSelection, this, &Timeline::deleteSelection);
     connect(this, &Timeline::selectionChanged, _toolbar, &TimelineToolbar::setSelection);
 }
 
@@ -196,7 +202,7 @@ void Timeline::addFrame() {
     if(_selection.length() == 0) {
         // Add the frame to the beginning.
         // TODO: break out a constant for default frame duration.
-        _selection.animation->AddFrame(QTime(0, 0, 0, 25), insertionLocation);
+        _selection.animation->AddFrame(25, insertionLocation);
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -210,16 +216,37 @@ void Timeline::addFrame() {
     // TODO: select the new frame?
 }
 
+void Timeline::deleteSelection() {
+    FrameSelection oldSelection = _selection;
+    _selection.start = _selection.end = 0;
+    selectionChanged(_selection);
+    for(int i = 0; i < oldSelection.length(); ++i) {
+        QWidget* widget = _frameLayout->itemAt(oldSelection.start)->widget();
+        _frameLayout->removeWidget(widget);
+        delete widget;
+        oldSelection.animation->DeleteFrame(oldSelection.start);
+    }
+}
+
 void Timeline::onFrameChanged(int index) {
     QWidget* widget = _frameLayout->itemAt(index)->widget();
     widget->updateGeometry();
     widget->update();
 }
 
-void Timeline::onFrameClicked(FrameWidget* frame) {
+void Timeline::onFrameClicked(FrameWidget* frame, bool isShiftClick) {
     int index = frame->index();
-    _selection.start = index;
-    _selection.end = index + 1;
+    // Are we extending an existing selection?
+    if(isShiftClick && _selection.length() > 0) {
+        if(index < _selection.start) {
+            _selection.start = index;
+        } else {
+            _selection.end = index + 1;
+        }
+    } else {
+        _selection.start = index;
+        _selection.end = index + 1;
+    }
     selectionChanged(_selection);
 }
 

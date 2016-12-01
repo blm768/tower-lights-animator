@@ -21,7 +21,7 @@ QVariant AnimationModel::data(const QModelIndex& index, int role) const {
             // TODO: implement.
             //return frame->
         case FrameDurationRole:
-            return frame->toMsec();
+            return frame->FDuration;
         default:
             return QVariant();
     }
@@ -42,7 +42,7 @@ bool AnimationModel::setData(const QModelIndex& index, const QVariant &value, in
             //return frame->
         case FrameDurationRole:
             if(value.canConvert<int>()) {
-                frame->FDuration = QTime(0, 0, 0, value.value<int>());
+                frame->FDuration = value.value<int>();
                 dataChanged(index, index, roles);
                 return true;
             }

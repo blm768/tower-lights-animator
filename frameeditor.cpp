@@ -69,7 +69,6 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 */
     curCol.setRgb(0,0,0);
     QGridLayout *EditorLayout = new QGridLayout(this);
-
     EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     for (int i = 0; i < FHEIGHT; i++){
@@ -92,9 +91,6 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
     }
 
 
-
-
-
     setLayout(EditorLayout);
 
     show();
@@ -111,18 +107,15 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
             QWidget *widget = layout->widget();
             QPushButton *current = qobject_cast<QPushButton*>(widget);
 
-            //Palette is no longer used, stylesheet is now used
-
-            //QPalette pal;
-            //pal.setColor(QPalette::Button, QColor(Qt::black));
-            //current->setFrameShape(QFrame::WinPanel);
-            //current->setFrameShadow(QFrame::Sunken);
-            //current->setPalette(pal);
-
             current->setMaximumSize(QSize(cellsize,cellsize));
             current->setMinimumSize(QSize(cellsize,cellsize));
-
-            QString css = "background-color: #000000; border: 2px solid #777777";
+            QString border = "777777";
+            if (i > 4 && i < FHEIGHT - 5){
+                if (j > 3 && j < FWIDTH - 4){
+                    border = "ff0000";
+                }
+            }
+            QString css = "background-color: #000000; border: 2px solid #" + border;
             current->setStyleSheet(css);
 
             current->setFlat(true);
@@ -131,28 +124,17 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
         }
     }
 
-
-
 }
 
 void FrameEditor::onCellClickEvent()
 {
     QPushButton *current = qobject_cast<QPushButton*>(sender());
 
-    //QPalette pal = current->palette();
-    //pal.setColor(QPalette::Button, QColor(Qt::green));
-    //current->setPalette(pal);
+    QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
+    int index = layout->indexOf(current);
+    int row, column, rs, cs;
+    layout->getItemPosition(index, &row, &column, &rs, &cs);
 
-    int x = current->x();
-    int y = current->y();
-
-    // This sets the text of the buttons to their x and y coordinate, note it's not their index
-    //current->setText(QString::number(x) + "," + QString::number(y));
-
-    //QString back = "00ffff";
-    //QString border = "000000";
-
-    //QString css = "background-color: #" + back + "; border: 1px solid #777777";
 
     int r,g,b;
     curCol.getRgb(&r,&g,&b);
@@ -169,10 +151,19 @@ void FrameEditor::onCellClickEvent()
     css.append(",");
     css.append(blue);
     css.append("); ");
-    css.append("border: 1px solid #777777");
+    
 
 
 
+    QString border = "777777";
+    if (row > 4 && row < FHEIGHT - 5){
+        if (column > 3 && column < FWIDTH - 4){
+            border = "ff0000";
+        }
+    }
+    css.append("border: 1px solid #" + border);
+
+    
     current->setStyleSheet(css);
 }
 

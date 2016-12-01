@@ -49,7 +49,7 @@ protected:
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 
 signals:
-    void clicked(FrameWidget* widget);
+    void clicked(FrameWidget* widget, bool isShiftClick);
 
 public slots:
     //! Rescales the widget to handle changes to timeline scale or duration
@@ -106,6 +106,10 @@ signals:
      * \brief Signals that a frame is to be added
      */
     void addFrame();
+    /*!
+     * \brief Signals that the frames in the selection are to be deleted
+     */
+    void deleteSelection();
 
 public slots:
     /*!
@@ -122,7 +126,6 @@ private:
 
     QSpinBox* _frameDurationBox;
     QWidget* _buttonBox;
-    QPushButton* _buttonNew;
 };
 
 class Timeline : public QWidget {
@@ -167,6 +170,11 @@ public slots:
     void addFrame();
 
     /*!
+     * \brief Deletes the frames in the current selection
+     */
+    void deleteSelection();
+
+    /*!
      * \brief Should be called when the contents or duration of the frame at the
      * given index are changed
      */
@@ -176,7 +184,7 @@ public slots:
     void onCutEvent();
     void onPasteEvent();
 
-    void onFrameClicked(FrameWidget *frame);
+    void onFrameClicked(FrameWidget *frame, bool isShiftClick);
 
 private:
     FrameSelection _selection;
