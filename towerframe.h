@@ -114,6 +114,30 @@ public:
             // Deletes frame at Position, returns 0 if position is out of bounds
     int DeleteFrame(int Position);
 
+            //Shift the frame up and to the left
+    int ShiftFrameLU(int Index, int Position);
+
+           //Shift the frame to the left
+    int ShiftFrameL(int Index, int Position);
+
+           //Shift the frame down and to the left
+    int ShiftFrameLD(int Index, int Position);
+
+          //Shift the frame up
+    int ShiftFrameUp(int Index, int Position);
+
+          //Shift the frame down
+    int ShiftFrameDown(int Index, int Position);
+
+           //Shift the frame up and to the right
+    int ShiftFrameRU(int Index, int Position);
+
+           //Shift the frame to the right
+    int ShiftFrameR(int Index, int Position);
+
+           //Shift the frame down and to the right
+    int ShiftFrameRD(int Index, int Position);
+
             // Relocates frame at IndexFrom to before IndexTo
             // Returns 0 if either index is outside of list bounds
     int MoveFrame(int IndexFrom, int IndexTo);

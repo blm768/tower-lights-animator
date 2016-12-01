@@ -8,7 +8,6 @@
 #include <QLine>
 #include <QPainter>
 
-
 #include "towerframe.h"
 #include "timeline.h"
 
@@ -27,11 +26,16 @@ public:
     explicit FrameEditor(QWidget *parent = 0);
     void initializeLayout(QGridLayout *curLayout);
 
+    QGridLayout *EditorLayout = new QGridLayout(this);
+    Animation *animation;
+    QColor pen;
+
 signals:
     void frameChanged(int index);
 
 public slots:
     void setSelection(FrameSelection selection);
+    void setAnimation(Animation *newAnimation);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
     void onCellClickEvent();

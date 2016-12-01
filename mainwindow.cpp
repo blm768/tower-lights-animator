@@ -33,8 +33,13 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(hozBox);
     mainLayout->addWidget(timeline);
     connect(this, &MainWindow::animationSet, timeline, &Timeline::setAnimation);
+    connect(this, &MainWindow::animationSet, frameEditor, &FrameEditor::setAnimation);
     connect(frameEditor, &FrameEditor::frameChanged, timeline, &Timeline::onFrameChanged);
+
     connect(colorPick, SIGNAL(sendColor(QColor)), frameEditor, SLOT(setPenColor(QColor)));
+
+    connect(timeline, &Timeline::selectionChanged, frameEditor, &FrameEditor::setSelection);
+
 }
 
 MainWindow::~MainWindow()

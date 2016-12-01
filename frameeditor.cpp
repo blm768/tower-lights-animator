@@ -69,6 +69,7 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 */
     curCol.setRgb(0,0,0);
     QGridLayout *EditorLayout = new QGridLayout(this);
+
     EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     for (int i = 0; i < FHEIGHT; i++){
@@ -102,7 +103,6 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
     {
         for (int j = 0; j < FWIDTH; j++)
         {
-
             QLayoutItem *layout = curLayout->itemAtPosition(i,j);
             QWidget *widget = layout->widget();
             QPushButton *current = qobject_cast<QPushButton*>(widget);
@@ -128,8 +128,9 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
 
 void FrameEditor::onCellClickEvent()
 {
+    //TODO remove this once pen color changes with color picker
+        pen = QColor(Qt::white);
     QPushButton *current = qobject_cast<QPushButton*>(sender());
-
     QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
     int index = layout->indexOf(current);
     int row, column, rs, cs;
@@ -161,7 +162,16 @@ void FrameEditor::onCellClickEvent()
             border = "ff0000";
         }
     }
+
     css.append("border: 1px solid #" + border);
+
+    
+
+
+    if (animation != NULL){
+        animation->SetSelectedColor(row, column, pen);
+        back = pen.name();
+    }
 
     
     current->setStyleSheet(css);
@@ -171,13 +181,41 @@ void FrameEditor::setSelection(FrameSelection selection)
 {
     if(selection.length() == 1)
     {
-        // TODO: switch frames
+        if (animation != NULL){
+            animation->SelectFrame(selection.start);
+        }
+        QString rgb, css, border;
+        //int frame;
+        for (int i = 0; i < FHEIGHT; i++){
+            for (int j = 0; j < FWIDTH; j++){
+
+                QLayoutItem *layout = EditorLayout->itemAtPosition(i,j);
+                QWidget *widget = layout->widget();
+                QPushButton *current = qobject_cast<QPushButton*>(widget);
+
+                rgb = animation->GetSelectedColor(i,j).name();
+                border = "777777";
+                if (i > 4 && i < FHEIGHT - 5){
+                    if (j > 3 && j < FWIDTH - 4){
+
+                        border = "ff0000";
+                    }
+                }
+                css = "background-color: " + rgb + "; border: 2px solid #" + border;
+                current->setStyleSheet(css);
+            }
+        }
     }
     else
     {
         // We can't edit 0 or multiple frames.
         // TODO: disable this widget?
     }
+
+}
+
+void FrameEditor::setAnimation(Animation *newAnimation){
+    animation = newAnimation;
 }
 
 void FrameEditor::selectTool(ToolType tool)

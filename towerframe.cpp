@@ -11,6 +11,7 @@
 Animation::Animation()
 {
     TDuration = 0;
+    currFrame = NULL;
 }
 
 bool Animation::FrameSelected()
@@ -73,11 +74,9 @@ int Animation::SanitizeTime(int OutTime)
 
 Frame* Animation::GetFrame(int index) {
     if (!IsValidFrame(index)){
-        return FrameList.at(index);
-    }
-    else if (FrameList.count() > 0){
         return FrameList.at(0);
     }
+    return FrameList.at(index);
 }
 
 int Animation::FrameCount() const {
@@ -225,6 +224,246 @@ int Animation::CopyFrame(int Index, int Position)
     return 1;
 }
 
+int Animation::ShiftFrameLU(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(i == (FHEIGHT - 1) || j == (FWIDTH - 1))
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i + 1][j + 1];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameL(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(j == (FWIDTH - 1))
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i][j + 1];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameLD(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(i == 0 || j == (FWIDTH - 1))
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i - 1][j + 1];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameUp(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(i == (FHEIGHT - 1))
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i + 1][j];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameDown(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(i == 0)
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i - 1][j];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameRU(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(i == (FHEIGHT - 1) || j == 0)
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i + 1][j - 1];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameR(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(j == 0)
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i][j - 1];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
+int Animation::ShiftFrameRD(int Index, int Position)
+{
+    if (!IsValidFrame(Index))
+    {
+        // Index is outside of the bounds of Animation
+        return 0;
+    }
+    else
+    {
+        frameptr curr = FrameList.at(Index);
+        frameptr n = new Frame;
+        n->FDuration = curr->FDuration;
+
+        for (int i = 0; i < (FHEIGHT); i++)
+        {
+            for (int j = 0; j < (FWIDTH); j++)
+            {
+                if(i == 0 || j == 0)
+                    n->WorkArea[i][j] = QColor(Qt::black);
+                else
+                    n->WorkArea[i][j] = curr->WorkArea[i - 1][j - 1];
+            }
+        }
+
+        TDuration += curr->FDuration;
+        FrameList.insert(Position, n);
+    }
+    return 1;
+}
+
 int Animation::DeleteFrame(int Position)
 {
     frameptr curr = FrameList.at(Position);
@@ -359,12 +598,10 @@ int Animation::SetFrameDuration(int Duration, int Index)
 
 /*
  *
- * Functions below exist only for testing at this point, in the future may be moved to
- * production or to another file completely once GUI testing is possible
+ * Testing
  *
- */
-
-// NOTE: If this function is removed this file should no longer include iostream
+ *
+ *
 void Animation::PrintTower()
 {
     QString qs;
@@ -395,3 +632,4 @@ void Animation::PrintTower()
         std::cout << std::endl << FrameList.at(i)->FDuration << std::endl;
     }
 }
+*/
