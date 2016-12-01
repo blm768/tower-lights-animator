@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(timeline);
     connect(this, &MainWindow::animationSet, timeline, &Timeline::setAnimation);
     connect(frameEditor, &FrameEditor::frameChanged, timeline, &Timeline::onFrameChanged);
+    connect(timeline, &Timeline::selectionChanged, frameEditor, &FrameEditor::setSelection);
 }
 
 MainWindow::~MainWindow()

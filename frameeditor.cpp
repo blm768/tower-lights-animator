@@ -15,7 +15,7 @@
 FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 {
 
-    QGridLayout *EditorLayout = new QGridLayout(this);
+    //QGridLayout *EditorLayout = new QGridLayout(this);
     EditorLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     for (int i = 0; i < FHEIGHT; i++){
@@ -39,7 +39,6 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
     {
         for (int j = 0; j < FWIDTH; j++)
         {
-
             QLayoutItem *layout = curLayout->itemAtPosition(i,j);
             QWidget *widget = layout->widget();
             QPushButton *current = qobject_cast<QPushButton*>(widget);
@@ -80,7 +79,7 @@ void FrameEditor::onCellClickEvent()
 
     QString back = "00ffff";
 
-    current->setText(QString("%1,%2").arg(row).arg(column));
+    //current->setText(QString("%1,%2").arg(row).arg(column));
 
     QString css = "background-color: #" + back + "; border: 2px solid #" + border;
     current->setStyleSheet(css);
@@ -90,13 +89,33 @@ void FrameEditor::setSelection(FrameSelection selection)
 {
     if(selection.length() == 1)
     {
-        // TODO: switch frames
+        QString rgb, css, border;
+        for (int i = 0; i < FHEIGHT; i++){
+            for (int j = 0; j < FWIDTH; j++){
+
+                QLayoutItem *layout = EditorLayout->itemAtPosition(i,j);
+                QWidget *widget = layout->widget();
+                QPushButton *current = qobject_cast<QPushButton*>(widget);
+
+                rgb = selection.animation->GetCellColor(0,i,j).name();
+                border = "777777";
+                if (i > 4 && i < FHEIGHT - 5){
+                    if (j > 3 && j < FWIDTH - 4){
+
+                        border = "ff0000";
+                    }
+                }
+                css = "background-color: " + rgb + "; border: 2px solid #" + border;
+                current->setStyleSheet(css);
+            }
+        }
     }
     else
     {
         // We can't edit 0 or multiple frames.
         // TODO: disable this widget?
     }
+
 }
 
 void FrameEditor::selectTool(ToolType tool)

@@ -72,6 +72,9 @@ int Animation::SanitizeTime(int OutTime)
 }
 
 Frame* Animation::GetFrame(int index) {
+    if (!IsValidFrame(index)){
+        return FrameList.at(0);
+    }
     return FrameList.at(index);
 }
 
@@ -594,12 +597,10 @@ int Animation::SetFrameDuration(int Duration, int Index)
 
 /*
  *
- * Functions below exist only for testing at this point, in the future may be moved to
- * production or to another file completely once GUI testing is possible
+ * Testing
  *
- */
-
-// NOTE: If this function is removed this file should no longer include iostream
+ *
+ *
 void Animation::PrintTower()
 {
     QString qs;
@@ -630,3 +631,4 @@ void Animation::PrintTower()
         std::cout << std::endl << FrameList.at(i)->FDuration << std::endl;
     }
 }
+*/

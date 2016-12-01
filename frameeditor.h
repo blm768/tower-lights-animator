@@ -25,11 +25,14 @@ public:
     explicit FrameEditor(QWidget *parent = 0);
     void initializeLayout(QGridLayout *curLayout);
 
+    QGridLayout *EditorLayout = new QGridLayout(this);
+
 signals:
     void frameChanged(int index);
 
 public slots:
     void setSelection(FrameSelection selection);
+    //void FrameEditor::setSelection(Frame *WorkFrame);
     void selectTool(ToolType tool);
     void setPenColor(const QColor& color);
     void onCellClickEvent();
