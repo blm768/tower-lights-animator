@@ -87,6 +87,7 @@ void MainMenu::newFile() {
     newFileBox.setText("Do you want to save your current animation?");
     newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     int ret = newFileBox.exec();
+    previousFile = "";
 
     switch(ret) {
     case QMessageBox::Save:{
