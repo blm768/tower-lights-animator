@@ -137,6 +137,7 @@ void ColorPicker::initializeLayout(QGridLayout *curLayout){
      color.getRgb(&r,&g,&b);
      col.setRgb(r,g,b);
      colorChange();
+     sendColor(col);
 
  }
 
