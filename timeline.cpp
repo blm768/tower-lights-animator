@@ -257,7 +257,9 @@ void Timeline::addFrame() {
     Frame* frame = _selection.animation->GetFrame(insertionLocation);
     FrameWidget* widget = new FrameWidget(this, frame);
     _frameLayout->insertWidget(insertionLocation, widget, 0);
-    // TODO: select the new frame?
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + 1;
+    selectionChanged(_selection);
 }
 
 void Timeline::deleteSelection() {
@@ -295,21 +297,25 @@ void Timeline::onFrameClicked(FrameWidget* frame, bool isShiftClick) {
 }
 
 void Timeline::setAnimation(Animation* animation) {
+    // Get rid of the old animation.
     _selection.clear();
     selectionChanged(_selection);
     while(QWidget* child = _frameBox->findChild<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
         delete child;
     }
+
+    // Create the new frame widgets.
     _selection.animation = animation;
     for(int i = 0; i < _selection.animation->FrameCount(); ++i) {
         Frame* frame = _selection.animation->GetFrame(i);
         FrameWidget* widget = new FrameWidget(this, frame);
         _frameLayout->insertWidget(i, widget, 0);
     }
+
     // If there's a first frame, select it.
     if(animation->FrameCount() > 0) {
-        _selection.start = 1;
-        _selection.start = 2;
+        _selection.start = 0;
+        _selection.end = 1;
         selectionChanged(_selection);
     }
 }

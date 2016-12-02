@@ -90,6 +90,7 @@ void FrameEditor::onCellClickEvent()
 
 void FrameEditor::setSelection(FrameSelection selection)
 {
+    animation = selection.animation;
     if(selection.length() == 1)
     {
         if (animation != NULL){

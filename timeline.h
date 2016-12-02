@@ -67,6 +67,7 @@ private:
  */
 class FrameSelection {
 public:
+    FrameSelection() : animation(nullptr), start(0), end(0) {}
     //! The animation that contains the frames
     Animation* animation;
     //! The start of the selection (inclusive)
