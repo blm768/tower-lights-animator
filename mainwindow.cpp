@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
     ColorPicker* colorPick = new ColorPicker(this);
     hozLayout->addWidget(colorPick);
 
-
+    Toolbar* toolbar = new Toolbar(this);
+    hozLayout->addWidget(toolbar);
 
 
 
