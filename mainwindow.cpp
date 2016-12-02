@@ -3,6 +3,7 @@
 #include "timeline.h"
 #include "colorpicker.h"
 #include <QHBoxLayout>
+#include "toolbar.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), _mainMenu(this)

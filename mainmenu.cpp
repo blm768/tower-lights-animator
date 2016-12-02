@@ -159,6 +159,7 @@ void MainMenu::openFile() {
         fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
         std::string stdFileName = fileName.toStdString();
         LoadTan(stdFileName, animation);
+        previousFile = stdFileName;
         _window->setAnimation(animation);
         break;
     }
