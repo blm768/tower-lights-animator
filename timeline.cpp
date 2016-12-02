@@ -306,6 +306,12 @@ void Timeline::setAnimation(Animation* animation) {
         FrameWidget* widget = new FrameWidget(this, frame);
         _frameLayout->insertWidget(i, widget, 0);
     }
+    // If there's a first frame, select it.
+    if(animation->FrameCount() > 0) {
+        _selection.start = 1;
+        _selection.start = 2;
+        selectionChanged(_selection);
+    }
 }
 
 void Timeline::shiftLU() {

@@ -13,12 +13,12 @@ ColorPicker::ColorPicker(QWidget *parent) : QWidget(parent)
     DefaultColors[0][0] = (QColor(Qt::blue));
     DefaultColors[0][1] = (QColor(Qt::red));
     DefaultColors[0][2] = (QColor(Qt::yellow));
-    DefaultColors[1][0] = (QColor(255,165,0,0));
+    DefaultColors[1][0] = (QColor(255,165,0,255));
     DefaultColors[1][1] = (QColor(Qt::green));
-    DefaultColors[1][2] = (QColor(255,0,255,0));
+    DefaultColors[1][2] = (QColor(255,0,255,255));
     DefaultColors[2][0] = (QColor(Qt::black));
     DefaultColors[2][1] = (QColor(Qt::white));
-    DefaultColors[2][2] = (QColor(150,150,150,00));
+    DefaultColors[2][2] = (QColor(150,150,150,255));
 
     col.setRgb(0,0,0);
     QWidget* hozBox = new QWidget();
@@ -140,4 +140,3 @@ void ColorPicker::initializeLayout(QGridLayout *curLayout){
      sendColor(col);
 
  }
-
