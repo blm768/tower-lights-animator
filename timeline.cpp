@@ -22,6 +22,7 @@ FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
     connect(this, &FrameWidget::clicked, _timeline, &Timeline::onFrameClicked);
     // We need the cast to determine which overload to use.
     connect(_timeline, &Timeline::selectionChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::update));
+    connect(_timeline, &Timeline::scaleChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::updateGeometry));
 }
 
 FrameWidget::FrameWidget(Timeline* timeline, Frame *frame) :
@@ -91,11 +92,6 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
         }
     }
     painter.restore();
-
-    // DEBUG
-    painter.setPen(Qt::white);
-    painter.drawText(0, 10, QString::number(index()));
-    painter.drawText(0, 20, QString::number((qlonglong)_frame));
 }
 
 //-----------------//
@@ -136,6 +132,17 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     QPushButton* buttonDelete = new QPushButton(tr("Delete frame"));
     buttonsLayout->addWidget(buttonDelete, 0, Qt::AlignLeft);
     connect(buttonDelete, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
+
+    QLabel* scaleLabel = new QLabel(tr("Scale"));
+    buttonsLayout->addWidget(scaleLabel, 0, Qt::AlignLeft);
+
+    QPushButton* buttonScaleUp = new QPushButton(tr("+"));
+    buttonsLayout->addWidget(buttonScaleUp, 0, Qt::AlignLeft);
+    connect(buttonScaleUp, &QPushButton::clicked, this, &TimelineToolbar::increaseScale);
+
+    QPushButton* buttonScaleDown = new QPushButton(tr("-"));
+    buttonsLayout->addWidget(buttonScaleDown, 0, Qt::AlignLeft);
+    connect(buttonScaleDown, &QPushButton::clicked, this, &TimelineToolbar::decreaseScale);
 
     QPushButton* sLeftUp = new QPushButton(tr("Up Left"));
     shiftLayout->addWidget(sLeftUp, 0, 0);
@@ -211,6 +218,9 @@ void TimelineToolbar::setDuration(int duration) {
 // Timeline //
 //----------//
 
+constexpr qreal Timeline::defaultScale;
+constexpr qreal Timeline::minScale;
+
 Timeline::Timeline(QWidget *parent) :
         QWidget(parent),
         _scale(defaultScale) {
@@ -234,6 +244,8 @@ Timeline::Timeline(QWidget *parent) :
 
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
     connect(_toolbar, &TimelineToolbar::deleteSelection, this, &Timeline::deleteSelection);
+    connect(_toolbar, &TimelineToolbar::increaseScale, this, &Timeline::increaseScale);
+    connect(_toolbar, &TimelineToolbar::decreaseScale, this, &Timeline::decreaseScale);
     connect(_toolbar, &TimelineToolbar::shiftLU, this, &Timeline::shiftLU);
     connect(_toolbar, &TimelineToolbar::shiftL, this, &Timeline::shiftL);
     connect(_toolbar, &TimelineToolbar::shiftLD, this, &Timeline::shiftLD);
@@ -277,6 +289,11 @@ void Timeline::deleteSelection() {
         delete widget;
         oldSelection.animation->DeleteFrame(oldSelection.start);
     }
+}
+
+void Timeline::deselect() {
+    _selection.start = _selection.end = 0;
+    selectionChanged(_selection);
 }
 
 void Timeline::onFrameChanged(int index) {
@@ -323,6 +340,19 @@ void Timeline::setAnimation(Animation* animation) {
         _selection.end = 1;
         selectionChanged(_selection);
     }
+}
+
+void Timeline::setScale(qreal scale) {
+    _scale = std::max(scale, minScale);
+    scaleChanged(_scale);
+}
+
+void Timeline::increaseScale() {
+    setScale(_scale * 2);
+}
+
+void Timeline::decreaseScale() {
+    setScale(_scale / 2);
 }
 
 void Timeline::copyFrames() {
