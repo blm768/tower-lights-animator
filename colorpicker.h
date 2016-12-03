@@ -12,11 +12,6 @@ class ColorPicker : public QWidget
     Q_OBJECT
 private:
     QColor col;
-    QLabel *ColSel;
-    QColorDialog *ColDiag;
-    static const int Height = 3;
-    static const int Width = 3;
-    QColor DefaultColors[Width][Height];
 
 public:
     explicit ColorPicker(QWidget *parent = 0);
@@ -29,9 +24,7 @@ signals:
 
 
 public slots:
-    void setColor();
-    void colorChange();
-    void diagOpt(QColor color);
+    void setColor(QColor color);
 
 };
 
