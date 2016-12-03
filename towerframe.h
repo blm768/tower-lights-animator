@@ -44,6 +44,12 @@ public:
     Frame* GetFrame(int index);
 
     /*!
+     * \brief Inserts the given frame at the given index
+     */
+
+    int InsertFrame(int index, Frame* frame);
+
+    /*!
      * \brief Returns the number of frames in the animation
      */
     int FrameCount() const;

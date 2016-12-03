@@ -91,6 +91,11 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
         }
     }
     painter.restore();
+
+    // DEBUG
+    painter.setPen(Qt::white);
+    painter.drawText(0, 10, QString::number(index()));
+    painter.drawText(0, 20, QString::number((qlonglong)_frame));
 }
 
 //-----------------//
@@ -320,6 +325,46 @@ void Timeline::setAnimation(Animation* animation) {
     }
 }
 
+void Timeline::copyFrames() {
+    if(_selection.length() == 0) {
+        return;
+    }
+
+    // Delete the old clipboard.
+    for(Frame* frame : _copiedFrames) {
+        delete frame;
+    }
+    _copiedFrames.resize(_selection.length());
+    for(int i = 0; i < _selection.length(); ++i) {
+        Frame* frame = new Frame(*(_selection.animation->GetFrame(_selection.start + i)));
+        _copiedFrames[i] = frame;
+    }
+}
+
+void Timeline::cutFrames() {
+    copyFrames();
+    deleteSelection();
+}
+
+void Timeline::pasteFrames() {
+    int insertionLocation = 0;
+    if(_selection.length() > 0) {
+        insertionLocation = _selection.end;
+    }
+
+    // Insert in reverse order because it's easier.
+    for(int i = _copiedFrames.length() - 1; i >= 0; --i) {
+        Frame* frame = new Frame(*_copiedFrames[i]);
+        _selection.animation->InsertFrame(insertionLocation, frame);
+        FrameWidget* widget = new FrameWidget(this, frame);
+        _frameLayout->insertWidget(insertionLocation, widget, 0);
+    }
+
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + _copiedFrames.length();
+    selectionChanged(_selection);
+}
+
 void Timeline::shiftLU() {
     int insertionLocation = 0;
 
@@ -486,16 +531,4 @@ void Timeline::shiftRD() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
-}
-
-void Timeline::onCopyEvent() {
-
-}
-
-void Timeline::onCutEvent() {
-
-}
-
-void Timeline::onPasteEvent() {
-
 }

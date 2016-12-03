@@ -204,6 +204,23 @@ public slots:
      * \brief Deletes the frames in the current selection
      */
     void deleteSelection();
+
+    /*!
+     * \brief Copies the current selection
+     */
+    void copyFrames();
+
+
+    /*!
+     * \brief Cuts the current selection
+     */
+    void cutFrames();
+
+    /*!
+     * \brief Pastes after the current selection
+     */
+    void pasteFrames();
+
     /*!
       * \brief copies the previous frame and shifts left and up
       */
@@ -243,10 +260,6 @@ public slots:
      */
     void onFrameChanged(int index);
 
-    void onCopyEvent();
-    void onCutEvent();
-    void onPasteEvent();
-
     void onFrameClicked(FrameWidget *frame, bool isShiftClick);
 
 private:
@@ -259,6 +272,13 @@ private:
 
     //! Display scale (in pixels per millisecond)
     qreal _scale;
+    //! Holds copied frames
+    QVector<Frame*> _copiedFrames;
+
+    /*!
+     * \brief Inserts a frame into the animation and creates a FrameWidget
+     */
+    void insertFrame(int index, Frame* frame);
 };
 
 #endif // TIMELINE_H
