@@ -18,6 +18,7 @@ private:
     QGridLayout *EditorLayout = new QGridLayout(this);
     Animation *animation;
     QColor curCol;
+    int curIndex;
 
 public:
     enum ToolType {

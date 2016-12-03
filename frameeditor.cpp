@@ -86,34 +86,37 @@ void FrameEditor::onCellClickEvent()
 
     QString css = "background-color: " + back + "; border: 2px solid #" + border;
     current->setStyleSheet(css);
+    frameChanged(curIndex);
 }
 
 void FrameEditor::setSelection(FrameSelection selection)
 {
     animation = selection.animation;
-    if(selection.length() == 1)
+    if(selection.length() > 0)
     {
         if (animation != NULL){
-            animation->SelectFrame(selection.start);
-        }
-        QString rgb, css, border;
-        for (int i = 0; i < FHEIGHT; i++){
-            for (int j = 0; j < FWIDTH; j++){
+            curIndex = selection.end - 1;
+            animation->SelectFrame(curIndex);
+            QString rgb, css, border;
 
-                QLayoutItem *layout = EditorLayout->itemAtPosition(i,j);
-                QWidget *widget = layout->widget();
-                QPushButton *current = qobject_cast<QPushButton*>(widget);
+            for (int i = 0; i < FHEIGHT; i++){
+                for (int j = 0; j < FWIDTH; j++){
 
-                rgb = animation->GetSelectedColor(i,j).name();
-                border = "777777";
-                if (i > 4 && i < FHEIGHT - 5){
-                    if (j > 3 && j < FWIDTH - 4){
+                    QLayoutItem *layout = EditorLayout->itemAtPosition(i,j);
+                    QWidget *widget = layout->widget();
+                    QPushButton *current = qobject_cast<QPushButton*>(widget);
 
-                        border = "ff0000";
+                    rgb = animation->GetSelectedColor(i,j).name();
+                    border = "777777";
+                    if (i > 4 && i < FHEIGHT - 5){
+                        if (j > 3 && j < FWIDTH - 4){
+
+                            border = "ff0000";
+                        }
                     }
+                    css = "background-color: " + rgb + "; border: 2px solid #" + border;
+                    current->setStyleSheet(css);
                 }
-                css = "background-color: " + rgb + "; border: 2px solid #" + border;
-                current->setStyleSheet(css);
             }
         }
     }
