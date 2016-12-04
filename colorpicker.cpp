@@ -18,6 +18,8 @@ ColorPicker::ColorPicker(QWidget *parent) : QWidget(parent)
 
     QColorDialog *colPicker = new QColorDialog(parent);
     connect(colPicker, SIGNAL(currentColorChanged(QColor)), this, SLOT(setColor(QColor)));
+    colPicker->setWindowFlags(Qt::Widget);
+    colPicker->setOptions(QColorDialog::DontUseNativeDialog | QColorDialog::NoButtons);
 
     MainLayout->addWidget(colPicker);
     MainLayout->addStretch(1);
