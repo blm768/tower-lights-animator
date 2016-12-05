@@ -22,6 +22,7 @@ FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
     connect(this, &FrameWidget::clicked, _timeline, &Timeline::onFrameClicked);
     // We need the cast to determine which overload to use.
     connect(_timeline, &Timeline::selectionChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::update));
+    connect(_timeline, &Timeline::scaleChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::updateGeometry));
 }
 
 FrameWidget::FrameWidget(Timeline* timeline, Frame *frame) :
@@ -132,6 +133,17 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     buttonsLayout->addWidget(buttonDelete, 0, Qt::AlignLeft);
     connect(buttonDelete, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
 
+    QLabel* scaleLabel = new QLabel(tr("Scale"));
+    buttonsLayout->addWidget(scaleLabel, 0, Qt::AlignLeft);
+
+    QPushButton* buttonScaleUp = new QPushButton(tr("+"));
+    buttonsLayout->addWidget(buttonScaleUp, 0, Qt::AlignLeft);
+    connect(buttonScaleUp, &QPushButton::clicked, this, &TimelineToolbar::increaseScale);
+
+    QPushButton* buttonScaleDown = new QPushButton(tr("-"));
+    buttonsLayout->addWidget(buttonScaleDown, 0, Qt::AlignLeft);
+    connect(buttonScaleDown, &QPushButton::clicked, this, &TimelineToolbar::decreaseScale);
+
     QPushButton* sLeftUp = new QPushButton(tr("Up Left"));
     shiftLayout->addWidget(sLeftUp, 0, 0);
     connect(sLeftUp, &QPushButton::clicked, this, &TimelineToolbar::shiftLU);
@@ -206,6 +218,9 @@ void TimelineToolbar::setDuration(int duration) {
 // Timeline //
 //----------//
 
+constexpr qreal Timeline::defaultScale;
+constexpr qreal Timeline::minScale;
+
 Timeline::Timeline(QWidget *parent) :
         QWidget(parent),
         _scale(defaultScale) {
@@ -229,6 +244,8 @@ Timeline::Timeline(QWidget *parent) :
 
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
     connect(_toolbar, &TimelineToolbar::deleteSelection, this, &Timeline::deleteSelection);
+    connect(_toolbar, &TimelineToolbar::increaseScale, this, &Timeline::increaseScale);
+    connect(_toolbar, &TimelineToolbar::decreaseScale, this, &Timeline::decreaseScale);
     connect(_toolbar, &TimelineToolbar::shiftLU, this, &Timeline::shiftLU);
     connect(_toolbar, &TimelineToolbar::shiftL, this, &Timeline::shiftL);
     connect(_toolbar, &TimelineToolbar::shiftLD, this, &Timeline::shiftLD);
@@ -272,6 +289,11 @@ void Timeline::deleteSelection() {
         delete widget;
         oldSelection.animation->DeleteFrame(oldSelection.start);
     }
+}
+
+void Timeline::deselect() {
+    _selection.start = _selection.end = 0;
+    selectionChanged(_selection);
 }
 
 void Timeline::onFrameChanged(int index) {
@@ -318,6 +340,59 @@ void Timeline::setAnimation(Animation* animation) {
         _selection.end = 1;
         selectionChanged(_selection);
     }
+}
+
+void Timeline::setScale(qreal scale) {
+    _scale = std::max(scale, minScale);
+    scaleChanged(_scale);
+}
+
+void Timeline::increaseScale() {
+    setScale(_scale * 2);
+}
+
+void Timeline::decreaseScale() {
+    setScale(_scale / 2);
+}
+
+void Timeline::copyFrames() {
+    if(_selection.length() == 0) {
+        return;
+    }
+
+    // Delete the old clipboard.
+    for(Frame* frame : _copiedFrames) {
+        delete frame;
+    }
+    _copiedFrames.resize(_selection.length());
+    for(int i = 0; i < _selection.length(); ++i) {
+        Frame* frame = new Frame(*(_selection.animation->GetFrame(_selection.start + i)));
+        _copiedFrames[i] = frame;
+    }
+}
+
+void Timeline::cutFrames() {
+    copyFrames();
+    deleteSelection();
+}
+
+void Timeline::pasteFrames() {
+    int insertionLocation = 0;
+    if(_selection.length() > 0) {
+        insertionLocation = _selection.end;
+    }
+
+    // Insert in reverse order because it's easier.
+    for(int i = _copiedFrames.length() - 1; i >= 0; --i) {
+        Frame* frame = new Frame(*_copiedFrames[i]);
+        _selection.animation->InsertFrame(insertionLocation, frame);
+        FrameWidget* widget = new FrameWidget(this, frame);
+        _frameLayout->insertWidget(insertionLocation, widget, 0);
+    }
+
+    _selection.start = insertionLocation;
+    _selection.end = insertionLocation + _copiedFrames.length();
+    selectionChanged(_selection);
 }
 
 void Timeline::shiftLU() {
@@ -486,16 +561,4 @@ void Timeline::shiftRD() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
-}
-
-void Timeline::onCopyEvent() {
-
-}
-
-void Timeline::onCutEvent() {
-
-}
-
-void Timeline::onPasteEvent() {
-
 }

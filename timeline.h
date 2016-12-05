@@ -104,6 +104,18 @@ signals:
      */
     void addFrame();
     /*!
+     * \brief Signals that the frames in the selection are to be deleted
+     */
+    void deleteSelection();
+    /*!
+     * \brief Signals that the view scale is to be increased
+     */
+    void increaseScale();
+    /*!
+     * \brief Signals that the view scale is to be decreased
+     */
+    void decreaseScale();
+    /*!
       * \brief Signals to add a frame shifted left and up
       */
     void shiftLU();
@@ -135,10 +147,6 @@ signals:
       * \brief Signals to add a frame shifted right and down
       */
     void shiftRD();
-    /*!
-     * \brief Signals that the frames in the selection are to be deleted
-     */
-    void deleteSelection();
 
 public slots:
     /*!
@@ -167,6 +175,7 @@ public:
      * \brief The default scale in pixels per millisecond
      */
     static constexpr qreal defaultScale = 10.0 * 10 / 25;
+    static constexpr qreal minScale = 1.0 / 25;
 
     /*!
      * Returns the current selection
@@ -196,6 +205,20 @@ public slots:
     void setAnimation(Animation* animation);
 
     /*!
+     * Sets the view scale
+     */
+    void setScale(qreal scale);
+
+    /*!
+     * \brief Increases the view scale
+     */
+    void increaseScale();
+    /*!
+     * \brief Decreases the view scale
+     */
+    void decreaseScale();
+
+    /*!
      * \brief Adds a blank frame to the timeline
      */
     void addFrame();
@@ -204,6 +227,27 @@ public slots:
      * \brief Deletes the frames in the current selection
      */
     void deleteSelection();
+
+    /*!
+     * \brief Clears the current selection
+     */
+    void deselect();
+
+    /*!
+     * \brief Copies the current selection
+     */
+    void copyFrames();
+
+    /*!
+     * \brief Cuts the current selection
+     */
+    void cutFrames();
+
+    /*!
+     * \brief Pastes after the current selection
+     */
+    void pasteFrames();
+
     /*!
       * \brief copies the previous frame and shifts left and up
       */
@@ -243,10 +287,6 @@ public slots:
      */
     void onFrameChanged(int index);
 
-    void onCopyEvent();
-    void onCutEvent();
-    void onPasteEvent();
-
     void onFrameClicked(FrameWidget *frame, bool isShiftClick);
 
 private:
@@ -259,6 +299,13 @@ private:
 
     //! Display scale (in pixels per millisecond)
     qreal _scale;
+    //! Holds copied frames
+    QVector<Frame*> _copiedFrames;
+
+    /*!
+     * \brief Inserts a frame into the animation and creates a FrameWidget
+     */
+    void insertFrame(int index, Frame* frame);
 };
 
 #endif // TIMELINE_H
