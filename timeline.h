@@ -186,7 +186,7 @@ public:
      * \brief The default scale in pixels per millisecond
      */
     static constexpr qreal defaultScale = 10.0 * 10 / 25;
-    static constexpr qreal minScale = 1.0 / 25;
+    static constexpr qreal minScale = (qreal)FrameWidget::minWidth / 25;
 
     /*!
      * Returns the current selection
