@@ -2,8 +2,15 @@
 #include "frameeditor.h"
 #include "timeline.h"
 #include "colorpicker.h"
+#include "tanIO.h"
 #include <QHBoxLayout>
+#include <QCloseEvent>
+#include <QMessageBox>
+#include <QFileDialog>
 #include "toolbar.h"
+
+extern std::string previousFile; //the previous save file name (if any)
+extern Animation *animation;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), _mainMenu(this)
@@ -52,4 +59,40 @@ MainWindow::~MainWindow()
 void MainWindow::setAnimation(Animation *animation) {
     _animation = animation;
     animationSet(animation);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QMessageBox newFileBox;
+    QString fileName;
+    newFileBox.setText("Do you want to save your current animation?");
+    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    int ret = newFileBox.exec();
+
+    switch(ret) {
+    case QMessageBox::Save:{
+        if(previousFile.empty()){
+            fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+            std::string stdFileName = fileName.toStdString();
+            SaveProject(stdFileName, animation);
+            previousFile = stdFileName;
+            event->accept();
+        }
+        else
+            SaveProject(previousFile, animation);
+        break;
+    }
+    case QMessageBox::Discard:{
+        delete animation;
+        event->accept();
+        break;
+    }
+    case QMessageBox::Cancel:
+        event->ignore();
+        break;
+    default:
+        std::cout << "Something bad happened\n";
+        break;
+    }
+
 }

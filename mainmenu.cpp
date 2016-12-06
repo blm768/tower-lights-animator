@@ -12,7 +12,6 @@
 #include "tanIO.h"
 
 extern Animation *animation;
-extern MainWindow w;
 std::string previousFile = "";
 
 MainMenu::MainMenu(MainWindow* window) : QObject(window) {
@@ -67,11 +66,11 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     QMenuBar* mainMenu = window->menuBar();
     menuFile = mainMenu->addMenu(tr("File"));
     menuFile->addAction(actNewFile);
+    menuFile->addAction(actOpenFile);
     menuFile->addAction(actSaveFile);
     menuFile->addAction(actSaveAs);
     menuFile->addAction(actExport);
     menuFile->addAction(actExit);
-    menuFile->addAction(actOpenFile);
 
     menuEdit = mainMenu->addMenu(tr("Edit"));
     menuEdit->addAction(Cut);
@@ -84,39 +83,44 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
 
 void MainMenu::newFile() {
     QMessageBox newFileBox;
-    newFileBox.setText("Do you want to save your current animation?");
-    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    newFileBox.setText("<p align='center'>Do you want to save your current animation?</p>");
+    QAbstractButton* noSave = (QAbstractButton *) newFileBox.addButton(tr("Don't Save"), QMessageBox::YesRole);
+    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
     int ret = newFileBox.exec();
     previousFile = "";
 
-    switch(ret) {
-    case QMessageBox::Save:{
-        QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
-        std::string stdFileName = fileName.toStdString();
-        SaveProject(stdFileName, animation);
-        animation = new Animation;
-        _window->setAnimation(animation);
-        break;
-    }
-    case QMessageBox::Discard:{
+    if(newFileBox.clickedButton() == noSave) {
         delete animation;
         animation = new Animation;
         _window->setAnimation(animation);
-        break;
     }
-    case QMessageBox::Cancel:
-        return;
-        break;
-    default:
-        std::cout << "Something bad happened\n";
-        break;
+    else{
+        switch(ret) {
+        case QMessageBox::Save:{
+            QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Project Files (*.pro)");
+            if(fileName == NULL || fileName.isEmpty())
+                return;          //the file returned is NULL so the cancel button was pressed (or empty)
+            std::string stdFileName = fileName.toStdString();
+            SaveProject(stdFileName, animation);
+            animation = new Animation;
+            _window->setAnimation(animation);
+            break;
+        }
+        case QMessageBox::Cancel:
+            return;
+            break;
+        default:
+            std::cout << "Something bad happened\n";
+            break;
+        }
     }
-
 }
 
 void MainMenu::saveFile() {
     if(previousFile.empty()){
         QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+        if(fileName == NULL || fileName.isEmpty())
+            return;          //the file returned is NULL so the cancel button was pressed (or empty)
         std::string stdFileName = fileName.toStdString();
         SaveProject(stdFileName, animation);
         previousFile = stdFileName;
@@ -127,6 +131,8 @@ void MainMenu::saveFile() {
 
 void MainMenu::saveFileAs() {
     QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+    if(fileName == NULL || fileName.isEmpty())
+        return;          //the file returned is NULL so the cancel button was pressed (or empty)
     std::string stdFileName = fileName.toStdString();
     SaveProject(stdFileName, animation);
     previousFile = stdFileName;
@@ -136,45 +142,53 @@ void MainMenu::openFile() {
     QMessageBox newFileBox;
     QString fileName;
     newFileBox.setText("Do you want to save your current animation?");
-    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    QAbstractButton* noSave = (QAbstractButton*) newFileBox.addButton("Don't Save", QMessageBox::YesRole);
+    newFileBox.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
     int ret = newFileBox.exec();
 
-    switch(ret) {
-    case QMessageBox::Save:{
-        fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
-        std::string stdFileName = fileName.toStdString();
-        SaveProject(stdFileName, animation);
-        delete animation;
-        animation = new Animation;
-        fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
-        stdFileName = fileName.toStdString();
-        LoadTan(stdFileName, animation);
-        previousFile = stdFileName;
-        _window->setAnimation(animation);
-        break;
-    }
-    case QMessageBox::Discard:{
+    if(newFileBox.clickedButton() == noSave){
         delete animation;
         animation = new Animation;
         _window->setAnimation(animation);
         fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
+        if(fileName == NULL || fileName.isEmpty())
+            return;          //the file returned is NULL so the cancel button was pressed (or empty)
         std::string stdFileName = fileName.toStdString();
         LoadTan(stdFileName, animation);
         previousFile = stdFileName;
         _window->setAnimation(animation);
-        break;
-    }
-    case QMessageBox::Cancel:
-        return;
-        break;
-    default:
-        std::cout << "Something bad happened\n";
-        break;
+        }
+    else{
+        switch(ret) {
+        case QMessageBox::Save:{
+            fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+            if(fileName == NULL || fileName.isEmpty())
+                return;          //the file returned is NULL so the cancel button was pressed (or empty)
+            std::string stdFileName = fileName.toStdString();
+            SaveProject(stdFileName, animation);
+            delete animation;
+            animation = new Animation;
+            fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan Files (*.tan)");
+            stdFileName = fileName.toStdString();
+            LoadTan(stdFileName, animation);
+            previousFile = stdFileName;
+            _window->setAnimation(animation);
+            break;
+        }
+        case QMessageBox::Cancel:
+            return;
+            break;
+        default:
+            std::cout << "Something bad happened\n";
+            break;
+        }
     }
 }
 
 void MainMenu::exportFile() {
     QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+    if(fileName == NULL || fileName.isEmpty())
+        return;          //the file returned is NULL so the cancel button was pressed (or empty)
     std::string stdFileName = fileName.toStdString();
     SaveTan(stdFileName, animation);
     previousFile = stdFileName;
