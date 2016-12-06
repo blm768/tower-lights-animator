@@ -82,10 +82,10 @@ void Playback::onPlayEvent()
         QWidget *widget = layout->widget();
         QSlider *current = qobject_cast<QSlider*>(widget);
 
-        if (current->value == animation->getDuration())
+        if (current->value() == animation->GetDuration())
         {
             current->setValue(0);
-            setTIme(0);
+            setTime(0);
         }
 
         play = 1;
