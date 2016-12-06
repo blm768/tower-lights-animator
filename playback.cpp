@@ -3,8 +3,10 @@
 #include <QList>
 #include <QTime>
 #include <QTimer>
+#include <QMessageBox>
 #include <QSlider>
 #include <QApplication>
+#include <QCloseEvent>
 #include "playback.h"
 #include "frameeditor.h"
 
@@ -15,7 +17,7 @@
 #define TWIDTH 4
 #define THEIGHT 10
 
-Playback::Playback(Animation *anim)
+Playback::Playback(QWidget *parent, Animation *anim)
 {
     play = 0;
 
@@ -111,6 +113,7 @@ void Playback::incTime()
         timer->stop();
         current->setValue(animation->GetDuration());
         setTime(current->value());
+        play = 0;
     }
 
 }
@@ -159,8 +162,15 @@ void Playback::setTime(int ms)
     }
 }
 
+void Playback::setAnimation(Animation* anim)
+{
+    animation = anim;
+    refreshAnim();
+}
+
 void Playback::refreshAnim()
 {
+    timestamps.clear();
     QTime temp = QTime(0,0,0,0);
     if (animation != NULL)
     {
@@ -175,4 +185,5 @@ void Playback::refreshAnim()
 
         progress->setMaximum(animation->GetDuration());
     }
+    setTime(0);
 }

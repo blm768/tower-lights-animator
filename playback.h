@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QList>
 #include <QGridLayout>
+#include <QCloseEvent>
 #include <QApplication>
 #include "towerframe.h"
 
@@ -29,8 +30,14 @@ private slots:
     void onPlayEvent();
     void incTime();
 
+public slots:
+    void setAnimation(Animation* anim);
+
+signals:
+    void closeEvent (QCloseEvent *event);
+
 public:
-    Playback(Animation *anim);
+    Playback(QWidget *parent = 0, Animation *anim = NULL);
     void refreshAnim();
 
 };

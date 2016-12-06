@@ -4,6 +4,8 @@
 
 #include <limits>
 
+#include <QApplication>
+#include <QT>
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
@@ -262,6 +264,17 @@ Timeline::Timeline(QWidget *parent) :
     connect(_toolbar, &TimelineToolbar::shiftR, this, &Timeline::shiftR);
     connect(_toolbar, &TimelineToolbar::shiftRD, this, &Timeline::shiftRD);
     connect(this, &Timeline::selectionChanged, _toolbar, &TimelineToolbar::setSelection);
+    //connect(this, &Timeline::selectionChanged, this, &Timeline::updatePlayback);
+
+    playopen = 0;
+}
+
+void Timeline::updatePlayback()
+{
+    if (playopen == 1 && _selection.animation != NULL)
+    {
+        _playback->setAnimation(_selection.animation);
+    }
 }
 
 void Timeline::addFrame() {
@@ -284,6 +297,7 @@ void Timeline::addFrame() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::deleteSelection() {
@@ -296,6 +310,7 @@ void Timeline::deleteSelection() {
         delete widget;
         oldSelection.animation->DeleteFrame(oldSelection.start);
     }
+    updatePlayback();
 }
 
 void Timeline::deselect() {
@@ -335,6 +350,7 @@ void Timeline::setAnimation(Animation* animation) {
 
     // Create the new frame widgets.
     _selection.animation = animation;
+    updatePlayback();
     for(int i = 0; i < _selection.animation->FrameCount(); ++i) {
         Frame* frame = _selection.animation->GetFrame(i);
         FrameWidget* widget = new FrameWidget(this, frame);
@@ -350,8 +366,21 @@ void Timeline::setAnimation(Animation* animation) {
 }
 
 void Timeline::playback(){
-    Playback *playback = new Playback(_selection.animation);
-    playback->show();
+    if (playopen == 0){
+        Playback *playback = new Playback(this, _selection.animation);
+        connect(playback, &Playback::closeEvent, this, &Timeline::togglePlayback);
+        playback->show();
+        togglePlayback();
+        _playback = playback;
+    }
+}
+
+void Timeline::togglePlayback(){
+    if (playopen == 0)
+        playopen = 1;
+    else {
+        playopen = 0;
+    }
 }
 
 void Timeline::setScale(qreal scale) {
@@ -405,6 +434,7 @@ void Timeline::pasteFrames() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + _copiedFrames.length();
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftLU() {
@@ -413,7 +443,6 @@ void Timeline::shiftLU() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -427,6 +456,7 @@ void Timeline::shiftLU() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftL() {
@@ -435,7 +465,6 @@ void Timeline::shiftL() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -449,6 +478,7 @@ void Timeline::shiftL() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftLD() {
@@ -457,7 +487,6 @@ void Timeline::shiftLD() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -471,6 +500,7 @@ void Timeline::shiftLD() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftUp() {
@@ -479,7 +509,6 @@ void Timeline::shiftUp() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -493,6 +522,7 @@ void Timeline::shiftUp() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftDown() {
@@ -501,7 +531,6 @@ void Timeline::shiftDown() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -515,6 +544,7 @@ void Timeline::shiftDown() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftRU() {
@@ -523,7 +553,6 @@ void Timeline::shiftRU() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -537,6 +566,7 @@ void Timeline::shiftRU() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftR() {
@@ -545,7 +575,6 @@ void Timeline::shiftR() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -559,6 +588,7 @@ void Timeline::shiftR() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }
 
 void Timeline::shiftRD() {
@@ -567,7 +597,6 @@ void Timeline::shiftRD() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
-        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -581,4 +610,5 @@ void Timeline::shiftRD() {
     _selection.start = insertionLocation;
     _selection.end = insertionLocation + 1;
     selectionChanged(_selection);
+    updatePlayback();
 }

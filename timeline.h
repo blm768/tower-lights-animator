@@ -6,6 +6,7 @@
 #include <QSpinBox>
 #include <QWidget>
 
+#include "playback.h"
 #include "towerframe.h"
 
 // Forward declarations
@@ -60,6 +61,7 @@ private:
     Timeline* _timeline;
     //! The frame of animation
     Frame* _frame;
+
 };
 
 /*!
@@ -203,6 +205,9 @@ signals:
     void scaleChanged(qreal pixelsPerMillisecond);
     void selectionChanged(FrameSelection selection);
 
+private slots:
+    void updatePlayback();
+
 public slots:
     /*!
      * \brief Sets the animation to display in the timeline
@@ -297,6 +302,8 @@ public slots:
      */
     void onFrameChanged(int index);
 
+    void togglePlayback();
+
     void onFrameClicked(FrameWidget *frame, bool isShiftClick);
 
 private:
@@ -311,6 +318,9 @@ private:
     qreal _scale;
     //! Holds copied frames
     QVector<Frame*> _copiedFrames;
+
+    int playopen;
+    Playback* _playback;
 
     /*!
      * \brief Inserts a frame into the animation and creates a FrameWidget
