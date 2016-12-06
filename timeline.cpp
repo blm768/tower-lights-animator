@@ -5,7 +5,7 @@
 #include <limits>
 
 #include <QApplication>
-#include <QT>
+#include <Qt>
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
