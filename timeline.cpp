@@ -56,7 +56,12 @@ QSize FrameWidget::sizeHint() const {
 // Makes sure this widget gets the width it needs.
 void FrameWidget::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
-    if(width() != sizeHint().width()) {
+    int hintWidth = sizeHint().width();
+    if(width() != hintWidth) {
+        // Partially fixes the issue where having over 127 frames in the timeline
+        // forces everything to its minimum width
+        // (Only triggers properly on a resize event)
+        setMinimumWidth(hintWidth);
         updateGeometry();
     }
 }

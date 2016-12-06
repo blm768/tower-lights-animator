@@ -43,8 +43,8 @@ public:
      */
     bool isSelected();
 
-    QSize sizeHint() const;
-    void resizeEvent(QResizeEvent *event);
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 protected:
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
@@ -61,7 +61,6 @@ private:
     Timeline* _timeline;
     //! The frame of animation
     Frame* _frame;
-
 };
 
 /*!
