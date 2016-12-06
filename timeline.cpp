@@ -1,5 +1,6 @@
 #include "timeline.h"
 #include "error.h"
+#include "playback.h"
 
 #include <limits>
 
@@ -125,6 +126,11 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     layout->addWidget(_shiftBox);
 
     // TODO: replace text with an icon?
+
+    QPushButton* buttonPlayback = new QPushButton(tr("Playback"));
+    buttonsLayout->addWidget(buttonPlayback, 0, Qt::AlignLeft);
+    connect(buttonPlayback, &QPushButton::clicked, this, &TimelineToolbar::playback);
+
     QPushButton* buttonAdd = new QPushButton(tr("Add frame"));
     buttonsLayout->addWidget(buttonAdd, 0, Qt::AlignLeft);
     connect(buttonAdd, &QPushButton::clicked, this, &TimelineToolbar::addFrame);
@@ -242,6 +248,7 @@ Timeline::Timeline(QWidget *parent) :
     frameScrollBox->setWidgetResizable(true);
     layout->addWidget(frameScrollBox, 1);
 
+    connect(_toolbar, &TimelineToolbar::playback, this, &Timeline::playback);
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
     connect(_toolbar, &TimelineToolbar::deleteSelection, this, &Timeline::deleteSelection);
     connect(_toolbar, &TimelineToolbar::increaseScale, this, &Timeline::increaseScale);
@@ -340,6 +347,11 @@ void Timeline::setAnimation(Animation* animation) {
         _selection.end = 1;
         selectionChanged(_selection);
     }
+}
+
+void Timeline::playback(){
+    Playback *playback = new Playback(_selection.animation);
+    playback->show();
 }
 
 void Timeline::setScale(qreal scale) {

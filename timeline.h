@@ -148,6 +148,11 @@ signals:
       */
     void shiftRD();
 
+    /*!
+     * \brief Launches an animation playback window
+     */
+    void playback();
+
 public slots:
     /*!
      * \brief Sets the selection
@@ -203,6 +208,11 @@ public slots:
      * \brief Sets the animation to display in the timeline
      */
     void setAnimation(Animation* animation);
+
+    /*!
+     * \brief Launches an animation playback window
+     */
+    void playback();
 
     /*!
      * Sets the view scale

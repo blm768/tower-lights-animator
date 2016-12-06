@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     colorpicker.cpp \
     towerframe.cpp \
     tanIO.cpp \
-    error.cpp
+    error.cpp \
+    playback.cpp
 
 HEADERS  += mainwindow.h \
     timeline.h \
@@ -33,4 +34,5 @@ HEADERS  += mainwindow.h \
     colorpicker.h \
     towerframe.h \
     tanIO.h \
-    error.h
+    error.h \
+    playback.h
