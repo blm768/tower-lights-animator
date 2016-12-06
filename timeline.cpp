@@ -413,6 +413,7 @@ void Timeline::shiftLU() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -434,6 +435,7 @@ void Timeline::shiftL() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -455,6 +457,7 @@ void Timeline::shiftLD() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -476,6 +479,7 @@ void Timeline::shiftUp() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -497,6 +501,7 @@ void Timeline::shiftDown() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -518,6 +523,7 @@ void Timeline::shiftRU() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -539,6 +545,7 @@ void Timeline::shiftR() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
@@ -560,6 +567,7 @@ void Timeline::shiftRD() {
     if(_selection.length() == 0) {
         //There is no frame to be shifted. Pop up error box
         errNoShift();
+        return;
     } else {
         // Copy the last selected frame and put the new frame after it.
         insertionLocation = _selection.end;
