@@ -92,6 +92,7 @@ void MainMenu::newFile() {
     if(newFileBox.clickedButton() == noSave) {
         delete animation;
         animation = new Animation;
+        animation->AddFrame(25);        //add default frame of 25 seconds
         _window->setAnimation(animation);
     }
     else{
@@ -103,6 +104,7 @@ void MainMenu::newFile() {
             std::string stdFileName = fileName.toStdString();
             SaveProject(stdFileName, animation);
             animation = new Animation;
+            animation->AddFrame(25);    //add default frame of 25 seconds
             _window->setAnimation(animation);
             break;
         }
