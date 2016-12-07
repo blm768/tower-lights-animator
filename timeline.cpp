@@ -248,7 +248,9 @@ Timeline::Timeline(QWidget *parent) :
     QScrollArea* frameScrollBox = new QScrollArea();
     frameScrollBox->setWidget(_frameBox);
     frameScrollBox->setWidgetResizable(true);
-    layout->addWidget(frameScrollBox, 1);
+    layout->addWidget(frameScrollBox,1);
+    //layout->setSizeConstraint(QLayout::SetMinimumSize);
+
 
     connect(_toolbar, &TimelineToolbar::playback, this, &Timeline::playback);
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
@@ -264,7 +266,6 @@ Timeline::Timeline(QWidget *parent) :
     connect(_toolbar, &TimelineToolbar::shiftR, this, &Timeline::shiftR);
     connect(_toolbar, &TimelineToolbar::shiftRD, this, &Timeline::shiftRD);
     connect(this, &Timeline::selectionChanged, _toolbar, &TimelineToolbar::setSelection);
-    //connect(this, &Timeline::selectionChanged, this, &Timeline::updatePlayback);
 
     playopen = 0;
 }

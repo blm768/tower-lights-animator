@@ -21,7 +21,7 @@ class Timeline;
 class FrameWidget : public QWidget {
     Q_OBJECT
 public:
-    static const int minWidth = 4;
+    static const int minWidth = 40;
     static const int minHeight = 16;
     static const QColor borderColor;
     static const QColor borderSelectedColor;
