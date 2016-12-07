@@ -44,6 +44,7 @@ public:
     bool isSelected();
 
     QSize sizeHint() const;
+    QSize minimumSizeHint() const;
     void resizeEvent(QResizeEvent *event);
 
 protected:

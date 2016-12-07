@@ -47,10 +47,14 @@ bool FrameWidget::isSelected() {
 // The optimal size of the frame widget
 QSize FrameWidget::sizeHint() const {
     int width = _frame->FDuration * _timeline->scale();
-    if(width < minimumWidth()) {
-        width = minimumWidth();
+    if(width < minWidth) {
+        width = minWidth;
     }
     return QSize(width, height());
+}
+
+QSize FrameWidget::minimumSizeHint() const {
+    return sizeHint();
 }
 
 // Makes sure this widget gets the width it needs.
@@ -267,9 +271,8 @@ Timeline::Timeline(QWidget *parent) :
     QScrollArea* frameScrollBox = new QScrollArea();
     frameScrollBox->setWidget(_frameBox);
     frameScrollBox->setWidgetResizable(true);
-    layout->addWidget(frameScrollBox,1);
+    layout->addWidget(frameScrollBox, 1);
     //layout->setSizeConstraint(QLayout::SetMinimumSize);
-
 
     connect(_toolbar, &TimelineToolbar::playback, this, &Timeline::playback);
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
