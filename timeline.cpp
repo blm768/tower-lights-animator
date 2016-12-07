@@ -25,8 +25,6 @@ const QColor FrameWidget::borderSelectedColor = QColor(255, 255, 127);
 
 FrameWidget::FrameWidget(QWidget *parent, Timeline* timeline, Frame* frame) :
         QWidget(parent), _timeline(timeline), _frame(frame) {
-    setMinimumWidth(minWidth);
-    setMinimumHeight(minHeight);
     connect(this, &FrameWidget::clicked, _timeline, &Timeline::onFrameClicked);
     // We need the cast to determine which overload to use.
     connect(_timeline, &Timeline::selectionChanged, this, static_cast<void (FrameWidget::*)()>(&FrameWidget::update));
@@ -54,7 +52,8 @@ QSize FrameWidget::sizeHint() const {
 }
 
 QSize FrameWidget::minimumSizeHint() const {
-    return sizeHint();
+    QSize hint = sizeHint();
+    return QSize(hint.width(), minHeight);
 }
 
 // Makes sure this widget gets the width it needs.
@@ -62,10 +61,6 @@ void FrameWidget::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
     int hintWidth = sizeHint().width();
     if(width() != hintWidth) {
-        // Partially fixes the issue where having over 127 frames in the timeline
-        // forces everything to its minimum width
-        // (Only triggers properly on a resize event)
-        setMinimumWidth(hintWidth);
         updateGeometry();
     }
 }
@@ -267,17 +262,16 @@ Timeline::Timeline(QWidget *parent) :
     layout->addWidget(_toolbar, 0);
 
     _frameBox = new QWidget();
-    _frameBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    _frameBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
 
     _frameLayout = new QHBoxLayout;
     _frameBox->setLayout(_frameLayout);
-    _frameLayout->addStretch(1);
 
     QScrollArea* frameScrollBox = new QScrollArea();
     frameScrollBox->setWidget(_frameBox);
     frameScrollBox->setWidgetResizable(true);
     layout->addWidget(frameScrollBox, 1);
-    //layout->setSizeConstraint(QLayout::SetMinimumSize);
+    layout->setSizeConstraint(QLayout::SetMinimumSize);
 
     connect(_toolbar, &TimelineToolbar::playback, this, &Timeline::playback);
     connect(_toolbar, &TimelineToolbar::addFrame, this, &Timeline::addFrame);
