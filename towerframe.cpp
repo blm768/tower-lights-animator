@@ -12,6 +12,23 @@ Animation::Animation()
     currFrame = NULL;
 }
 
+Animation::~Animation(){
+    FreeMemory();
+
+}
+void Animation::FreeMemory(){
+    frameptr delf;
+    int length = FrameList.size();
+
+    for(int k = 0; k < length; k++){
+        delf = FrameList.at(k);
+        delete delf;
+        //std::cout << "Frame deleted" << std::endl;
+    }
+
+
+}
+
 bool Animation::FrameSelected()
 {
     return (currFrame != NULL);
