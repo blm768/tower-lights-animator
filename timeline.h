@@ -159,6 +159,10 @@ public slots:
      * \param selection The selection
      */
     void setSelection(const FrameSelection& selection);
+    /*!
+     * \brief Changes the global wrap to true/false
+     */\
+    void wrapStateChanged();
 
 private slots:
     void setDuration(int duration);

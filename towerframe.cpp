@@ -4,6 +4,8 @@
 #include <iostream>
 #include "towerframe.h"
 
+extern bool wrap;
+
 Animation::Animation()
 {
     TDuration = 0;
@@ -248,10 +250,20 @@ int Animation::ShiftFrameLU(int Index, int Position)
         {
             for (int j = 0; j < (FWIDTH); j++)
             {
-                if(i == (FHEIGHT - 1) || j == (FWIDTH - 1))
-                    n->WorkArea[i][j] = QColor(Qt::black);
+                if(wrap == false)
+                {
+                    if(i == (FHEIGHT - 1) || j == (FWIDTH - 1))
+                     n->WorkArea[i][j] = QColor(Qt::black);
+                    else
+                     n->WorkArea[i][j] = curr->WorkArea[i + 1][j + 1];
+                }
                 else
-                    n->WorkArea[i][j] = curr->WorkArea[i + 1][j + 1];
+                {
+                    if(i == (FHEIGHT - 1) || j == (FWIDTH - 1))
+                     n->WorkArea[i][j] = QColor(Qt::black);
+                    else
+                     n->WorkArea[i][j] = curr->WorkArea[i + 1][j + 1];
+                }
             }
         }
 
@@ -278,10 +290,25 @@ int Animation::ShiftFrameL(int Index, int Position)
         {
             for (int j = 0; j < (FWIDTH); j++)
             {
-                if(j == (FWIDTH - 1))
-                    n->WorkArea[i][j] = QColor(Qt::black);
+                if(wrap == true)
+                {
+                    if(j == (FWIDTH - 1))
+                    { /* do nothing */ }
+                    else if(j == 0)
+                    {
+                        n->WorkArea[i][FWIDTH - 1] = curr->WorkArea[i][j];
+                        n->WorkArea[i][j] = curr->WorkArea[i][j + 1];
+                    }
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i][j + 1];
+                }
                 else
-                    n->WorkArea[i][j] = curr->WorkArea[i][j + 1];
+                {
+                    if(j == (FWIDTH - 1))
+                        n->WorkArea[i][j] = QColor(Qt::black);
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i][j + 1];
+                }
             }
         }
 
@@ -338,10 +365,25 @@ int Animation::ShiftFrameUp(int Index, int Position)
         {
             for (int j = 0; j < (FWIDTH); j++)
             {
-                if(i == (FHEIGHT - 1))
-                    n->WorkArea[i][j] = QColor(Qt::black);
+                if(wrap == true)
+                {
+                    if(i == (FHEIGHT - 1))
+                    { /* do nothing */ }
+                    else if(i == 0)
+                    {
+                        n->WorkArea[FHEIGHT - 1][j] = curr->WorkArea[i][j];
+                        n->WorkArea[i][j] = curr->WorkArea[i + 1][j];
+                    }
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i + 1][j];
+                }
                 else
-                    n->WorkArea[i][j] = curr->WorkArea[i + 1][j];
+                {
+                    if(i == (FHEIGHT - 1))
+                        n->WorkArea[i][j] = QColor(Qt::black);
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i + 1][j];
+                }
             }
         }
 
@@ -368,10 +410,20 @@ int Animation::ShiftFrameDown(int Index, int Position)
         {
             for (int j = 0; j < (FWIDTH); j++)
             {
-                if(i == 0)
-                    n->WorkArea[i][j] = QColor(Qt::black);
+                if(wrap == true)
+                {
+                    if(i == 0)
+                        n->WorkArea[i][j] = curr->WorkArea[FHEIGHT - 1][j];
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i - 1][j];
+                 }
                 else
-                    n->WorkArea[i][j] = curr->WorkArea[i - 1][j];
+                {
+                    if(i == 0)
+                        n->WorkArea[i][j] = QColor(Qt::black);
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i - 1][j];
+                }
             }
         }
 
@@ -428,10 +480,20 @@ int Animation::ShiftFrameR(int Index, int Position)
         {
             for (int j = 0; j < (FWIDTH); j++)
             {
-                if(j == 0)
-                    n->WorkArea[i][j] = QColor(Qt::black);
+                if(wrap == true)
+                {
+                    if(j== 0)
+                        n->WorkArea[i][j] = curr->WorkArea[i][FWIDTH - 1];
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i][j - 1];
+                }
                 else
-                    n->WorkArea[i][j] = curr->WorkArea[i][j - 1];
+                {
+                    if(j == 0)
+                        n->WorkArea[i][j] = QColor(Qt::black);
+                    else
+                        n->WorkArea[i][j] = curr->WorkArea[i][j - 1];
+                }
             }
         }
 

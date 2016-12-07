@@ -8,10 +8,15 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
+#include <QCheckBox>
+
+
 
 //-------------//
 // FrameWidget //
 //-------------//
+
+bool wrap = false;
 
 const QColor FrameWidget::borderColor = QColor(127, 127, 127);
 const QColor FrameWidget::borderSelectedColor = QColor(255, 255, 127);
@@ -100,6 +105,7 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
 //-----------------//
 
 TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
+
     QHBoxLayout *layout = new QHBoxLayout;
     setLayout(layout);
 
@@ -166,6 +172,10 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     shiftLayout->addWidget(sUp, 0, 1);
     connect(sUp, &QPushButton::clicked, this, &TimelineToolbar::shiftUp);
 
+    QCheckBox* wrapbox = new QCheckBox("Wrap", this);
+    shiftLayout->addWidget(wrapbox, 1, 1, Qt::AlignCenter);
+    connect(wrapbox, SIGNAL(stateChanged(int)), this, SLOT(wrapStateChanged()));
+
     QPushButton* sDown = new QPushButton(tr("Down"));
     shiftLayout->addWidget(sDown, 2, 1);
     connect(sDown, &QPushButton::clicked, this, &TimelineToolbar::shiftDown);
@@ -218,6 +228,15 @@ void TimelineToolbar::setDuration(int duration) {
         frame->FDuration = individualDuration;
         timeline->onFrameChanged(i);
     }
+}
+
+void TimelineToolbar::wrapStateChanged()
+{
+    if(wrap == false)
+        wrap = true;
+    else
+        wrap = false;
+
 }
 
 //----------//
