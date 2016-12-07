@@ -37,6 +37,12 @@ public:
 
     frameptr currFrame;
     Animation();
+    ~Animation();
+
+    /*!
+     *\brief Frees Animation memory
+     */
+     void FreeMemory();
 
     /*!
      * \brief Gets a pointer to the raw frame at the given index
