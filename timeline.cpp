@@ -91,15 +91,15 @@ void FrameWidget::paintEvent(QPaintEvent *event) {
     // Frame height matches interior height.
     qreal frameHeight = (qreal)interior.height();
     // Frame width matches aspect ratio (but clipped to interior area)
-    qreal frameWidth = std::min(frameHeight * FWIDTH / FHEIGHT, (qreal)interior.width());
+    qreal frameWidth = std::min(frameHeight * FRAME_INNER_WIDTH / FRAME_INNER_HEIGHT, (qreal)interior.width());
 
     // Draw cells.
     painter.translate(interior.top(), interior.left());
-    painter.scale(frameWidth / FWIDTH, frameHeight / FHEIGHT);
+    painter.scale(frameWidth / FRAME_INNER_WIDTH, frameHeight / FRAME_INNER_HEIGHT);
     // TODO: just draw the interior area.
-    for(size_t x = 0; x < FWIDTH; ++x) {
-        for(size_t y = 0; y < FHEIGHT; ++y) {
-            painter.setBrush(_frame->WorkArea[y][x]);
+    for(size_t x = 0; x < FRAME_INNER_WIDTH; ++x) {
+        for(size_t y = 0; y < FRAME_INNER_HEIGHT; ++y) {
+            painter.setBrush(_frame->WorkArea[FRAME_V_MARGIN + y][FRAME_H_MARGIN + x]);
             painter.drawRect(x, y, 1, 1);
         }
     }
