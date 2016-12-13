@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: Wrote all this (currently unused) code
+ */
 #include "frameregion.h"
 
 DynamicFrameRegion* FrameRegion::subregion(QRect area) {

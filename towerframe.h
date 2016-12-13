@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: added a couple of constants and the declaration of GetFrame()
+ */
 #ifndef TOWERFRAME_H
 #define TOWERFRAME_H
 #include <QColor>

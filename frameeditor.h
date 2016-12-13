@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: Outlined initial signals and slots
+ */
 #ifndef FRAMEEDITOR_H
 #define FRAMEEDITOR_H
 

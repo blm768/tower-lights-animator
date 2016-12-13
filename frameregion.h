@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: Wrote all this (currently unused) code
+ */
 #ifndef _FRAME_REGION_H
 #define _FRAME_REGION_H
 
