@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: outlined the initial signals, slots, and actions
+ */
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
@@ -10,7 +13,9 @@
 // Forward declaration
 class MainWindow;
 
-// Holds the main menus and actions
+/*!
+ * \brief Holds the main menus and actions
+ */
 class MainMenu : public QObject
 {
     Q_OBJECT

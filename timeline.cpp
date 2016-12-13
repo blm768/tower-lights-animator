@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: Wrote most of this code
+ */
 #include "timeline.h"
 #include "error.h"
 #include "playback.h"
@@ -11,8 +14,6 @@
 #include <QPainter>
 #include <QScrollArea>
 #include <QCheckBox>
-
-
 
 //-------------//
 // FrameWidget //

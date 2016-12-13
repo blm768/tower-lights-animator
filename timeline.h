@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: Wrote most of this code
+ */
 #ifndef TIMELINE_H
 #define TIMELINE_H
 

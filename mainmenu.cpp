@@ -1,3 +1,6 @@
+/* CONTRIBUTORS
+ * Ben Merritt: Set up the first few menu items in the MainMenu constructor
+ */
 #include "mainmenu.h"
 
 #include <QMenuBar>
@@ -195,4 +198,3 @@ void MainMenu::exportFile() {
     SaveTan(stdFileName, animation);
     previousFile = stdFileName;
 }
-
