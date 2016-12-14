@@ -175,7 +175,7 @@ void MainMenu::openFile() {
             SaveProject(stdFileName, animation);
             delete animation;
             animation = new Animation;
-            fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Project Files (*.pro)");
+            fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan or Project Files (*.tan *.pro)");
             stdFileName = fileName.toStdString();
             LoadTan(stdFileName, animation);
             previousFile = stdFileName;
