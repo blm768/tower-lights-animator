@@ -2,6 +2,8 @@
  * Ben Merritt: Set up the first few menu items in the MainMenu constructor
  * Paden Rumsey: Implemented/debugged most of the file operations 
  *               (except export)
+ * Kevin Benzing: Set up the remainder of the file and edit menus
+ *                 I/O debugging
  * Max Gilmore: Added insert menu with animation submenu, no animations implemented yet
  */
 #include "mainmenu.h"

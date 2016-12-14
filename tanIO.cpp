@@ -6,7 +6,7 @@
  * Paden's Contributions: Created all the functions in this file
  *                        except SaveTan and SaveProject
  * Max's Contributions: Created SaveTan and SaveProject
- * Kevin's Contributions: Fixed Export bug
+ * Kevin's Contributions: Debugging
  */ 
 
 #include <QTime>
