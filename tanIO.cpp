@@ -6,6 +6,7 @@
  * Paden's Contributions: Created all the functions in this file
  *                        except SaveTan and SaveProject
  * Max's Contributions: Created SaveTan and SaveProject
+ * Kevin's Contributions: Fixed Export bug
  */ 
 
 #include <QTime>
@@ -312,7 +313,7 @@ int SaveTan( string fileName, Animation *tower ) {
 
         //Sizes used are the static 14x20 that the tower is statically allocated to
         for( int i=5; i<15; i++ ) {
-            for( int j=5; j<10; j++ ) {
+            for( int j=4; j<8; j++ ) {
 
                 //Get color of a cell and write it to the file
                 current = tower->GetCellColor(index, i, j);
