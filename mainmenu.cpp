@@ -2,6 +2,7 @@
  * Ben Merritt: Set up the first few menu items in the MainMenu constructor
  * Paden Rumsey: Implemented/debugged most of the file operations 
  *               (except export)
+ * Max Gilmore: Added insert menu with animation submenu, no animations implemented yet
  */
 #include "mainmenu.h"
 
@@ -65,6 +66,11 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     Paste->setShortcuts(QKeySequence::Paste);
     Paste->setStatusTip(tr("Paste from clipboard"));
     connect(Paste, &QAction::triggered, this, &MainMenu::paste);
+    
+    //Unimplemented animation
+    //RainEffect = new QAction(tr("Rain"), this);
+    //RainEffect->setStatusTip(tr("Insert falling rain effect after current frame"));
+    //connect(RainEffect, &QAction::triggered, this, &MainMenu::rainEffect);
 
     // Create menus and add to window.
 
@@ -81,6 +87,11 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     menuEdit->addAction(Cut);
     menuEdit->addAction(Copy);
     menuEdit->addAction(Paste);
+    
+    //Unimplemented menus
+    //menuInsert = mainMenu->addMenu(tr("Insert"));
+    //menuAnimations = menuInsert->addMenu("Animations");
+    //menuAnimations->addAction(RainEffect);
 
     _window = window;
 
