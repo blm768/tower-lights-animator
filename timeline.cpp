@@ -162,41 +162,41 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     editLayout->addWidget(buttonScaleDown, 2, 1);
     connect(buttonScaleDown, &QPushButton::clicked, this, &TimelineToolbar::decreaseScale);
 
-    QPushButton* sLeftUp = new QPushButton(tr("Up Left"));
-    shiftLayout->addWidget(sLeftUp, 0, 0);
-    connect(sLeftUp, &QPushButton::clicked, this, &TimelineToolbar::shiftLU);
+    _sLeftUp = new QPushButton(tr("Up Left"));
+    shiftLayout->addWidget(_sLeftUp, 0, 0);
+    connect(_sLeftUp, &QPushButton::clicked, this, &TimelineToolbar::shiftLU);
 
-    QPushButton* sLeft = new QPushButton(tr("Left"));
-    shiftLayout->addWidget(sLeft, 1, 0);
-    connect(sLeft, &QPushButton::clicked, this, &TimelineToolbar::shiftL);
+    _sLeft = new QPushButton(tr("Left"));
+    shiftLayout->addWidget(_sLeft, 1, 0);
+    connect(_sLeft, &QPushButton::clicked, this, &TimelineToolbar::shiftL);
 
-    QPushButton* sLeftDown = new QPushButton(tr("Down Left"));
-    shiftLayout->addWidget(sLeftDown, 2, 0);
-    connect(sLeftDown, &QPushButton::clicked, this, &TimelineToolbar::shiftLD);
+    _sLeftDown = new QPushButton(tr("Down Left"));
+    shiftLayout->addWidget(_sLeftDown, 2, 0);
+    connect(_sLeftDown, &QPushButton::clicked, this, &TimelineToolbar::shiftLD);
 
-    QPushButton* sUp = new QPushButton(tr("Up"));
-    shiftLayout->addWidget(sUp, 0, 1);
-    connect(sUp, &QPushButton::clicked, this, &TimelineToolbar::shiftUp);
+    _sUp = new QPushButton(tr("Up"));
+    shiftLayout->addWidget(_sUp, 0, 1);
+    connect(_sUp, &QPushButton::clicked, this, &TimelineToolbar::shiftUp);
 
     QCheckBox* wrapbox = new QCheckBox("Wrap", this);
     shiftLayout->addWidget(wrapbox, 1, 1, Qt::AlignCenter);
     connect(wrapbox, SIGNAL(stateChanged(int)), this, SLOT(wrapStateChanged()));
 
-    QPushButton* sDown = new QPushButton(tr("Down"));
-    shiftLayout->addWidget(sDown, 2, 1);
-    connect(sDown, &QPushButton::clicked, this, &TimelineToolbar::shiftDown);
+    _sDown = new QPushButton(tr("Down"));
+    shiftLayout->addWidget(_sDown, 2, 1);
+    connect(_sDown, &QPushButton::clicked, this, &TimelineToolbar::shiftDown);
 
-    QPushButton* sRightUp = new QPushButton(tr("Right Up"));
-    shiftLayout->addWidget(sRightUp, 0, 2);
-    connect(sRightUp, &QPushButton::clicked, this, &TimelineToolbar::shiftRU);
+    _sRightUp = new QPushButton(tr("Right Up"));
+    shiftLayout->addWidget(_sRightUp, 0, 2);
+    connect(_sRightUp, &QPushButton::clicked, this, &TimelineToolbar::shiftRU);
 
-    QPushButton* sRight = new QPushButton(tr("Right"));
-    shiftLayout->addWidget(sRight, 1, 2);
-    connect(sRight, &QPushButton::clicked, this, &TimelineToolbar::shiftR);
+    _sRight = new QPushButton(tr("Right"));
+    shiftLayout->addWidget(_sRight, 1, 2);
+    connect(_sRight, &QPushButton::clicked, this, &TimelineToolbar::shiftR);
 
-    QPushButton* sRightDown = new QPushButton(tr("Right Down"));
-    shiftLayout->addWidget(sRightDown, 2, 2);
-    connect(sRightDown, &QPushButton::clicked, this, &TimelineToolbar::shiftRD);
+    _sRightDown = new QPushButton(tr("Right Down"));
+    shiftLayout->addWidget(_sRightDown, 2, 2);
+    connect(_sRightDown, &QPushButton::clicked, this, &TimelineToolbar::shiftRD);
 
     QPushButton* buttonPlayback = new QPushButton(tr("Playback"));
     buttonsLayout->addWidget(buttonPlayback, 0, Qt::AlignLeft);
@@ -243,10 +243,33 @@ void TimelineToolbar::setDuration(int duration) {
 void TimelineToolbar::wrapStateChanged()
 {
     if(wrap == false)
+    {
         wrap = true;
+        alterDiagonals(true);
+    }
     else
+    {
         wrap = false;
+        alterDiagonals(false);
+    }
+}
 
+void TimelineToolbar::alterDiagonals(bool state)
+{
+    if(state == true)
+    {
+        _sLeftUp->setEnabled(false);
+        _sLeftDown->setEnabled(false);
+        _sRightDown->setEnabled(false);
+        _sRightUp->setEnabled(false);
+    }
+    else
+    {
+        _sLeftUp->setEnabled(true);
+        _sLeftDown->setEnabled(true);
+        _sRightDown->setEnabled(true);
+        _sRightUp->setEnabled(true);
+    }
 }
 
 //----------//

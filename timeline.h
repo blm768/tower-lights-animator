@@ -103,6 +103,9 @@ class TimelineToolbar : public QWidget {
 public:
     explicit TimelineToolbar(Timeline* parent = 0);
 
+    //! Turns the diagonals on and off based on wrap state
+    void alterDiagonals(bool state);
+
 signals:
     /*!
      * \brief Signals that a frame is to be added
@@ -179,6 +182,14 @@ private:
     QWidget* _buttonBox;
     QWidget* _shiftBox;
     QWidget* _editBox;
+    QPushButton* _sUp;
+    QPushButton* _sDown;
+    QPushButton* _sLeft;
+    QPushButton* _sLeftUp;
+    QPushButton* _sLeftDown;
+    QPushButton* _sRight;
+    QPushButton* _sRightDown;
+    QPushButton* _sRightUp;
 
 };
 
