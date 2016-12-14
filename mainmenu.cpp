@@ -113,7 +113,7 @@ void MainMenu::newFile() {
     else{
         switch(ret) {
         case QMessageBox::Save:{
-            QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Project Files (*.pro)");
+            QString fileName = QFileDialog::getSaveFileName(_window, "Save file", QDir::currentPath(), "Project Files (*.pro)");
             if(fileName == NULL || fileName.isEmpty())
                 return;          //the file returned is NULL so the cancel button was pressed (or empty)
             std::string stdFileName = fileName.toStdString();
@@ -136,7 +136,7 @@ void MainMenu::newFile() {
 
 void MainMenu::saveFile() {
     if(previousFile.empty()){
-        QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Project Files (*.pro)");
+        QString fileName = QFileDialog::getSaveFileName(_window, "Save file", QDir::currentPath(), "Project Files (*.pro)");
         if(fileName == NULL || fileName.isEmpty())
             return;          //the file returned is NULL so the cancel button was pressed (or empty)
         std::string stdFileName = fileName.toStdString();
@@ -148,7 +148,7 @@ void MainMenu::saveFile() {
 }
 
 void MainMenu::saveFileAs() {
-    QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Project Files (*.pro)");
+    QString fileName = QFileDialog::getSaveFileName(_window, "Save file", QDir::currentPath(), "Project Files (*.pro)");
     if(fileName == NULL || fileName.isEmpty())
         return;          //the file returned is NULL so the cancel button was pressed (or empty)
     std::string stdFileName = fileName.toStdString();
@@ -165,7 +165,7 @@ void MainMenu::openFile() {
     int ret = newFileBox.exec();
 
     if(newFileBox.clickedButton() == noSave){
-        fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan or Project Files (*.tan *.pro)");
+        fileName = QFileDialog::getOpenFileName(_window, "Open file", QDir::currentPath(), "Tan or Project Files (*.tan *.pro)");
         if(fileName == NULL || fileName.isEmpty())
             return;          //the file returned is NULL so the cancel button was pressed (or empty)
         delete animation;
@@ -178,14 +178,14 @@ void MainMenu::openFile() {
     else{
         switch(ret) {
         case QMessageBox::Save:{
-            fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Project Files (*.pro)");
+            fileName = QFileDialog::getSaveFileName(_window, "Save file", QDir::currentPath(), "Project Files (*.pro)");
             if(fileName == NULL || fileName.isEmpty())
                 return;          //the file returned is NULL so the cancel button was pressed (or empty)
             std::string stdFileName = fileName.toStdString();
             SaveProject(stdFileName, animation);
             delete animation;
             animation = new Animation;
-            fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan or Project Files (*.tan *.pro)");
+            fileName = QFileDialog::getOpenFileName(_window, "Open file", QDir::currentPath(), "Tan or Project Files (*.tan *.pro)");
             stdFileName = fileName.toStdString();
             LoadTan(stdFileName, animation);
             previousFile = stdFileName;
@@ -203,7 +203,7 @@ void MainMenu::openFile() {
 }
 
 void MainMenu::exportFile() {
-    QString fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+    QString fileName = QFileDialog::getSaveFileName(_window, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
     if(fileName == NULL || fileName.isEmpty())
         return;          //the file returned is NULL so the cancel button was pressed (or empty)
     std::string stdFileName = fileName.toStdString();

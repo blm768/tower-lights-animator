@@ -82,7 +82,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     switch(ret) {
     case QMessageBox::Save:{
         if(previousFile.empty()){
-            fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+            fileName = QFileDialog::getSaveFileName(this, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
             if(fileName == NULL || fileName.isEmpty())
             {
                 event->ignore();
