@@ -14,6 +14,9 @@ Toolbar::Toolbar(QWidget *parent) : QWidget(parent) {
     hozLayout->setContentsMargins(0,0,0,0);
 
 //Create a button for each of the tooltypes
+//Unimplemented features
+
+    /*
     selector = new QPushButton(hozLayoutWidget);
     selector->setText("Select");
     selector->setObjectName(QStringLiteral("Select"));
@@ -32,6 +35,7 @@ Toolbar::Toolbar(QWidget *parent) : QWidget(parent) {
     connect(pen, SIGNAL(clicked()), this, SLOT(handlePen()));
     connect(selector, SIGNAL(clicked()), this, SLOT(handleSelector()));
     connect(colorPicker, SIGNAL(clicked()), this, SLOT(handleColorPicker()));
+    */
 }
 
 //Internal slots for each tool
