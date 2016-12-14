@@ -178,6 +178,7 @@ private:
     QSpinBox* _frameDurationBox;
     QWidget* _buttonBox;
     QWidget* _shiftBox;
+    QWidget* _editBox;
 
 };
 

@@ -118,49 +118,48 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
 
     // Create toolbar elements
 
+    _editBox = new QWidget;
+    QGridLayout *editLayout = new QGridLayout;
+    _editBox->setLayout(editLayout);
+    layout->addWidget(_editBox);
+
     QLabel *frameDurationLabel = new QLabel(tr("Frame duration"));
-    layout->addWidget(frameDurationLabel, 0, Qt::AlignLeft);
+    editLayout->addWidget(frameDurationLabel, 0, 0);
 
     _frameDurationBox = new QSpinBox;
     // TODO: get the minimum from a constant.
     _frameDurationBox->setRange(25, std::numeric_limits<int>::max());
-    layout->addWidget(_frameDurationBox);
+    editLayout->addWidget(_frameDurationBox, 0, 1);
 
     connect(_frameDurationBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &TimelineToolbar::setDuration);
-
-    _buttonBox = new QWidget;
-    QHBoxLayout *buttonsLayout = new QHBoxLayout;
-    _buttonBox->setLayout(buttonsLayout);
-    layout->addWidget(_buttonBox);
 
     _shiftBox = new QWidget;
     QGridLayout *shiftLayout = new QGridLayout;
     _shiftBox->setLayout(shiftLayout);
     layout->addWidget(_shiftBox);
 
+    _buttonBox = new QWidget;
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    _buttonBox->setLayout(buttonsLayout);
+    layout->addWidget(_buttonBox);
+
+
     // TODO: replace text with an icon?
 
-    QPushButton* buttonPlayback = new QPushButton(tr("Playback"));
-    buttonsLayout->addWidget(buttonPlayback, 0, Qt::AlignLeft);
-    connect(buttonPlayback, &QPushButton::clicked, this, &TimelineToolbar::playback);
-
     QPushButton* buttonAdd = new QPushButton(tr("Add frame"));
-    buttonsLayout->addWidget(buttonAdd, 0, Qt::AlignLeft);
+    editLayout->addWidget(buttonAdd, 1, 0);
     connect(buttonAdd, &QPushButton::clicked, this, &TimelineToolbar::addFrame);
 
     QPushButton* buttonDelete = new QPushButton(tr("Delete frame"));
-    buttonsLayout->addWidget(buttonDelete, 0, Qt::AlignLeft);
+    editLayout->addWidget(buttonDelete, 1, 1);
     connect(buttonDelete, &QPushButton::clicked, this, &TimelineToolbar::deleteSelection);
 
-    QLabel* scaleLabel = new QLabel(tr("Scale"));
-    buttonsLayout->addWidget(scaleLabel, 0, Qt::AlignLeft);
-
-    QPushButton* buttonScaleUp = new QPushButton(tr("+"));
-    buttonsLayout->addWidget(buttonScaleUp, 0, Qt::AlignLeft);
+    QPushButton* buttonScaleUp = new QPushButton(tr("Scale Up"));
+    editLayout->addWidget(buttonScaleUp, 2, 0);
     connect(buttonScaleUp, &QPushButton::clicked, this, &TimelineToolbar::increaseScale);
 
-    QPushButton* buttonScaleDown = new QPushButton(tr("-"));
-    buttonsLayout->addWidget(buttonScaleDown, 0, Qt::AlignLeft);
+    QPushButton* buttonScaleDown = new QPushButton(tr("Scale Down"));
+    editLayout->addWidget(buttonScaleDown, 2, 1);
     connect(buttonScaleDown, &QPushButton::clicked, this, &TimelineToolbar::decreaseScale);
 
     QPushButton* sLeftUp = new QPushButton(tr("Up Left"));
@@ -198,6 +197,10 @@ TimelineToolbar::TimelineToolbar(Timeline* parent) : QWidget(parent) {
     QPushButton* sRightDown = new QPushButton(tr("Right Down"));
     shiftLayout->addWidget(sRightDown, 2, 2);
     connect(sRightDown, &QPushButton::clicked, this, &TimelineToolbar::shiftRD);
+
+    QPushButton* buttonPlayback = new QPushButton(tr("Playback"));
+    buttonsLayout->addWidget(buttonPlayback, 0, Qt::AlignLeft);
+    connect(buttonPlayback, &QPushButton::clicked, this, &TimelineToolbar::playback);
 
     // Pushes all the controls left.
     buttonsLayout->addStretch(1);
