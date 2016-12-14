@@ -1,6 +1,7 @@
 /* CONTRIBUTORS
  * Ben Merritt: outlined the initial signals, slots, and actions
  * Paden Rumsey: Implemented file operations (except export)
+ * Max Gilmore: Created Insert and Animation menus, no animations implemented yet
  */
 #ifndef MAINMENU_H
 #define MAINMENU_H
@@ -31,6 +32,7 @@ signals:
     void copy();
     void paste();
     void close();
+    void rainEffect();
 
 private slots:
     // Slots corresponding to menu actions
@@ -51,10 +53,13 @@ private:
     QAction* Cut;
     QAction* Copy;
     QAction* Paste;
+    QAction* RainEffect;
 
     // Menus
     QMenu* menuFile;
     QMenu* menuEdit;
+    QMenu* menuInsert;
+    QMenu* menuAnimations;
 
     MainWindow *_window;
 };

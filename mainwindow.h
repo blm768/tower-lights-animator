@@ -1,3 +1,11 @@
+/*
+ * Tower Lights Animator
+ * mainwindow.h
+ *
+ * Worked on by:  Paden Rumsey and others
+ * Paden Rumsey: Worked on the close event of the mainwindow
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
