@@ -1,5 +1,7 @@
 /* CONTRIBUTORS
  * Ben Merritt: Set up the first few menu items in the MainMenu constructor
+ * Paden Rumsey: Implemented/debugged most of the file operations 
+ *               (except export)
  */
 #include "mainmenu.h"
 

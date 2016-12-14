@@ -1,5 +1,6 @@
 /* CONTRIBUTORS
  * Ben Merritt: outlined the initial signals, slots, and actions
+ * Paden Rumsey: Implemented file operations (except export)
  */
 #ifndef MAINMENU_H
 #define MAINMENU_H

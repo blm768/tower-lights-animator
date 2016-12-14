@@ -1,3 +1,10 @@
+/*
+ * Tower Lights Animator
+ * error.h 
+ * 
+ * Worked on by: Paden Rumsey
+ */
+
 #ifndef ERROR_H
 #define ERROR_H
 #include <string.h> 

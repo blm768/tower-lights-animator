@@ -1,3 +1,10 @@
+/*
+ * Tower Lights Animator
+ * error.cpp
+ *
+ * Worked on by: Paden Rumsey
+ */ 
+
 #include <QMessageBox>
 #include <QString>
 #include <string.h>

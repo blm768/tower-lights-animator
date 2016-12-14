@@ -1,6 +1,7 @@
 /* CONTRIBUTORS
  * Nick Valenti: wrote the towerframe class and did most of the non shift related updating and maintenance
  * Ben Merritt: added a couple of constants and the declaration of GetFrame()
+ * Paden Rumsey: added a variety of frame adding methods (outside of shift) and implemented all of the shifting functions
  */
 #ifndef TOWERFRAME_H
 #define TOWERFRAME_H
@@ -99,7 +100,7 @@ public:
     QColor GetCellColor(int Index, int row, int column);
 
             /*!
-            /* \brief Returns the color of the cell in frame Index at row and column
+             * \brief Returns the color of the cell in frame Index at row and column
              * Does everything the previous one does excepts sets
              * the color of the currently selected frame in tan file
              * and no index cause we are going linearly

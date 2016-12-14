@@ -1,3 +1,13 @@
+/* 
+ * Tower Lights Animator
+ * tanIO.cpp
+ * 
+ * Worked on by: Paden Rumsey, Max Flinn
+ * Paden's Contributions: Created all the functions in this file
+ *                        except SaveTan and SaveProject
+ * Max's Contributions: Created SaveTan and SaveProject
+ */ 
+
 #include <QTime>
 #include <fstream>
 #include <iomanip>

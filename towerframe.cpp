@@ -1,3 +1,9 @@
+/* CONTRIBUTORS
+ * Nick Valenti: wrote the towerframe class and did most of the non shift related updating and maintenance
+ * Ben Merritt: added a couple of constants and the declaration of GetFrame()
+ * Paden Rumsey: added a variety of frame adding methods (outside of shift) and implemented all of the shifting functions
+ */
+
 #include <QColor>
 #include <QTime>
 #include <QList>

@@ -1,6 +1,7 @@
 /* CONTRIBUTORS
  * Ben Merritt: Wrote most of this code
  * Nick Valenti: Created signals and slots for FrameEditor, minor testing and bugfixing
+ * Paden Rumsey: Implemented shifting on the timeline toolbar. The rest is basically Ben's
  */
 #ifndef TIMELINE_H
 #define TIMELINE_H
