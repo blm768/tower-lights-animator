@@ -166,7 +166,7 @@ public slots:
     void setSelection(const FrameSelection& selection);
     /*!
      * \brief Changes the global wrap to true/false
-     */\
+     */
     void wrapStateChanged();
 
 private slots:

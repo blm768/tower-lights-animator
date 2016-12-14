@@ -11,7 +11,7 @@
 #define FWIDTH 12
 
 #define FRAME_H_MARGIN 4
-#define FRAME_V_MARGIN 4
+#define FRAME_V_MARGIN 5
 #define FRAME_INNER_WIDTH 4
 #define FRAME_INNER_HEIGHT 10
 
