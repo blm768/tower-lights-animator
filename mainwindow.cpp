@@ -1,3 +1,11 @@
+/*
+ * Tower Lights Animator
+ * mainwindow.cpp
+ *
+ * Worked on by:  Paden Rumsey and others
+ * Paden Rumsey: Worked on the close event of the mainwindow
+ */
+
 #include "mainwindow.h"
 #include "frameeditor.h"
 #include "timeline.h"
@@ -75,6 +83,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     case QMessageBox::Save:{
         if(previousFile.empty()){
             fileName = QFileDialog::getSaveFileName(0, "Save file", QDir::currentPath(), "Tan Files (*.tan)");
+            if(fileName == NULL || fileName.isEmpty())
+            {
+                event->ignore();
+                return;          //the file returned is NULL so the cancel button was pressed (or empty)
+            }
             std::string stdFileName = fileName.toStdString();
             SaveProject(stdFileName, animation);
             previousFile = stdFileName;
