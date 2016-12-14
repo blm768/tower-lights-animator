@@ -1,3 +1,7 @@
+/* CONTRIBUTORS
+ * Max Gilmore: Coded toolbar.h and toolbar.cpp
+*/
+
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
