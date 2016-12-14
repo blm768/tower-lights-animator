@@ -68,8 +68,8 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     connect(Paste, &QAction::triggered, this, &MainMenu::paste);
     
     //Unimplemented animation
-    //RainEffect = new QAction(tr("Rain"), this);
-    //RainEffect->setStatusTip(tr("Insert falling rain effect after current frame"));
+    RainEffect = new QAction(tr("Rain"), this);
+    RainEffect->setStatusTip(tr("Insert falling rain effect after current frame"));
     //connect(RainEffect, &QAction::triggered, this, &MainMenu::rainEffect);
 
     // Create menus and add to window.
@@ -88,10 +88,9 @@ MainMenu::MainMenu(MainWindow* window) : QObject(window) {
     menuEdit->addAction(Copy);
     menuEdit->addAction(Paste);
     
-    //Unimplemented menus
-    //menuInsert = mainMenu->addMenu(tr("Insert"));
-    //menuAnimations = menuInsert->addMenu("Animations");
-    //menuAnimations->addAction(RainEffect);
+    menuInsert = mainMenu->addMenu(tr("Insert"));
+    menuAnimations = menuInsert->addMenu("Animations");
+    menuAnimations->addAction(RainEffect);
 
     _window = window;
 
