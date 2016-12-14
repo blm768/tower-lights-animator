@@ -106,6 +106,7 @@ void MainMenu::newFile() {
                 return;          //the file returned is NULL so the cancel button was pressed (or empty)
             std::string stdFileName = fileName.toStdString();
             SaveProject(stdFileName, animation);
+            delete animation;
             animation = new Animation;
             animation->AddFrame(25);    //add default frame of 25 seconds
             _window->setAnimation(animation);
@@ -152,12 +153,11 @@ void MainMenu::openFile() {
     int ret = newFileBox.exec();
 
     if(newFileBox.clickedButton() == noSave){
-        delete animation;
-        animation = new Animation;
-        _window->setAnimation(animation);
         fileName = QFileDialog::getOpenFileName(0, "Open file", QDir::currentPath(), "Tan or Project Files (*.tan *.pro)");
         if(fileName == NULL || fileName.isEmpty())
             return;          //the file returned is NULL so the cancel button was pressed (or empty)
+        delete animation;
+        animation = new Animation;
         std::string stdFileName = fileName.toStdString();
         LoadTan(stdFileName, animation);
         previousFile = stdFileName;
