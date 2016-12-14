@@ -326,7 +326,6 @@ int SaveProject( string fileName, Animation *tower ) {
     int index = 0;
     QColor current;
     int r,g,b;
-    int time = 0;
     int timeMs = 0;
     int timeS = 0;
     int timeM = 0;
