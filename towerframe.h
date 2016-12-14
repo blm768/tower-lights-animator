@@ -1,4 +1,5 @@
 /* CONTRIBUTORS
+ * Nick Valenti: wrote the towerframe class and did most of the non shift related updating and maintenance
  * Ben Merritt: added a couple of constants and the declaration of GetFrame()
  */
 #ifndef TOWERFRAME_H
@@ -69,40 +70,60 @@ public:
 
     bool FrameSelected();
 
-            // Points currFrame to the Animation Frame at Index
+            /*!
+             * \brief Points currFrame to the Animation Frame at Index
+             */
     int SelectFrame(int Index);
 
-            // Sets cell [row][column] to Color in currFrame
+            /*!
+             * \brief Sets cell [row][column] to Color in currFrame
+             */
     int SetSelectedColor(int row, int column, QColor Color);
 
-            // Returns the color of selected frame at cell [row][column]
+            /*!
+             * \brief Returns the color of selected frame at cell [row][column]
+             */
     QColor GetSelectedColor(int row, int column);
 
-            // Sets cell [row][column] to Color in frame located at Index
-            // returns 0 if Index, row, or column are out of bounds
-            // If Color is not valid it sets it to Qt::black
+            /*!
+             * \brief Sets cell [row][column] to Color in frame located at Index
+             * returns 0 if Index, row, or column are out of bounds
+             * If Color is not valid it sets it to Qt::black
+             */
     int SetCellColor(int Index, int row, int column, QColor Color);
 
-            // Returns the color of the cell in frame Index at row and column
-            // returns Qt::black if any values are invalid
+            /*!
+             * \brief Returns the color of the cell in frame Index at row and column
+             * returns Qt::black if any values are invalid
+             */
     QColor GetCellColor(int Index, int row, int column);
 
-            // Does everything the previous one does excepts sets
-            // the color of the currently selected frame in tan file
-            // and no index cause we are going linearly
+            /*!
+            /* \brief Returns the color of the cell in frame Index at row and column
+             * Does everything the previous one does excepts sets
+             * the color of the currently selected frame in tan file
+             * and no index cause we are going linearly
+             */
     int ColorCell(int row, int column, QColor Color);
 
-            // Returns the length of the entire sequence in ms
+            /*!
+             * \brief Returns the length of the entire sequence in ms
+             */
     int GetDuration();
 
-    //QTime GetDuration();
+    // removed: no longer store duration as QTime
+    // QTime GetDuration();
 
-            // Sets the frame at Index's duration to Duration
-            // returns 0 if Index is out of bounds
+            /*!
+             * \brief Sets the frame at Index's duration to Duration
+             * returns 0 if Index is out of bounds
+             */
     int SetFrameDuration(int Duration, int Index);
 
-            // Returns the duration of frame Index in ms
-            // returns 0 if Index is out of bounds
+            /*!
+             * \brief Returns the duration of frame Index in ms
+             * returns 0 if Index is out of bounds
+             */
     int GetFrameDuration(int Index);
 
     void CreateNewFrame();
@@ -113,24 +134,34 @@ public:
             // Used to add a frame thats been created
             // from the tan file to a tower animation
 
-            // Add a frame with Duration to end
+            /*!
+             * \brief Add a frame with Duration to end
+             */
     void AddFrame(int Duration);
 
-            // Add a copy of frame at Index to end
-            // returns 0 if Index is out of bounds
+            /*!
+             * \brief Add a copy of frame at Index to end
+             * returns 0 if Index is out of bounds
+             */
     int CopyFrame(int Index);
 
 
     // If Position is outside of the bounds of the List it will be
     // appended or prepended automatically
-            // Add a new frame to Position with Duration
+            /*!
+             * \brief Add a new frame to Position with Duration
+             */
     void AddFrame(int Duration, int Position);
 
-            // Add a copy of frame at Index to Position
-            // return 0 if Index is out of bounds
+            /*!
+             * \brief Add a copy of frame at Index to Position
+             * return 0 if Index is out of bounds
+             */
     int CopyFrame(int Index, int Position);
 
-            // Deletes frame at Position, returns 0 if position is out of bounds
+            /*!
+             * /brief Deletes frame at Position, returns 0 if position is out of bounds
+             */
     int DeleteFrame(int Position);
 
             //Shift the frame up and to the left
@@ -157,8 +188,10 @@ public:
            //Shift the frame down and to the right
     int ShiftFrameRD(int Index, int Position);
 
-            // Relocates frame at IndexFrom to before IndexTo
-            // Returns 0 if either index is outside of list bounds
+            /*!
+             * \brief Relocates frame at IndexFrom to before IndexTo
+             * Returns 0 if either index is outside of list bounds
+             */
     int MoveFrame(int IndexFrom, int IndexTo);
 
             // Returns true if frame Index exists and row and column are

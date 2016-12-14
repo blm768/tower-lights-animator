@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&_mainMenu, &MainMenu::cut, timeline, &Timeline::cutFrames);
     connect(&_mainMenu, &MainMenu::paste, timeline, &Timeline::pasteFrames);
 
+    mainLayout->setAlignment(hozBox, Qt::AlignCenter);
+
     connect(colorPick, &ColorPicker::sendColor, frameEditor, &FrameEditor::setPenColor);
 }
 

@@ -677,15 +677,19 @@ int Animation::SetFrameDuration(int Duration, int Index)
     }
     else
     {
-        FrameList.at(Index)->FDuration = SanitizeTime(Duration);
+        // remove duration of frame from animation duration
+        int NDur = SanitizeTime(Duration);
+        TDuration -= FrameList.at(Index)->FDuration;
+        FrameList.at(Index)->FDuration = NDur;
+        TDuration += NDur;
     }
     return 1;
 }
 
 /*
  *
- * Testing
- *
+ * Early testing purposes
+ * WARNING: console only, requires console and not gui .pro file, should be used to test this class in an isolated console environment only
  *
  *
 void Animation::PrintTower()

@@ -16,6 +16,7 @@ FrameEditor::FrameEditor(QWidget *parent) : QWidget(parent)
 {
     curCol = QColor(Qt::black);
 
+    // FHEIGHT and FWIDTH defined in towerframe.h
     for (int i = 0; i < FHEIGHT; i++){
         for (int j = 0; j < FWIDTH; j++){
             QPushButton *button = new QPushButton;
@@ -44,6 +45,9 @@ void FrameEditor::initializeLayout(QGridLayout *curLayout)
             current->setMaximumSize(QSize(cellsize,cellsize));
             current->setMinimumSize(QSize(cellsize,cellsize));
             QString border = "777777";
+
+            // TODO: remove magic numbers
+            // logic selects only viewable cells
             if (i > 4 && i < FHEIGHT - 5){
                 if (j > 3 && j < FWIDTH - 4){
                     border = "ff0000";
@@ -64,11 +68,17 @@ void FrameEditor::onCellClickEvent()
 {
     QPushButton *current = qobject_cast<QPushButton*>(sender());
     QGridLayout *layout = dynamic_cast<QGridLayout*>(current->parentWidget()->layout());
+
     int index = layout->indexOf(current);
+
+    // rs, cs hold widget spans in qgridlayout but are otherwise unusued, variables required for the getItemPosition method
     int row, column, rs, cs;
     layout->getItemPosition(index, &row, &column, &rs, &cs);
 
     QString border = "777777";
+
+    // TODO: remove magic numbers
+    // logic selects only viewable cells
     if (row > 4 && row < FHEIGHT - 5){
         if (column > 3 && column < FWIDTH - 4){
             border = "ff0000";
@@ -81,6 +91,7 @@ void FrameEditor::onCellClickEvent()
         animation->SetSelectedColor(row, column, curCol);
     }
     if (curCol.isValid()){
+        // background color will be white if curCol not set
         back = curCol.name();
     }
 
@@ -92,10 +103,16 @@ void FrameEditor::onCellClickEvent()
 void FrameEditor::setSelection(FrameSelection selection)
 {
     animation = selection.animation;
+
+    // if multiple frames are selected the editor will handle only the last one
     if(selection.length() > 0)
     {
+        // should always evaluate to true
         if (animation != NULL){
+
+            // selection.end is not inclusive
             curIndex = selection.end - 1;
+
             animation->SelectFrame(curIndex);
             QString rgb, css, border;
 
@@ -122,7 +139,7 @@ void FrameEditor::setSelection(FrameSelection selection)
     }
     else
     {
-        // We can't edit 0 or multiple frames.
+        // We can't edit 0 frames.
         // TODO: disable this widget?
     }
 
@@ -139,11 +156,6 @@ void FrameEditor::selectTool(ToolType tool)
 
 void FrameEditor::setPenColor(const QColor& color)
 {
-    /*
-    int r,g,b;
-    color.getRgb(&r,&g,&b);
-    curCol.setRgb(r,g,b);
-    */
     curCol = color;
 }
 

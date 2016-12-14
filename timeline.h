@@ -1,5 +1,6 @@
 /* CONTRIBUTORS
  * Ben Merritt: Wrote most of this code
+ * Nick Valenti: Created signals and slots for FrameEditor, minor testing and bugfixing
  */
 #ifndef TIMELINE_H
 #define TIMELINE_H

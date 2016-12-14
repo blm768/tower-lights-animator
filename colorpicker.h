@@ -1,3 +1,7 @@
+/* CONTRIBUTORS
+ * Nick Valenti: updated existing solution to use QColorDialog
+ */
+
 #ifndef COLORPICKER_H
 #define COLORPICKER_H
 

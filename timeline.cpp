@@ -234,8 +234,7 @@ void TimelineToolbar::setDuration(int duration) {
     Timeline* timeline = dynamic_cast<Timeline*>(parent());
     int individualDuration = duration / _selection.length();
     for(int i = _selection.start; i < _selection.end; ++i) {
-        Frame* frame = _selection.animation->GetFrame(i);
-        frame->FDuration = individualDuration;
+        _selection.animation->SetFrameDuration(individualDuration,i);
         timeline->onFrameChanged(i);
     }
 }
@@ -287,6 +286,7 @@ Timeline::Timeline(QWidget *parent) :
 
     _toolbar = new TimelineToolbar;
     layout->addWidget(_toolbar, 0);
+    layout->setAlignment(_toolbar, Qt::AlignCenter);
 
     _frameBox = new QWidget();
     _frameBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);

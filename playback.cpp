@@ -12,6 +12,8 @@
 
 #define cellsize 50
 #define cellspace 4
+
+// TODO: these defines must be migrated to the animation class in towerframe.h
 #define hoffset 5
 #define voffset 4
 #define TWIDTH 4
@@ -21,11 +23,14 @@ Playback::Playback(QWidget *parent, Animation *anim)
 {
     play = 0;
 
+    // TODO: remove magic numbers
+    // refresh rate 25ms matches tower
     timer->setInterval(25);
     connect(timer, SIGNAL(timeout()), this, SLOT(incTime()));
 
     currentindex = 0;
     animation = anim;
+
     if (animation != NULL) {
 
         for (int i = 0; i < THEIGHT; i++){
@@ -57,6 +62,8 @@ Playback::Playback(QWidget *parent, Animation *anim)
         QSlider *progress = new QSlider(Qt::Horizontal);
         progress->setTickPosition(QSlider::TicksAbove);
         progress->setTickInterval(1000);
+
+        // TODO: magic numbers, cleanup of qgridlayout coordinates
         progress->setSingleStep(25);
         progress->setPageStep(25);
         PBLayout->addWidget(progress, THEIGHT+3,2,1,4);
@@ -64,7 +71,7 @@ Playback::Playback(QWidget *parent, Animation *anim)
         QLabel *time = new QLabel(QTime(0,0,0,0).toString("mm:ss.zzz"));
         PBLayout->addWidget(time,THEIGHT+2,3,1,2);
 
-        QPushButton *playpause = new QPushButton(tr("Play/Pause"));
+        QPushButton *playpause = new QPushButton(tr("Play"));
         playpause->setFixedWidth(50);
         connect(playpause, SIGNAL(clicked()), this, SLOT(onPlayEvent()));
         PBLayout->addWidget(playpause,THEIGHT+2,2,1,2);
@@ -80,6 +87,7 @@ void Playback::onPlayEvent()
 {
     if (play == 0)
     {
+        // begin playing
         QLayoutItem *layout = PBLayout->itemAtPosition(THEIGHT+3,2);
         QWidget *widget = layout->widget();
         QSlider *current = qobject_cast<QSlider*>(widget);
@@ -95,6 +103,7 @@ void Playback::onPlayEvent()
     }
     else
     {
+        // pause playing
         play = 0;
         timer->stop();
     }
@@ -139,6 +148,10 @@ void Playback::setTime(int ms)
 
     int index;
 
+    // only redraw qlabels if index changes
+    // because of reliance on stylesheets labels will be redrawn
+    // any time a change in stylesheet is made
+    // TODO: further optimize by changing to pallet implementation
     for (int i = 0; i < animation->FrameCount(); i++)
     {
         if (temp >= timestamps.at(i))
