@@ -1,6 +1,7 @@
 /* CONTRIBUTORS
  * Ben Merritt: Outlined initial signals and slots
  * Nick Valenti: Connected/wrote signals and slots, assisted building the GUI, wrote the change and update functions
+ * Dylan Carlson: Outline class with Ben on structuring the signal and slots, helped build the constructor
  */
 #ifndef FRAMEEDITOR_H
 #define FRAMEEDITOR_H

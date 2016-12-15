@@ -2,6 +2,7 @@
  * Nick Valenti: wrote the towerframe class and did most of the non shift related updating and maintenance
  * Ben Merritt: added a couple of constants and the declaration of GetFrame()
  * Paden Rumsey: added a variety of frame adding methods (outside of shift) and implemented all of the shifting functions
+ * Dylan Carlson: implemented deconstructor and freeing memory method
  */
 #ifndef TOWERFRAME_H
 #define TOWERFRAME_H

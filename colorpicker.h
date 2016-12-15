@@ -1,5 +1,6 @@
 /* CONTRIBUTORS
  * Nick Valenti: updated existing solution to use QColorDialog
+ * Dylan Carlson: Worked on original Color Picker, and connecting the Color Picker to the Frame Editor
  */
 
 #ifndef COLORPICKER_H
